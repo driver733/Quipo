@@ -1,0 +1,1 @@
+../../../VK-ios-sdk/sdk/Source/API/upload/VKUploadPhotoBase.h

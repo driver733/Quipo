@@ -1,0 +1,1 @@
+../../../VK-ios-sdk/sdk/Source/Core/VKResponse.h

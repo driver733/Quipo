@@ -1,0 +1,132 @@
+PODS:
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - Async (1.3.1)
+  - Bolts (1.2.0):
+    - Bolts/AppLinks (= 1.2.0)
+    - Bolts/Tasks (= 1.2.0)
+  - Bolts/AppLinks (1.2.0):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.2.0)
+  - FastImageCache (1.3)
+  - FBSDKCoreKit (4.4.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc (= 4.4.0)
+    - FBSDKCoreKit/no-arc (= 4.4.0)
+  - FBSDKCoreKit/arc (4.4.0):
+    - Bolts (~> 1.1)
+  - FBSDKCoreKit/no-arc (4.4.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc
+  - FBSDKLoginKit (4.4.0):
+    - FBSDKCoreKit
+  - FBSDKShareKit (4.4.0):
+    - FBSDKCoreKit
+  - FontBlaster (1.0.7)
+  - Google/Core (1.0.7):
+    - GoogleNetworkingUtilities (~> 1.0)
+    - GoogleSymbolUtilities (~> 1.0)
+    - GoogleUtilities (~> 1.0)
+  - Google/SignIn (1.0.7):
+    - Google/Core
+    - GoogleSignIn (~> 2.0)
+  - GoogleAppUtilities (1.0.0):
+    - GoogleSymbolUtilities (~> 1.0)
+  - GoogleAuthUtilities (1.0.1):
+    - GoogleNetworkingUtilities (~> 1.0)
+    - GoogleSymbolUtilities (~> 1.0)
+  - GoogleNetworkingUtilities (1.0.0):
+    - GoogleSymbolUtilities (~> 1.0)
+  - GoogleSignIn (2.2.0):
+    - GoogleAppUtilities (~> 1)
+    - GoogleAuthUtilities (~> 1)
+    - GoogleNetworkingUtilities (~> 1)
+    - GoogleUtilities (~> 1)
+  - GoogleSymbolUtilities (1.0.0)
+  - GoogleUtilities (1.0.1):
+    - GoogleSymbolUtilities (~> 1.0)
+  - InstagramKit (3.6.5):
+    - AFNetworking (~> 2.0)
+  - KeychainAccess (1.2.1)
+  - OAuthSwift (0.3.6)
+  - PureLayout (2.0.6)
+  - SwiftValidator (2.1.1)
+  - SwiftyJSON (2.2.1)
+  - TLYShyNavBar (0.9.11)
+  - TPKeyboardAvoiding (1.2.9)
+  - VK-ios-sdk (1.1.12)
+
+DEPENDENCIES:
+  - AFNetworking (~> 2.5)
+  - Async (from `https://github.com/duemunk/Async.git`)
+  - FastImageCache (~> 1.3)
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
+  - FontBlaster
+  - Google/SignIn
+  - InstagramKit (~> 3.0)
+  - KeychainAccess
+  - OAuthSwift (~> 0.3.4)
+  - PureLayout
+  - SwiftValidator (= 2.1.1)
+  - SwiftyJSON (~> 2.2.0)
+  - TLYShyNavBar
+  - TPKeyboardAvoiding (~> 1.2)
+  - VK-ios-sdk
+
+EXTERNAL SOURCES:
+  Async:
+    :git: https://github.com/duemunk/Async.git
+
+CHECKOUT OPTIONS:
+  Async:
+    :commit: 9e64046b767fe11010891f5b7fe2aed613a6ee55
+    :git: https://github.com/duemunk/Async.git
+
+SPEC CHECKSUMS:
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Async: edb15b1e34181d7c9873ce6b5d6eabc1c99e638b
+  Bolts: d176cb1e0012175589e389a9db49b85e27787576
+  FastImageCache: 25f214fd46405daca3d1995d783fb83b9036c62e
+  FBSDKCoreKit: 75bdd75c980e811db218488d99dd93b7740f4474
+  FBSDKLoginKit: 02a9254a4c132412fa03577b0d53e936d068a7fb
+  FBSDKShareKit: a42865f20ba2d1cc548c4d0f73ad22cff6377ddb
+  FontBlaster: 1bab493b67698b77bfa73a770f50d8aed15a6aa5
+  Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
+  GoogleAppUtilities: c01c6a5671e9da8b9d690fdaec5959d6c2aac699
+  GoogleAuthUtilities: 049ffd3a297cdffd271451b82fd4e75304f15ef3
+  GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
+  GoogleSignIn: c45d8d1a873784a3283b4f47f331dc06d8a727b6
+  GoogleSymbolUtilities: a7b0feed1fe667c8d5e647177938d0ecd62d6948
+  GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
+  InstagramKit: 90759652c8c4579bfaa5c9f001927e162c3e1c66
+  KeychainAccess: 3d7922baf90762a976adb7f6030d74c1a4110a1d
+  OAuthSwift: 3517e94380923085dfa7f23421bc3d4a61ce48c0
+  PureLayout: f25f0bb904d5ccfe6e31da3cb869185259f02e0d
+  SwiftValidator: 79936ea870f1dba8a0824763375375bb209fe30d
+  SwiftyJSON: ae2d0a3d68025d136602a33c4ee215091ced3e33
+  TLYShyNavBar: e0d7b6719a8860144415708bbe8b6fbddd36f419
+  TPKeyboardAvoiding: ff1ee4e5a5a0c119b965552af8f183868ea20207
+  VK-ios-sdk: 53e366d221b24cc0ef6f31c6e9dfae5f12eea054
+
+COCOAPODS: 0.38.2
