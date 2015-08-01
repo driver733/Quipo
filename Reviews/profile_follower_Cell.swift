@@ -12,7 +12,7 @@ class profile_follower_Cell: UITableViewCell {
 
     @IBOutlet weak var followButton: UIButton!
     @IBOutlet weak var userName: UILabel!
-    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var profileImage: UIImageView!
     
     
     override func awakeFromNib() {

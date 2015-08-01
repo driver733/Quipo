@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="4uB-6d-YoG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8164.2" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="4uB-6d-YoG">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8135.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -102,7 +103,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="0Ya-hd-HmD">
-                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <rect key="frame" x="4" y="28" width="592" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <outlet property="delegate" destination="DBR-Fr-Ujv" id="6DA-C0-GUv"/>
@@ -133,12 +134,12 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="814" y="764"/>
+            <point key="canvasLocation" x="722" y="758"/>
         </scene>
         <!--Sign in-->
         <scene sceneID="qAj-ll-11h">
             <objects>
-                <viewController id="EBS-We-1ep" customClass="Log_inVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="login" id="EBS-We-1ep" customClass="Log_inVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sk8-uU-vYE"/>
                         <viewControllerLayoutGuide type="bottom" id="ue2-jj-ehS"/>
@@ -154,8 +155,9 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cLR-qo-X5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="CZt-jr-AlF" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1202" y="-228"/>
+            <point key="canvasLocation" x="1598" y="-228"/>
         </scene>
         <!--Likes-->
         <scene sceneID="Sgy-X3-beG">
@@ -179,7 +181,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
-                <tabBarController id="49e-Tb-3d3" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="main" id="49e-Tb-3d3" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
@@ -233,11 +235,34 @@
                     <navigationItem key="navigationItem" id="2rR-dO-FR4"/>
                     <connections>
                         <outlet property="tableView" destination="LOb-uL-nzo" id="hOv-fQ-zG8"/>
+                        <segue destination="0dA-48-2dU" kind="show" identifier="profileSettings" id="0WI-Pi-Qd5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xhX-LP-PUU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3227" y="571"/>
+        </scene>
+        <!--Profile Settings-->
+        <scene sceneID="nio-HG-cTN">
+            <objects>
+                <viewController id="0dA-48-2dU" customClass="ProfileSettings" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="LVh-g4-5F9">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="0dA-48-2dU" id="KVu-l2-ffT"/>
+                            <outlet property="delegate" destination="0dA-48-2dU" id="gOR-oo-QOY"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="tableView" destination="LVh-g4-5F9" id="ddR-id-Fv8"/>
+                        <segue destination="CZt-jr-AlF" kind="unwind" identifier="didLogOut" unwindAction="didLogOut:" id="lbg-bz-lLC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xav-YW-mmV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4128" y="571"/>
         </scene>
         <!--Item-->
         <scene sceneID="VNg-gS-Hac">
@@ -256,7 +281,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cao-RG-EAu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4063" y="571"/>
+            <point key="canvasLocation" x="5293" y="571"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="b2p-zx-yJi">

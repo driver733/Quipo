@@ -63,7 +63,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="followButton" destination="VHp-GN-heP" id="KjD-ZD-Or8"/>
-                <outlet property="userImage" destination="avM-fC-gn5" id="e1Q-Nt-aWd"/>
+                <outlet property="profileImage" destination="avM-fC-gn5" id="Sm5-MS-8lv"/>
                 <outlet property="userName" destination="zga-ZG-15A" id="Fik-s0-1kZ"/>
             </connections>
             <point key="canvasLocation" x="582" y="581.5"/>

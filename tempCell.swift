@@ -13,17 +13,6 @@ class tempCell: UITableViewCell {
     @IBOutlet weak var textfield: UITextField!
     @IBOutlet weak var label: UILabel!
     
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
-    
-    required init(coder aDecoder: NSCoder) {
-        //fatalError("init(coder:) has not been implemented")
-        super.init(coder: aDecoder)
-    }
-
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

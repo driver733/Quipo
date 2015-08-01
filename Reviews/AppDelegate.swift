@@ -7,27 +7,23 @@
 //
 
 import UIKit
-import Fabric
-import TwitterKit
+//import Fabric
+//import TwitterKit
 import OAuthSwift
 import FBSDKCoreKit
 import VK_ios_sdk
-import Parse
 import Bolts
-
-
-
-
+import SDWebImage
+import Parse
+import ParseFacebookUtilsV4
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate
+,GIDSignInDelegate
+{
 
     var window: UIWindow?
     
-    
-
-    
-
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -39,12 +35,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // Initialize Parse.
         Parse.setApplicationId("FHtrAm8LOVA1UWPNicmSXd4xn8Zpq7NM1fkLtb11",
             clientKey: "Ul05iFZTBIIKGEfwUnagU7nUTTcs1Cm8sH1VXNbg")
+        PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
         
         // [Optional] Track statistics around application opens.
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
         
         
-        Fabric.with([Twitter()])
+      //  Fabric.with([Twitter()])
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         // Initialize sign-in
         var configureError: NSError?
@@ -52,7 +49,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         assert(configureError == nil, "Error configuring Google services: \(configureError)")
         
         GIDSignIn.sharedInstance().delegate = self
-
+        
+        
+        PFTwitterUtils.initializeWithConsumerKey("IeJhyNYLW5bgaZtrQTJ9Rq7Vb",  consumerSecret:"Ze2eFiBSVHA1dIOM8bu2gsK2cBO9Maw4nmqVzbJUv9B82G9vaw")
+        
+        let isLoggedIn = PFUser.currentUser()
+        
+        
+        let storyboardId = isLoggedIn != nil ? "main" : "login"
+        self.window?.rootViewController = self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier(storyboardId)
+        
+        
         return true
     }
 
@@ -79,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         GIDSignIn.sharedInstance().handleURL(url, sourceApplication: sourceApplication, annotation: annotation)
         FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
         VKSdk.processOpenURL(url, fromApplication: sourceApplication)
@@ -99,9 +106,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         }
         else{
             
-    
-          
-          
 
         }
     }

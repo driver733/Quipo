@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import TwitterKit
+//import TwitterKit
 import OAuthSwift
 import SwiftyJSON
 import VK_ios_sdk
@@ -15,7 +15,6 @@ import InstagramKit
 import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
-import FastImageCache
 import KeychainAccess
 import FontBlaster
 import TLYShyNavBar
@@ -72,19 +71,21 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCellWithIdentifier("profileUserReviews", forIndexPath: indexPath) as! profileUserReviews
         cell.movieName.text = "Titanic"
         cell.userReview.text = "Кино"
-        let url = NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg")
-        cell.posterImage.setImageWithUrl(url!, placeHolderImage: nil)
+        cell.posterImage.sd_setImageWithURL(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg"), placeholderImage: getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size))
         return cell
 
             } else {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("profile_follower", forIndexPath: indexPath) as! profile_follower_Cell
         cell.userName.text = "Dachnik"
+                            
             
-        let url = NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")
-        cell.userImage.setImageWithUrl(url!, placeHolderImage: nil)
-        cell.userImage.image = Toucan(image: cell.userImage.image!).maskWithEllipse().image
-        return cell
+        
+        cell.profileImage.sd_setImageWithURL(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg"), placeholderImage: getImageWithColor(.grayColor(), size: cell.profileImage.bounds.size))
+                if let cellImage = cell.profileImage.image {
+                    cell.profileImage.image = Toucan(image: cellImage).maskWithEllipse().image
+                }
+           return cell
             }
         
         
@@ -117,9 +118,19 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
-  
+  /*
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
+    }
 
-
+    
+    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.alpha = 0
+        return view
+    }
+*/
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -150,9 +161,28 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
          let gesture = UITapGestureRecognizer(target: self, action: "cellPressed:")
          self.view.addGestureRecognizer(gesture)
          gesture.cancelsTouchesInView = false
+        
+        
+        
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Settings", style: UIBarButtonItemStyle.Plain, target: self, action: "settings:")
+        
+        
+       
+        
     }
     
+    /*
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "profileSettings" {
+           
+        }
+    }
+    */
     
+    func settings(sender: UIBarButtonItem) {
+        performSegueWithIdentifier("profileSettings", sender: nil)
+    }
     
     
     
@@ -168,7 +198,6 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 
                 var viewPoint = newCell.awaitedView.convertPoint(location, fromView: tableView)
                 if newCell.awaitedView.pointInside(viewPoint, withEvent: nil){
-                    println("1")
                     
                     
                     str = "reviews"
@@ -178,7 +207,6 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 
                 viewPoint = newCell.favouriteView.convertPoint(location, fromView: tableView)
                 if newCell.favouriteView.pointInside(viewPoint, withEvent: nil){
-                    println("2")
                     
                     str = ""
                     tableView.reloadData()
@@ -186,22 +214,18 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 
                 viewPoint = newCell.watchedView.convertPoint(location, fromView: tableView)
                 if newCell.watchedView.pointInside(viewPoint, withEvent: nil){
-                    println("3")
                 }
                 
                 viewPoint = newCell.followingView.convertPoint(location, fromView: tableView)
                 if newCell.followingView.pointInside(viewPoint, withEvent: nil){
-                    println("4")
                 }
                 
                 viewPoint = newCell.followersView.convertPoint(location, fromView: tableView)
                 if newCell.followersView.pointInside(viewPoint, withEvent: nil){
-                    println("5")
                 }
                 
                 viewPoint = newCell.unknownView.convertPoint(location, fromView: tableView)
                 if newCell.unknownView.pointInside(viewPoint, withEvent: nil){
-                    println("6")
                 }
                 
                 

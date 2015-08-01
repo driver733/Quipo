@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import TwitterKit
+//import TwitterKit
 import OAuthSwift
 import SwiftyJSON
 import VK_ios_sdk
@@ -15,11 +15,11 @@ import InstagramKit
 import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
-import FastImageCache
 import KeychainAccess
 import SwiftValidator
 import FontBlaster
 import Parse
+import ParseFacebookUtilsV4
 
 
 
@@ -28,7 +28,11 @@ import Parse
 
 
 
-class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VKSdkDelegate, ValidationDelegate, UITextFieldDelegate, GIDSignInUIDelegate {
+
+class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VKSdkDelegate, ValidationDelegate, UITextFieldDelegate
+    
+//,GIDSignInUIDelegate
+{
    
     @IBOutlet weak var tableView_sign_in: UITableView!
     @IBOutlet weak var tableView_sign_up: UITableView!
@@ -49,6 +53,9 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     
 
+    @IBAction func didLogOut(segue: UIStoryboardSegue) {
+       
+    }
     
     @IBAction func signUp_button(sender: AnyObject) {
         tableView_sign_in.hidden = true
@@ -71,7 +78,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         }
 */
         
-        for var section = 0; section < tableView_sign_in.numberOfSections(); ++section {
+        for var section = 0; section < tableView_sign_in.numberOfSections; ++section {
             for var row = 0; row < tableView_sign_in.numberOfRowsInSection(section); ++row {
                 let cellPath = NSIndexPath(forRow: row, inSection: section)
                 let sign_in_cell: tempCell = tableView_sign_in.cellForRowAtIndexPath(cellPath) as! tempCell
@@ -82,7 +89,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
         
         
-        for var section = 0; section < tableView_sign_up.numberOfSections(); ++section {
+        for var section = 0; section < tableView_sign_up.numberOfSections; ++section {
             for var row = 0; row < tableView_sign_up.numberOfRowsInSection(section); ++row {
                 let cellPath = NSIndexPath(forRow: row, inSection: section)
                 let sign_up_cell: tempCell = tableView_sign_up.cellForRowAtIndexPath(cellPath) as! tempCell
@@ -106,7 +113,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
         
         
-        for var section = 0; section < tableView_sign_in.numberOfSections(); ++section {
+        for var section = 0; section < tableView_sign_in.numberOfSections; ++section {
             for var row = 0; row < tableView_sign_in.numberOfRowsInSection(section); ++row {
                 let cellPath = NSIndexPath(forRow: row, inSection: section)
                 let sign_in_cell: tempCell = tableView_sign_in.cellForRowAtIndexPath(cellPath) as! tempCell
@@ -116,7 +123,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
         
         
-        for var section = 0; section < tableView_sign_up.numberOfSections(); ++section {
+        for var section = 0; section < tableView_sign_up.numberOfSections; ++section {
             for var row = 0; row < tableView_sign_up.numberOfRowsInSection(section); ++row {
                 let cellPath = NSIndexPath(forRow: row, inSection: section)
                 let sign_up_cell: tempCell = tableView_sign_up.cellForRowAtIndexPath(cellPath) as! tempCell
@@ -147,13 +154,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     
     
-    
-    
-    
-    
-    
-    
-
+  
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -187,7 +188,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
 
         
-        for var section = 0; section < tableView_sign_up.numberOfSections(); ++section {
+        for var section = 0; section < tableView_sign_up.numberOfSections; ++section {
             for var row = 0; row < tableView_sign_up.numberOfRowsInSection(section); ++row {
                 let cellPath = NSIndexPath(forRow: row, inSection: section)
                 let sign_up_cell: tempCell = tableView_sign_up.cellForRowAtIndexPath(cellPath) as! tempCell
@@ -206,10 +207,12 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
         
         
-        var currentUser = PFUser.currentUser()
+        let currentUser = PFUser.currentUser()
         if currentUser != nil {
-            // Do stuff with the user
-            println("already logged in")
+        
+       //     currentUser!.setObject(FBSDKAccessToken.currentAccessToken().tokenString, forKey: "facebookID")
+       //     currentUser!.saveInBackground()
+           
         } else {
             // Show the signup or login screen
         }
@@ -235,7 +238,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     func validationSuccessful() {
         //  performSegueWithIdentifier("did_log_in", sender: nil)
-        println("success")
+        print("success")
     }
     
     
@@ -253,14 +256,15 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         }
         
         if OR_label.text == "or Sign In with:" {
-            if contains(tempArr, 4) {
+
+            if tempArr.contains(4) {
                 alert.title = "Incorrect Email"
                 alert.message = "Please check your Email"
                 self.presentViewController(alert, animated: true, completion: nil)
                 tempArr = [Int]()
                 return
             }
-            if contains(tempArr, 5) {
+            if tempArr.contains(5) {
                 alert.title = "Incorrect Password"
                 alert.message = "Please check your password"
                 self.presentViewController(alert, animated: true, completion: nil)
@@ -271,21 +275,21 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         }
             
         else  {
-            if contains(tempArr, 1) {
+            if tempArr.contains(1) {
                 alert.title = "Invalid Email"
                 alert.message = "Please check your Email"
                 self.presentViewController(alert, animated: true, completion: nil)
                 tempArr = [Int]()
                 return
             }
-            if contains(tempArr, 2) {
+            if tempArr.contains(2) {
                 alert.title = "Invalid Password"
                 alert.message = "Please check your password"
                 self.presentViewController(alert, animated: true, completion: nil)
                 tempArr = [Int]()
                 return
             }
-            if contains(tempArr, 3){
+            if tempArr.contains(3) {
                 alert.message = "Check your username"
                 alert.message = "Please check your username"
                 self.presentViewController(alert, animated: true, completion: nil)
@@ -308,10 +312,8 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         let email = (tableView_sign_in.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! tempCell).textfield.text
         let password = (tableView_sign_in.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! tempCell).textfield.text
         var query = PFUser.query()
-        query?.whereKey("email", equalTo: email)
-        query?.findObjectsInBackgroundWithBlock({
-             (foundUsers: [AnyObject]?, error: NSError?) -> Void in
-            
+        query?.whereKey("email", equalTo: email!)
+        query?.findObjectsInBackgroundWithBlock({ (foundUsers: [AnyObject]?, error: NSError?) -> Void in
             if error == nil {
              if let foundUsers = foundUsers as? [PFObject] {
                 if foundUsers.count == 1 {
@@ -324,10 +326,10 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
             
             PFUser.logInWithUsernameInBackground(
                 username,
-                password: (self.tableView_sign_in.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! tempCell).textfield.text) {
+                password: (self.tableView_sign_in.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! tempCell).textfield.text!) {
                     (user: PFUser?, error: NSError?) -> Void in
                     if user != nil {
-                       // login went ok
+                        self.performSegueWithIdentifier("did_log_in", sender: nil)
                     } else {
                         switch error!.code {
                         case 101:
@@ -345,7 +347,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
      
         
-    
+        
        
     }
     
@@ -356,12 +358,13 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         var alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         
-        if !(tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! tempCell).textfield.text.isEmpty {
+        if !(tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! tempCell).textfield.text!.isEmpty {
             user.username = (tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! tempCell).textfield.text
         }
         else {
-            let arr = split((tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! tempCell).textfield.text) {$0 == "@"}
-            user.username = arr[0]
+//let arr = split((tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! tempCell).textfield.text) {$0 == "@"}
+            let arr: Array = ((tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! tempCell).textfield.text?.componentsSeparatedByString("@"))!
+         user.username = arr[0]
         }
 
         
@@ -421,7 +424,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
                 cell.label.font  = UIFont(name: "Nanum Pen", size: cell.label.font.pointSize)
                 cell.textfield.placeholder = "optional"
                 cell.textfield.tag = 3
-                cell.textfield.font = UIFont(name: "Nanum Pen", size: cell.textfield.font.pointSize)
+                cell.textfield.font = UIFont(name: "Nanum Pen", size: cell.textfield.font!.pointSize)
                 return cell
             default :
                 break
@@ -468,10 +471,6 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     }
     
     
-    func cancelLogin(){
-        self.navigationController?.popViewControllerAnimated(true)
-    }
-    
     
     func next(){
         performSegueWithIdentifier("did_log_in", sender: nil)
@@ -479,14 +478,17 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     
     
-    
+    /*
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "did_log_in" {
-            let vc = segue.destinationViewController as? UITabBarController
+           
         }
     }
-
- 
+    */
+    
+    
+    
+ /*
     
     
     @IBAction func loginWithGoogle(sender: AnyObject) {
@@ -522,19 +524,19 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
 
     
     
-    
+    */
 
     
     @IBAction func buttonTwitterLogin(sender: AnyObject) {
-        Twitter.sharedInstance().logInWithCompletion {
-            (session, error) -> Void in
-            if (session != nil) {
-            //    self.testLoginLabel.text = "\(session.userName)"
+        
+        PFTwitterUtils.logInWithBlock {
+            (user: PFUser?, error: NSError?) -> Void in
+            if user != nil {
+                self.performSegueWithIdentifier("did_log_in", sender: nil)
             } else {
-                println("error: \(error.localizedDescription)");
+                print("Uh oh. The user cancelled the Twitter login.")
             }
         }
-
     }
     
     
@@ -565,10 +567,10 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
                 success: {
                     data, response in
                     let json = JSON(data: data)
-                       //    self.testLoginLabel.text = json["data"]["full_name"].string
+                     
                     // println(json)
                 }, failure: {(error:NSError!) -> Void in
-                    println(error)
+                    print(error)
             })
             
         }
@@ -620,81 +622,115 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
                     self.testLoginLabel.text = json["data"]["full_name"].string
                     // println(json)
                     
-                
-                    
                     
                     }, failure: {(error:NSError!) -> Void in
                     println(error)
                     })
                     
-                    
                     */
                 },
                 
                 failure: {(error:NSError!) -> Void in
-                    println(error.localizedDescription)
+                    print(error.localizedDescription)
             })
         }
     }
     
-    
-    
+    func getfbFriendList(user: PFUser){
+   
+    }
     
     
     @IBAction func loginWithFacebook(sender: AnyObject) {
-    
-        if ((FBSDKAccessToken.currentAccessToken()) != nil){
-            let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil)
-            graphRequest.startWithCompletionHandler({
-                (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
-                if(error != nil){
-                    // process error
-                }
-                else{
-                    let json = JSON(result)
-                }
-            })
-        }
-            
-        else{
-            let fbLoginManager = FBSDKLoginManager()
-            fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
-            fbLoginManager.logInWithReadPermissions(["email"], handler: {
-                (result: FBSDKLoginManagerLoginResult!, error:NSError!) -> Void in
-                if ((error) != nil){
-                    fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
-                }
-                else if (result.isCancelled){
-                } else {
-                    if(result.grantedPermissions.contains("email")){
-                        print(result)
+        
+    let fbLoginManager = FBSDKLoginManager()
+    fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
+    fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"], handler: {
+        (result: FBSDKLoginManagerLoginResult!, error:NSError!) -> Void in
+        if error == nil && result.token != nil {
+            PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken(), block: {
+                    (user: PFUser?, error: NSError?) -> Void in
+                    if user != nil {
+                    self.performSegueWithIdentifier("did_log_in", sender: nil)
+                    let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: nil)
+                        graphRequest.startWithCompletionHandler({
+                            (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
+                            if error == nil {
+                                let json = JSON(result)
+                                print(json)
+                                if let fbID = json["data"][0]["id"].string {
+                                  // friends who have installed the Moviethete
+                                }
+                            }
+                            else {
+                                // process error
+                            }
+                        })
+
                     }
-                }
-            })
+                    else {
+                        print("Uh oh. There was an error logging in.")
+                    }
+                })
         }
+        else {
+            // process error
+        }
+    })
+        
     }
     
     
     @IBAction func loginWithVkontakte(sender: AnyObject) {
         VKSdk.initializeWithDelegate(self, andAppId: "4991711")
-        if (!VKSdk.isLoggedIn()) {
-            //    let scope = NSMutableArray()
-            //    scope.addObject("friends,profile info,offline,wall")
-            //    VKSdk.authorize(scope as [AnyObject])
-            VKSdk.authorize(["friends,profile info,offline,wall"])
+        if VKSdk.wakeUpSession() {
         }
         else {
-            let audioReq: VKRequest = VKApi.users().get()
+            VKSdk.authorize(["friends", "profile_info", "offline", "wall"])
+        }
+        
+        if VKSdk.isLoggedIn() {
+            let user = PFUser()
+            
+            let vkReq = VKApi.users().get()
+            vkReq.executeWithResultBlock({
+            response in
+                let json = JSON(response.json)
+                if let firstName = json[0]["first_name"].string, let lastName = json[0]["last_name"].string {
+                    let username: String = firstName + "_" + lastName
+                    user.username = username.lowercaseString
+                    self.performSegueWithIdentifier("did_log_in", sender: nil)
+                }
+    
+                },  errorBlock: {(error:NSError!) -> Void in
+                    print(error.localizedDescription)
+            })
+            
+          //  user.username = V
+            /*
+            user.signUpInBackgroundWithBlock {
+                (succeeded: Bool, error: NSError?) -> Void in
+                if error == nil {
+                    self.performSegueWithIdentifier("did_log_in", sender: nil)
+                }
+                
+                
+            }
+            */
+        }
+        
+        /*
+           // let audioReq: VKRequest = VKRequest(method: "friends.getAppUsers", andParameters: nil, andHttpMethod: "GET")
+        let audioReq = VKApi.users().get()
             audioReq.executeWithResultBlock({
                 response in
                 let json = JSON(response.json)
-                  //   self.testLoginLabel.text = json[0]["first_name"].string! + " " + json[0]["last_name"].string!
                 for (key, subJson) in json[0] {
                     if let title = subJson[key].string {
                         println(title)
                     }
                 }
-                println("//////////////////")
+           //     println("//////////////////")
                 if let title = json[0]["first_name"].string {
                     println(title)
                 }
@@ -705,14 +741,14 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
                     println(title)
                 }
                 else{
-                    println("ID - FAIL!")
+                //    println("ID - FAIL!")
                 }
                 println(response.json)
                 },
                 errorBlock: {(error:NSError!) -> Void in
                     println(error.localizedDescription)
             })
-        }
+        */
         
         
     }
@@ -728,6 +764,10 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         self.vkontakteAcessToken = newToken
     }
     
+    func vkSdkIsBasicAuthorization() -> Bool {
+        return true
+    }
+    
     func vkSdkTokenHasExpired(expiredToken: VKAccessToken!) {
         VKSdk.getAccessToken()
     }
@@ -737,8 +777,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     }
     
     func vkSdkShouldPresentViewController(controller: UIViewController!) {
-        let vc = controller
-        self.navigationController?.presentViewController(controller, animated: true, completion: nil)
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     func vkSdkNeedCaptchaEnter(captchaError: VKError!) {

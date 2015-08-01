@@ -11,6 +11,20 @@ import TLYShyNavBar
 import Async
 import SwiftyJSON
 
+extension UIViewController {
+    
+    func getImageWithColor(color: UIColor, size: CGSize) -> UIImage {
+        let rect = CGRectMake(0, 0, size.width, size.height)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        color.setFill()
+        UIRectFill(rect)
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+}
+
+
 class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var tableView: UITableView!
@@ -41,6 +55,10 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
           
     }
     
+    
+    
+    
+    
   //  override func viewDidAppear(animated: Bool) {
   //      tableView.setContentOffset((CGPointMake(0, 23)), animated: false)
   //  }
@@ -59,8 +77,8 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     func setUpPost(){
-        var post1 = Post(userName: "Dachnik", timeSincePosted: "two hours ago", profileImage: nil, posterImage: nil)
-        for var i = 0; i < 5; i++ {
+        let post1 = Post(userName: "Dachnik", timeSincePosted: "two hours ago", profileImage: nil, posterImage: nil)
+        for var i = 0; i < 200; i++ {
         arrayOfPosts.append(post1)
         }
         
@@ -68,10 +86,9 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     
     
-    
   
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let nodeCount = arrayOfPosts.count;
+        _ = arrayOfPosts.count;
 /*
         if (indexPath.row == 0)
         {
@@ -96,17 +113,19 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                    // {
                         if (!tableView.dragging && !tableView.decelerating)
                         {
-                            cell.profileImage.setImageWithUrl(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")!, placeHolderImage: nil)
+                         //   cell.profileImage.setImageWithUrl(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")!, placeHolderImage: nil)
+                            cell.profileImage.sd_setImageWithURL(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")!, placeholderImage: getImageWithColor(.grayColor(), size: cell.profileImage.bounds.size))
                             return cell
                                            }
                     return cell
                 }
                 // Set up the cell representing the app
                 let cell = tableView.dequeueReusableCellWithIdentifier("contentCell", forIndexPath: indexPath) as! contentCell
-                let post = arrayOfPosts[indexPath.row]
+                _ = arrayOfPosts[indexPath.row]
                     if (!tableView.dragging && !tableView.decelerating)
                     {
-                        cell.posterImage.setImageWithUrl(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg")!, placeHolderImage: nil)
+                    
+                          cell.posterImage.sd_setImageWithURL(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg")!, placeholderImage: getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size))
                         return cell
                 }
         return cell
@@ -120,20 +139,19 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func loadImagesForOnscreenRows(){
         if (arrayOfPosts.count > 0){
-    let visiblePaths:NSArray = tableView.indexPathsForVisibleRows()!
+    let visiblePaths:NSArray = tableView.indexPathsForVisibleRows!
         for indexPath in visiblePaths {
     let post = arrayOfPosts[indexPath.row]
             if (indexPath.row % 2 == 0){
                 Async.background(){
                 let cell:topCell = self.tableView.cellForRowAtIndexPath(indexPath as! NSIndexPath) as! topCell
-                cell.profileImage.setImageWithUrl(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")!, placeHolderImage: nil)
+                cell.profileImage.sd_setImageWithURL(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")!, placeholderImage: self.getImageWithColor(.grayColor(), size: cell.profileImage.bounds.size))
                 }
             }
            else{
                    Async.background(){
             let cell: contentCell = self.tableView.cellForRowAtIndexPath(indexPath as! NSIndexPath) as! contentCell
-                  let url = NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg")
-                  cell.posterImage.setImageWithUrl(url!, placeHolderImage: nil)
+                  cell.posterImage.sd_setImageWithURL(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg")!, placeholderImage: self.getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size))
                     }
             }
             }
@@ -169,7 +187,7 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetailedPost" {
             if let vc = segue.destinationViewController as? DetailedPostVC {
-                    vc.num = tableView.indexPathForSelectedRow()!.row
+                    vc.num = tableView.indexPathForSelectedRow!.row
             }
         }
     }
