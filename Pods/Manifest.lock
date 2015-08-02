@@ -27,6 +27,9 @@ PODS:
   - Bolts/AppLinks (1.2.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.2.0)
+  - Fabric (1.2.8):
+    - Fabric/Base (= 1.2.8)
+  - Fabric/Base (1.2.8)
   - FBSDKCoreKit (4.4.0):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc (= 4.4.0)
@@ -83,10 +86,13 @@ PODS:
   - SwiftyJSON (2.2.1)
   - TLYShyNavBar (0.9.11)
   - TPKeyboardAvoiding (1.2.9)
+  - TwitterCore (1.8.1)
+  - TwitterKit (1.8.1)
   - VK-ios-sdk (1.1.12)
 
 DEPENDENCIES:
   - Async (from `https://github.com/duemunk/Async.git`)
+  - Fabric
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
@@ -104,6 +110,8 @@ DEPENDENCIES:
   - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`, branch `xcode7`)
   - TLYShyNavBar
   - TPKeyboardAvoiding (~> 1.2)
+  - TwitterCore
+  - TwitterKit
   - VK-ios-sdk
 
 EXTERNAL SOURCES:
@@ -141,6 +149,7 @@ SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   Async: edb15b1e34181d7c9873ce6b5d6eabc1c99e638b
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
+  Fabric: a9eabe53915e9f1db55a84dd2838737928675878
   FBSDKCoreKit: 75bdd75c980e811db218488d99dd93b7740f4474
   FBSDKLoginKit: 02a9254a4c132412fa03577b0d53e936d068a7fb
   FBSDKShareKit: a42865f20ba2d1cc548c4d0f73ad22cff6377ddb
@@ -163,6 +172,8 @@ SPEC CHECKSUMS:
   SwiftyJSON: ae2d0a3d68025d136602a33c4ee215091ced3e33
   TLYShyNavBar: e0d7b6719a8860144415708bbe8b6fbddd36f419
   TPKeyboardAvoiding: ff1ee4e5a5a0c119b965552af8f183868ea20207
+  TwitterCore: 0a26fb8054bc23d8986344d3dcb6602255b6aec5
+  TwitterKit: 88daaebdb8bfb5847d76d8ae159841248427931d
   VK-ios-sdk: 53e366d221b24cc0ef6f31c6e9dfae5f12eea054
 
 COCOAPODS: 0.38.2

@@ -59,6 +59,8 @@
 		8F16FAF01B6C160E00C80CE0 /* ProfileSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F16FAEE1B6C160E00C80CE0 /* ProfileSettings.swift */; };
 		8F16FAF41B6C193800C80CE0 /* profileSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F16FAF21B6C193800C80CE0 /* profileSettingsCell.swift */; };
 		8F16FAF51B6C193800C80CE0 /* profileSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F16FAF31B6C193800C80CE0 /* profileSettingsCell.xib */; };
+		8F1E1AD31B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1E1AD11B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift */; };
+		8F1E1AD41B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F1E1AD21B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +127,8 @@
 		8F16FAEE1B6C160E00C80CE0 /* ProfileSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettings.swift; sourceTree = "<group>"; };
 		8F16FAF21B6C193800C80CE0 /* profileSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = profileSettingsCell.swift; sourceTree = "<group>"; };
 		8F16FAF31B6C193800C80CE0 /* profileSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = profileSettingsCell.xib; sourceTree = "<group>"; };
+		8F1E1AD11B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = profileSettingsFollowFriendsCell.swift; sourceTree = "<group>"; };
+		8F1E1AD21B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = profileSettingsFollowFriendsCell.xib; sourceTree = "<group>"; };
 		A542343F9A35D2AB55AE2953 /* Pods-Moviethete.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.release.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -274,6 +278,8 @@
 				8F16FAEE1B6C160E00C80CE0 /* ProfileSettings.swift */,
 				8F16FAF21B6C193800C80CE0 /* profileSettingsCell.swift */,
 				8F16FAF31B6C193800C80CE0 /* profileSettingsCell.xib */,
+				8F1E1AD11B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift */,
+				8F1E1AD21B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -304,6 +310,7 @@
 				84E23E421B50268400667AF5 /* Resources */,
 				DE42C36ED7A397C917B0EDBE /* Embed Pods Frameworks */,
 				5650A2D38270482628B2B15F /* Copy Pods Resources */,
+				8F17EED01B6EAAFE00E177B3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -364,6 +371,7 @@
 				84DB4F011B65688E0043459B /* Triangle.xib in Resources */,
 				84E2A7241B62E4A900CF5B1A /* profile_follower.xib in Resources */,
 				84515C441B5C3C0100CF1DE5 /* Log_in.xib in Resources */,
+				8F1E1AD41B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib in Resources */,
 				84F34BC21B5028010017CD2D /* Main.storyboard in Resources */,
 				8F16FAF51B6C193800C80CE0 /* profileSettingsCell.xib in Resources */,
 				84F34BC81B5028010017CD2D /* Images.xcassets in Resources */,
@@ -410,6 +418,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8F17EED01B6EAAFE00E177B3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/Fabric.framework/run\" 5ed73828141bfc6b5cd201384f8aa2e059190876 dcedab5c416825310e93e34b16cff54865084b07f77dd77cd4be19e7540c3ede";
+		};
 		DE42C36ED7A397C917B0EDBE /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -444,6 +465,7 @@
 				84DB4EFF1B6568750043459B /* Triangle.swift in Sources */,
 				843823701B586A54002D2610 /* Log_inVC.swift in Sources */,
 				84F34BCA1B5028010017CD2D /* LikesVC.swift in Sources */,
+				8F1E1AD31B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift in Sources */,
 				84F34BBF1B5028010017CD2D /* AddVC.swift in Sources */,
 				8F16FAF41B6C193800C80CE0 /* profileSettingsCell.swift in Sources */,
 				8462FF991B6558E4002485D9 /* Toucan.swift in Sources */,
@@ -499,9 +521,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"FRAMEWORK_SEARCH_PATHS[arch=*]" = /Users/admin/Desktop/Reviews/Reviews;
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -546,8 +569,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -573,7 +598,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Reviews/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -612,7 +637,7 @@
 					"\"VK_ios_sdk\"",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.biboram.moviethete;
+				PRODUCT_BUNDLE_IDENTIFIER = com.BIBORAM.Moviethete;
 				PRODUCT_NAME = Moviethete;
 				PROVISIONING_PROFILE = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
@@ -631,12 +656,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Reviews/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.biboram.moviethete;
+				PRODUCT_BUNDLE_IDENTIFIER = com.BIBORAM.Moviethete;
 				PRODUCT_NAME = Moviethete;
 				PROVISIONING_PROFILE = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;

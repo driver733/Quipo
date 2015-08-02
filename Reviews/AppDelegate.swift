@@ -7,8 +7,8 @@
 //
 
 import UIKit
-//import Fabric
-//import TwitterKit
+import Fabric
+import TwitterKit
 import OAuthSwift
 import FBSDKCoreKit
 import VK_ios_sdk
@@ -19,7 +19,7 @@ import ParseFacebookUtilsV4
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate
-,GIDSignInDelegate
+//,GIDSignInDelegate
 {
 
     var window: UIWindow?
@@ -41,20 +41,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
         
         
-      //  Fabric.with([Twitter()])
+        Fabric.with([Twitter()])
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         // Initialize sign-in
         var configureError: NSError?
   //      GGLContext.sharedInstance().configureWithError(&configureError)
         assert(configureError == nil, "Error configuring Google services: \(configureError)")
         
-        GIDSignIn.sharedInstance().delegate = self
+     //   GIDSignIn.sharedInstance().delegate = self
         
         
         PFTwitterUtils.initializeWithConsumerKey("IeJhyNYLW5bgaZtrQTJ9Rq7Vb",  consumerSecret:"Ze2eFiBSVHA1dIOM8bu2gsK2cBO9Maw4nmqVzbJUv9B82G9vaw")
         
         let isLoggedIn = PFUser.currentUser()
-        
         
         let storyboardId = isLoggedIn != nil ? "main" : "login"
         self.window?.rootViewController = self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier(storyboardId)
@@ -87,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        GIDSignIn.sharedInstance().handleURL(url, sourceApplication: sourceApplication, annotation: annotation)
+  //      GIDSignIn.sharedInstance().handleURL(url, sourceApplication: sourceApplication, annotation: annotation)
         FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
         VKSdk.processOpenURL(url, fromApplication: sourceApplication)
         if (url.host == "oauth-callback") {
@@ -99,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     }
     
  
-    
+    /*
     
     func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!, withError error: NSError!) {
         if (error != nil){
@@ -117,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     }
     
     
-    
+    */
     
 
 

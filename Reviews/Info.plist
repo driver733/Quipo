@@ -24,7 +24,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>0.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -77,7 +77,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>4</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -88,9 +88,9 @@
 				<key>KitInfo</key>
 				<dict>
 					<key>consumerKey</key>
-					<string>GNSW1HMqI7DnZBcYHmyV7yAjw</string>
+					<string>0jmaVlfn8HXzeQNX3DJWWMV81</string>
 					<key>consumerSecret</key>
-					<string>zGJXzx1z3DVhrA3scRy43QeXC96sOkb11k3iSCsu4tBiFWICUB</string>
+					<string>GQ3tew5o4qGWVMYlAeX69L2Et00hlULBxWvdJDkMfNwG8LRRlt</string>
 				</dict>
 				<key>KitName</key>
 				<string>Twitter</string>
@@ -103,6 +103,12 @@
 	<string>TestSheesh</string>
 	<key>InstagramAppRedirectURL</key>
 	<string>oauth-swift://oauth-callback/instagram</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>vkauthorize</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

@@ -7,8 +7,20 @@
 //
 
 import UIKit
-import Parse
 import VK_ios_sdk
+import TwitterKit
+import OAuthSwift
+import SwiftyJSON
+import VK_ios_sdk
+import InstagramKit
+import FBSDKCoreKit
+import FBSDKLoginKit
+import FBSDKShareKit
+import KeychainAccess
+import SwiftValidator
+import FontBlaster
+import Parse
+import ParseFacebookUtilsV4
 
 class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -18,6 +30,7 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
         super.viewDidLoad()
         
         tableView.registerNib(UINib(nibName: "profileSettingsCell", bundle: nil), forCellReuseIdentifier: "profileSettingsCell")
+        tableView.registerNib(UINib(nibName: "profileSettingsFollowFriendsCell", bundle: nil), forCellReuseIdentifier: "profileSettingsFollowFriendsCell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension;
@@ -33,49 +46,104 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
     
 
     
-    /*
-    @IBAction func segu goToRoot: UIStoryboardSegue segue {
-   //  @IBAction func signUp_button(sender: AnyObject) {
-   
-    }
-    */
-    
-    
-    /*
-    override func segueForUnwindingToViewController(toViewController: UIViewController, fromViewController: UIViewController, identifier: String?) -> UIStoryboardSegue {
-        
-    }
-    */
-    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("profileSettingsCell", forIndexPath: indexPath) as! profileSettingsCell
         
-        if indexPath.row == 0 {
-            cell.tempLabel.text = "Log Out"
+        if indexPath.section == 0 {
+          let cell = tableView.dequeueReusableCellWithIdentifier("profileSettingsFollowFriendsCell", forIndexPath: indexPath) as! profileSettingsFollowFriendsCell
+            if indexPath.row == 0 {
+                if FBSDKAccessToken.currentAccessToken() != nil {
+                    cell.socialNetworkIcon.image = UIImage(named: "facebook")
+                    let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: nil)
+                    graphRequest.startWithCompletionHandler({
+                        (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
+                        if error == nil {
+                            let json = JSON(result)
+                            var numberOfFacebookFriends: Int = Int()
+                            for (index: String, subJson: JSON) in json["data"] {
+                                numberOfFacebookFriends++
+                            }
+                            cell.label.text = "\(numberOfFacebookFriends) Facebook Friends"
+                          
+                           
+                        }
+                        else {
+                            // process error
+                        }
+                    })
+                }
+                return cell
+            }
+            
         }
         
+        if indexPath.section == 1 {
+            let cell = tableView.dequeueReusableCellWithIdentifier("profileSettingsCell", forIndexPath: indexPath) as! profileSettingsCell
+            cell.tempLabel.text = "Log Out"
+            return cell
+        }
         
+        let cell = UITableViewCell()
         return cell
     }
     
-    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        if indexPath.row == 0 {
-            PFUser.logOutInBackground()
+        if indexPath.section == 1 {
+            PFUser.logOut()
             VKSdk.forceLogout()
+            let fb = FBSDKLoginManager()
+            fb.logOut()
+            Twitter.sharedInstance().logOut()
             performSegueWithIdentifier("didLogOut", sender: nil)
         }
+        
+        
     }
     
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        var numberOfRows = 0
+        
+        switch section {
+        case 0:
+            if (FBSDKAccessToken.currentAccessToken() != nil) {
+                numberOfRows++
+            }
+            if VKSdk.isLoggedIn() {
+                numberOfRows++
+            }
+            break
+            
+        case 1:
+            numberOfRows++
+            
+        default:
+            break
+        }
+        
+        
+        
+        
+        
+        return numberOfRows
     }
 
     
     
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if cell.isKindOfClass(profileSettingsFollowFriendsCell) {
+           let cell = cell as! profileSettingsFollowFriendsCell
+           cell.separatorInset.left = cell.label.frame.origin.x
+        }
+    }
+    
+    
+    
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 3
+    }
     
     
     /*

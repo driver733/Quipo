@@ -3,6 +3,9 @@ platform :ios, '8.4'
 use_frameworks!
 
 target 'Moviethete' do
+    pod 'Fabric'
+    pod 'TwitterKit'
+    pod 'TwitterCore'
     pod 'Google/SignIn'
     pod 'Parse', '~> 1.7'
     pod 'ParseUI', '~> 1.1'

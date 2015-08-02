@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import TwitterKit
+import TwitterKit
 import OAuthSwift
 import SwiftyJSON
 import VK_ios_sdk
@@ -209,6 +209,9 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
         let currentUser = PFUser.currentUser()
         if currentUser != nil {
+            
+            
+        
         
        //     currentUser!.setObject(FBSDKAccessToken.currentAccessToken().tokenString, forKey: "facebookID")
        //     currentUser!.saveInBackground()
@@ -216,6 +219,8 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         } else {
             // Show the signup or login screen
         }
+        
+        
         
         
     }
@@ -353,9 +358,9 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     
     func SignUp(){
-        var user = PFUser()
+        let user = PFUser()
         
-        var alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         
         if !(tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! tempCell).textfield.text!.isEmpty {
@@ -529,17 +534,16 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     @IBAction func buttonTwitterLogin(sender: AnyObject) {
         
-        PFTwitterUtils.logInWithBlock {
-            (user: PFUser?, error: NSError?) -> Void in
-            if user != nil {
+        
+        Twitter.sharedInstance().logInWithCompletion { session, error in
+            if (session != nil) {
                 self.performSegueWithIdentifier("did_log_in", sender: nil)
             } else {
-                print("Uh oh. The user cancelled the Twitter login.")
+                print("error: \(error.localizedDescription)");
             }
         }
+
     }
-    
-    
     
     
     @IBAction func loginWithInstagram(sender: AnyObject) {
@@ -683,13 +687,13 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     @IBAction func loginWithVkontakte(sender: AnyObject) {
         VKSdk.initializeWithDelegate(self, andAppId: "4991711")
-        if VKSdk.wakeUpSession() {
-        }
-        else {
-            VKSdk.authorize(["friends", "profile_info", "offline", "wall"])
-        }
-        
+        VKSdk.authorize(["friends", "profile_info", "offline", "wall"])
         if VKSdk.isLoggedIn() {
+        
+    
+        
+     
+       
             let user = PFUser()
             
             let vkReq = VKApi.users().get()
@@ -717,38 +721,10 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
                 
             }
             */
-        }
         
-        /*
-           // let audioReq: VKRequest = VKRequest(method: "friends.getAppUsers", andParameters: nil, andHttpMethod: "GET")
-        let audioReq = VKApi.users().get()
-            audioReq.executeWithResultBlock({
-                response in
-                let json = JSON(response.json)
-                for (key, subJson) in json[0] {
-                    if let title = subJson[key].string {
-                        println(title)
-                    }
-                }
-           //     println("//////////////////")
-                if let title = json[0]["first_name"].string {
-                    println(title)
-                }
-                if let title = json[0]["last_name"].string {
-                    println(title)
-                }
-                if let title = json[0][1].string {
-                    println(title)
-                }
-                else{
-                //    println("ID - FAIL!")
-                }
-                println(response.json)
-                },
-                errorBlock: {(error:NSError!) -> Void in
-                    println(error.localizedDescription)
-            })
-        */
+        
+
+        }
         
         
     }
@@ -765,7 +741,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     }
     
     func vkSdkIsBasicAuthorization() -> Bool {
-        return true
+        return false
     }
     
     func vkSdkTokenHasExpired(expiredToken: VKAccessToken!) {
@@ -782,7 +758,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     func vkSdkNeedCaptchaEnter(captchaError: VKError!) {
         let vc = VKCaptchaViewController.captchaControllerWithError(captchaError)
-        vc.presentIn(self)
+        self.presentViewController(vc, animated: true, completion: nil)
     }
     
     
