@@ -56,6 +56,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         let isLoggedIn = PFUser.currentUser()
         
         let storyboardId = isLoggedIn != nil ? "main" : "login"
+        
+      
+        
         self.window?.rootViewController = self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier(storyboardId)
         
         

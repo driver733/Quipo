@@ -10,6 +10,10 @@ import UIKit
 import TLYShyNavBar
 import Async
 import SwiftyJSON
+import FBSDKCoreKit
+import FBSDKLoginKit
+import FBSDKShareKit
+import Parse
 
 extension UIViewController {
     
@@ -30,6 +34,7 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet var tableView: UITableView!
     var arrayOfPosts: [Post] = [Post]()
 
+    var fbProfile = false
     
     override func viewDidLoad() {
          super.viewDidLoad()
@@ -43,7 +48,8 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
          shyNavBarManager.scrollView = self.tableView;
         
         
-        
+      //  FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
+      //  NSNotificationCenter.defaultCenter().addObserver(self, selector: "fb:", name: FBSDKProfileDidChangeNotification, object: nil)
         
         
         
@@ -113,8 +119,16 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                    // {
                         if (!tableView.dragging && !tableView.decelerating)
                         {
-                         //   cell.profileImage.setImageWithUrl(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")!, placeHolderImage: nil)
-                            cell.profileImage.sd_setImageWithURL(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")!, placeholderImage: getImageWithColor(.grayColor(), size: cell.profileImage.bounds.size))
+                       
+                   
+                         
+                          
+                      cell.profileImage.sd_setImageWithURL(NSURL(string: PFUser.currentUser()!.objectForKey("smallProfileImage") as! String), placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size))
+        
+                        cell.profileImage.image = Toucan(image: cell.profileImage.image!).maskWithEllipse().image
+                            
+                            
+                            
                             return cell
                                            }
                     return cell
@@ -137,22 +151,30 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
   //  }
     
     
+    func fb(notif: NSNotification) {
+        fbProfile = true
+        tableView.reloadData()
+    }
+    
+    
     func loadImagesForOnscreenRows(){
         if (arrayOfPosts.count > 0){
     let visiblePaths:NSArray = tableView.indexPathsForVisibleRows!
         for indexPath in visiblePaths {
     let post = arrayOfPosts[indexPath.row]
             if (indexPath.row % 2 == 0){
-                Async.background(){
+              
                 let cell:topCell = self.tableView.cellForRowAtIndexPath(indexPath as! NSIndexPath) as! topCell
-                cell.profileImage.sd_setImageWithURL(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")!, placeholderImage: self.getImageWithColor(.grayColor(), size: cell.profileImage.bounds.size))
-                }
+           
+                    cell.profileImage.sd_setImageWithURL(NSURL(string: PFUser.currentUser()!.objectForKey("smallProfileImage") as! String), placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size))
+                    cell.profileImage.image = Toucan(image: cell.profileImage.image!).maskWithEllipse().image
+               
+            
+                
             }
            else{
-                   Async.background(){
             let cell: contentCell = self.tableView.cellForRowAtIndexPath(indexPath as! NSIndexPath) as! contentCell
                   cell.posterImage.sd_setImageWithURL(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg")!, placeholderImage: self.getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size))
-                    }
             }
             }
         }

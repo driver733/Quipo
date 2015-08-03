@@ -155,7 +155,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cLR-qo-X5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="CZt-jr-AlF" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1598" y="-228"/>
         </scene>
@@ -257,7 +256,6 @@
                     </tableView>
                     <connections>
                         <outlet property="tableView" destination="LVh-g4-5F9" id="ddR-id-Fv8"/>
-                        <segue destination="CZt-jr-AlF" kind="unwind" identifier="didLogOut" unwindAction="didLogOut:" id="lbg-bz-lLC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xav-YW-mmV" userLabel="First Responder" sceneMemberID="firstResponder"/>

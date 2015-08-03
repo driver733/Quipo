@@ -159,7 +159,6 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     override func viewDidLoad() {
         super.viewDidLoad()
         FontBlaster.blast()
-        FontBlaster.debugEnabled = true
         NSBundle.mainBundle().loadNibNamed("Log_in", owner: self, options: nil)
         
         tableView_sign_in.registerNib(UINib(nibName: "tempCell", bundle: nil), forCellReuseIdentifier: "tempCell")
@@ -206,25 +205,26 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
         
         
+        /*
+        let user = PFUser()
+        user.username = "sf"
+        user.password = "sdf"
+        user.setObject("sfd", forKey: "smallProfileImage")
+        user.signUpInBackground()
+        user.save()
+        */
         
-        let currentUser = PFUser.currentUser()
-        if currentUser != nil {
-            
-            
-        
-        
-       //     currentUser!.setObject(FBSDKAccessToken.currentAccessToken().tokenString, forKey: "facebookID")
-       //     currentUser!.saveInBackground()
-           
-        } else {
-            // Show the signup or login screen
-        }
-        
-        
-        
-        
+       
+
+        FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "fb:", name: FBSDKProfileDidChangeNotification, object: nil)
     }
 
+    
+    
+    
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -242,8 +242,6 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     
     
     func validationSuccessful() {
-        //  performSegueWithIdentifier("did_log_in", sender: nil)
-        print("success")
     }
     
     
@@ -640,10 +638,7 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         }
     }
     
-    func getfbFriendList(user: PFUser){
-   
-    }
-    
+  
     
     @IBAction func loginWithFacebook(sender: AnyObject) {
         
@@ -652,30 +647,8 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
     fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"], handler: {
         (result: FBSDKLoginManagerLoginResult!, error:NSError!) -> Void in
         if error == nil && result.token != nil {
-            PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken(), block: {
-                    (user: PFUser?, error: NSError?) -> Void in
-                    if user != nil {
-                    self.performSegueWithIdentifier("did_log_in", sender: nil)
-                    let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: nil)
-                        graphRequest.startWithCompletionHandler({
-                            (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
-                            if error == nil {
-                                let json = JSON(result)
-                                print(json)
-                                if let fbID = json["data"][0]["id"].string {
-                                  // friends who have installed the Moviethete
-                                }
-                            }
-                            else {
-                                // process error
-                            }
-                        })
-
-                    }
-                    else {
-                        print("Uh oh. There was an error logging in.")
-                    }
-                })
+            
+        
         }
         else {
             // process error
@@ -684,6 +657,50 @@ class Log_inVC: UIViewController, UITableViewDataSource, UITableViewDelegate, VK
         
     }
     
+    
+    
+    
+    func fb(notif:NSNotification){
+        if FBSDKAccessToken.currentAccessToken() != nil {
+        PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken(), block: {
+            (user: PFUser?, error: NSError?) -> Void in
+            if let user = user {
+                if user.isNew {
+                    let smallProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
+                    let bigProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(600, 600))
+                    user.setObject("https://graph.facebook.com/\(smallProfileImage)", forKey: "smallProfileImage")
+                    user.setObject("https://graph.facebook.com/\(bigProfileImage)", forKey: "bigProfileImage")
+                    PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken())
+                    
+
+                }
+                
+                let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: nil)
+                graphRequest.startWithCompletionHandler({
+                    (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
+                    if error == nil {
+                        let json = JSON(result)
+                        print(json)
+                        if let fbID = json["data"][0]["id"].string {
+                            // friends who have installed the Moviethete
+                        }
+                        self.performSegueWithIdentifier("did_log_in", sender: nil)
+                        
+                    }
+                    else {
+                        // process error
+                    }
+                })
+                
+            }
+            else {
+                print("Uh oh. There was an error logging in.")
+            }
+        })
+        
+    }
+
+    }
     
     @IBAction func loginWithVkontakte(sender: AnyObject) {
         VKSdk.initializeWithDelegate(self, andAppId: "4991711")

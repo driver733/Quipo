@@ -61,6 +61,7 @@
 		8F16FAF51B6C193800C80CE0 /* profileSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F16FAF31B6C193800C80CE0 /* profileSettingsCell.xib */; };
 		8F1E1AD31B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1E1AD11B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift */; };
 		8F1E1AD41B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F1E1AD21B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib */; };
+		8FC162111B6FF124000820A2 /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC162101B6FF124000820A2 /* Singleton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -129,6 +130,7 @@
 		8F16FAF31B6C193800C80CE0 /* profileSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = profileSettingsCell.xib; sourceTree = "<group>"; };
 		8F1E1AD11B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = profileSettingsFollowFriendsCell.swift; sourceTree = "<group>"; };
 		8F1E1AD21B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = profileSettingsFollowFriendsCell.xib; sourceTree = "<group>"; };
+		8FC162101B6FF124000820A2 /* Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Singleton.swift; sourceTree = "<group>"; };
 		A542343F9A35D2AB55AE2953 /* Pods-Moviethete.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.release.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -205,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				8438236E1B586A54002D2610 /* Log_inVC.swift */,
+				8FC162101B6FF124000820A2 /* Singleton.swift */,
 				84DB4EFE1B6568750043459B /* Triangle.swift */,
 				84DB4F001B65688E0043459B /* Triangle.xib */,
 				84515C431B5C3C0100CF1DE5 /* Log_in.xib */,
@@ -470,6 +473,7 @@
 				8F16FAF41B6C193800C80CE0 /* profileSettingsCell.swift in Sources */,
 				8462FF991B6558E4002485D9 /* Toucan.swift in Sources */,
 				84F34BD21B5028100017CD2D /* WebViewVC.swift in Sources */,
+				8FC162111B6FF124000820A2 /* Singleton.swift in Sources */,
 				84F34BD11B5028100017CD2D /* ProfileVC.swift in Sources */,
 				84F34BCD1B5028010017CD2D /* topCell.swift in Sources */,
 				8438237B1B5906E6002D2610 /* tempCell.swift in Sources */,
@@ -635,7 +639,6 @@
 					"\"TPKeyboardAvoiding\"",
 					"-framework",
 					"\"VK_ios_sdk\"",
-					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.BIBORAM.Moviethete;
 				PRODUCT_NAME = Moviethete;
@@ -662,6 +665,107 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-undefined",
+					dynamic_lookup,
+					"-l\"GGLCore\"",
+					"-l\"GGLSignIn\"",
+					"-l\"GIDExShared\"",
+					"-l\"GSDK_Overload\"",
+					"-l\"GTMOAuth2_external\"",
+					"-l\"GTMOAuth2_internal\"",
+					"-l\"GTMSessionFetcher_core\"",
+					"-l\"GTMSessionFetcher_full\"",
+					"-l\"GTMStackTrace\"",
+					"-l\"GTM_AddressBook\"",
+					"-l\"GTM_DebugUtils\"",
+					"-l\"GTM_GTMURLBuilder\"",
+					"-l\"GTM_KVO\"",
+					"-l\"GTM_NSDictionary+URLArguments\"",
+					"-l\"GTM_NSScannerJSON\"",
+					"-l\"GTM_NSStringHTML\"",
+					"-l\"GTM_NSStringXML\"",
+					"-l\"GTM_Regex\"",
+					"-l\"GTM_RoundedRectPath\"",
+					"-l\"GTM_StringEncoding\"",
+					"-l\"GTM_SystemVersion\"",
+					"-l\"GTM_UIFont+LineHeight\"",
+					"-l\"GTM_core\"",
+					"-l\"GTM_iPhone\"",
+					"-l\"OpenInChrome\"",
+					"-l\"SignIn\"",
+					"-l\"c++\"",
+					"-l\"z\"",
+					"-framework",
+					"\"AFNetworking\"",
+					"-framework",
+					"\"Accounts\"",
+					"-framework",
+					"\"AddressBook\"",
+					"-framework",
+					"\"Async\"",
+					"-framework",
+					"\"Bolts\"",
+					"-framework",
+					"\"CoreData\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"FBSDKCoreKit\"",
+					"-framework",
+					"\"FBSDKLoginKit\"",
+					"-framework",
+					"\"FBSDKShareKit\"",
+					"-framework",
+					"\"Fabric\"",
+					"-framework",
+					"\"FontBlaster\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"InstagramKit\"",
+					"-framework",
+					"\"KeychainAccess\"",
+					"-framework",
+					"\"OAuthSwift\"",
+					"-framework",
+					"\"Parse\"",
+					"-framework",
+					"\"ParseFacebookUtilsV4\"",
+					"-framework",
+					"\"ParseUI\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"SDWebImage\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"Social\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SwiftValidator\"",
+					"-framework",
+					"\"SwiftyJSON\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"TLYShyNavBar\"",
+					"-framework",
+					"\"TPKeyboardAvoiding\"",
+					"-framework",
+					"\"TwitterCore\"",
+					"-framework",
+					"\"TwitterKit\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"VK_ios_sdk\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.BIBORAM.Moviethete;
 				PRODUCT_NAME = Moviethete;
 				PROVISIONING_PROFILE = "";

@@ -87,16 +87,17 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         if indexPath.section == 1 {
             PFUser.logOut()
             VKSdk.forceLogout()
-            let fb = FBSDKLoginManager()
-            fb.logOut()
+            FBSDKLoginManager().logOut()
             Twitter.sharedInstance().logOut()
-            performSegueWithIdentifier("didLogOut", sender: nil)
+            self.presentViewController((self.storyboard?.instantiateViewControllerWithIdentifier("login"))!, animated: true, completion: nil)
+            
         }
-        
+       
         
     }
     
