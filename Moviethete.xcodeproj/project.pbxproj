@@ -29,8 +29,6 @@
 		84CF5F081B544C4F002C351D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF5F071B544C4F002C351D /* Security.framework */; };
 		84CF5F0A1B544C60002C351D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF5F091B544C60002C351D /* SystemConfiguration.framework */; };
 		84CF5F0C1B544C72002C351D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF5F0B1B544C72002C351D /* UIKit.framework */; };
-		84DB4EFF1B6568750043459B /* Triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB4EFE1B6568750043459B /* Triangle.swift */; };
-		84DB4F011B65688E0043459B /* Triangle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84DB4F001B65688E0043459B /* Triangle.xib */; };
 		84DB4F051B68EC2D0043459B /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84DB4F021B68EC2D0043459B /* Bolts.framework */; };
 		84DB4F091B68EC690043459B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84DB4F081B68EC690043459B /* AudioToolbox.framework */; };
 		84DB4F0B1B68EC730043459B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84DB4F0A1B68EC730043459B /* CFNetwork.framework */; };
@@ -71,9 +69,9 @@
 		8008C146C31E694AC587DB1B /* Pods-Reviews.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reviews.release.xcconfig"; path = "Pods/Target Support Files/Pods-Reviews/Pods-Reviews.release.xcconfig"; sourceTree = "<group>"; };
 		840491551B5518BE009A0604 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8417EE721B502AB1006B0ACF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8438236E1B586A54002D2610 /* Log_inVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log_inVC.swift; sourceTree = "<group>"; };
+		8438236E1B586A54002D2610 /* Log_inVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Log_inVC.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		843823781B590466002D2610 /* tempCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = tempCell.xib; sourceTree = "<group>"; };
-		8438237A1B5906E6002D2610 /* tempCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = tempCell.swift; path = ../tempCell.swift; sourceTree = "<group>"; };
+		8438237A1B5906E6002D2610 /* tempCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = tempCell.swift; path = ../tempCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84472BF71B6962A400093FDE /* bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
 		84515C431B5C3C0100CF1DE5 /* Log_in.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Log_in.xib; sourceTree = "<group>"; };
 		845D0B7C1B64089800B4B6EE /* profileUserReviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = profileUserReviews.swift; sourceTree = "<group>"; };
@@ -93,8 +91,6 @@
 		84CF5F071B544C4F002C351D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		84CF5F091B544C60002C351D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		84CF5F0B1B544C72002C351D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		84DB4EFE1B6568750043459B /* Triangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Triangle.swift; sourceTree = "<group>"; };
-		84DB4F001B65688E0043459B /* Triangle.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Triangle.xib; sourceTree = "<group>"; };
 		84DB4F021B68EC2D0043459B /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		84DB4F081B68EC690043459B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		84DB4F0A1B68EC730043459B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -108,8 +104,8 @@
 		84E23E6D1B5026C900667AF5 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
 		84E2A7231B62E4A900CF5B1A /* profile_follower.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = profile_follower.xib; sourceTree = "<group>"; };
 		84E2A7281B62EA3000CF5B1A /* profile_follower_Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = profile_follower_Cell.swift; sourceTree = "<group>"; };
-		84F34BAC1B5028010017CD2D /* AddVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddVC.swift; sourceTree = "<group>"; };
-		84F34BAD1B5028010017CD2D /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		84F34BAC1B5028010017CD2D /* AddVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AddVC.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		84F34BAD1B5028010017CD2D /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84F34BB01B5028010017CD2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		84F34BB21B5028010017CD2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		84F34BB31B5028010017CD2D /* contentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = contentCell.swift; sourceTree = "<group>"; };
@@ -208,8 +204,6 @@
 			children = (
 				8438236E1B586A54002D2610 /* Log_inVC.swift */,
 				8FC162101B6FF124000820A2 /* Singleton.swift */,
-				84DB4EFE1B6568750043459B /* Triangle.swift */,
-				84DB4F001B65688E0043459B /* Triangle.xib */,
 				84515C431B5C3C0100CF1DE5 /* Log_in.xib */,
 				8438237A1B5906E6002D2610 /* tempCell.swift */,
 				843823781B590466002D2610 /* tempCell.xib */,
@@ -371,7 +365,6 @@
 			files = (
 				8493D66E1B5D45DC005D37E0 /* NanumPenScript-Regular.ttf in Resources */,
 				843823791B590466002D2610 /* tempCell.xib in Resources */,
-				84DB4F011B65688E0043459B /* Triangle.xib in Resources */,
 				84E2A7241B62E4A900CF5B1A /* profile_follower.xib in Resources */,
 				84515C441B5C3C0100CF1DE5 /* Log_in.xib in Resources */,
 				8F1E1AD41B6E6EC000659F12 /* profileSettingsFollowFriendsCell.xib in Resources */,
@@ -465,7 +458,6 @@
 				84F34BC51B5028010017CD2D /* DetailedPostVC.swift in Sources */,
 				8F16FAF01B6C160E00C80CE0 /* ProfileSettings.swift in Sources */,
 				84E2A7291B62EA3000CF5B1A /* profile_follower_Cell.swift in Sources */,
-				84DB4EFF1B6568750043459B /* Triangle.swift in Sources */,
 				843823701B586A54002D2610 /* Log_inVC.swift in Sources */,
 				84F34BCA1B5028010017CD2D /* LikesVC.swift in Sources */,
 				8F1E1AD31B6E6EC000659F12 /* profileSettingsFollowFriendsCell.swift in Sources */,
@@ -770,6 +762,8 @@
 				PRODUCT_NAME = Moviethete;
 				PROVISIONING_PROFILE = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = bridge.h;
 			};
 			name = Release;
 		};

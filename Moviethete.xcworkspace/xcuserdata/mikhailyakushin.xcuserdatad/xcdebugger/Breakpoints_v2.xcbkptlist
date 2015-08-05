@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Reviews/Log_inVC.swift"
-            timestampString = "460338957.60283"
+            timestampString = "460471159.070231"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "644"
-            endingLineNumber = "644"
+            startingLineNumber = "638"
+            endingLineNumber = "638"
             landmarkName = "loginWithFacebook(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Reviews/Log_inVC.swift"
-            timestampString = "460338957.60283"
+            timestampString = "460471159.070231"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "647"
-            endingLineNumber = "647"
+            startingLineNumber = "641"
+            endingLineNumber = "641"
             landmarkName = "loginWithFacebook(_:)"
             landmarkType = "5">
             <Locations>

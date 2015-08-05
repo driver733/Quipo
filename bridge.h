@@ -10,6 +10,7 @@
 #define _bridge_h
 
 #import <GoogleSignIn/GoogleSignIn.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+
 
 #endif

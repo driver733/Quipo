@@ -120,14 +120,29 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         if (!tableView.dragging && !tableView.decelerating)
                         {
                        
-                   
-                         
+                          let url = NSURL(string: PFUser.currentUser()!.objectForKey("smallProfileImage") as! String)
+                          let placeholderImage = getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size)
+                          /*
+                          cell.profileImage.sd_setImageWithURL(url!, placeholderImage: placeholderImage, completed: {(
+                            image: UIImage!, error: NSError!, cacheType: SDImageCacheType.None, url: NSURL!) -> Void in
+                            Toucan.Mask.maskImageWithEllipse(cell.profileImage.image!)
+                            
+                            })
+                          */
+               //           cell.profileImage.sd_setImageWithURL(url, placeholderImage: nil, options: sd)
                           
-                      cell.profileImage.sd_setImageWithURL(NSURL(string: PFUser.currentUser()!.objectForKey("smallProfileImage") as! String), placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size))
-        
-                        cell.profileImage.image = Toucan(image: cell.profileImage.image!).maskWithEllipse().image
-                            
-                            
+                          
+                        //  cell.profileImage.sd_setImageWithURL(url, placeholderImage: placeholderImage, options:  , completed:{(
+                        //      image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+                              
+                        //  })
+                          
+                          
+                      cell.profileImage.sd_setImageWithURL(url, placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size))
+  
+                       // cell.profileImage.image = Toucan(image: cell.profileImage.image!).maskWithEllipse().image
+                        Toucan.Mask.maskImageWithEllipse(cell.profileImage.image!)
+
                             
                             return cell
                                            }
