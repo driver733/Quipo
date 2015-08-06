@@ -1,5 +1,5 @@
 //
-//  profileUserReviews.swift
+//  ProfileUserReviews.swift
 //  Moviethete
 //
 //  Created by Admin on 25/07/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class profileUserReviews: UITableViewCell {
+class ProfileUserReviews: UITableViewCell {
 
     @IBOutlet weak var userReview: UILabel!
     @IBOutlet weak var movieName: UILabel!

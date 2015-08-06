@@ -24,27 +24,22 @@ import Async
 
 
 
-class Log_inVC: UIViewController
+class LogInVC: UIViewController
 {
    
-    @IBOutlet weak var tableView_sign_in: UITableView!
-    @IBOutlet weak var tableView_sign_up: UITableView!
-    @IBOutlet weak var sign_in_or_up: UIButton!
-    @IBOutlet weak var OR_label: UILabel!
-    @IBOutlet weak var signIn_button: UIButton!
-    @IBOutlet weak var signUp_button: UIButton!
-    @IBOutlet weak var share_thoughts_label: UILabel!
-    @IBOutlet weak var signUp_triangle: UIView!
-    @IBOutlet weak var signIn_triangle: UIView!
+    @IBOutlet weak var signInTableView: UITableView!
+    @IBOutlet weak var signUpTableView: UITableView!
+    @IBOutlet weak var signInOrUp: UIButton!
+    @IBOutlet weak var orLabel: UILabel!
+    @IBOutlet weak var signInButton: UIButton!
+    @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var shareThoughtsLabel: UILabel!
+    @IBOutlet weak var signUpTriangle: UIView!
+    @IBOutlet weak var signInTriangle: UIView!
     
+  
     
-    @IBOutlet weak var fb: UIButton!
-    @IBOutlet weak var vk: UIButton!
-    @IBOutlet weak var i: UIButton!
-    @IBOutlet weak var g: UIButton!
-    @IBOutlet weak var t: UIButton!
-    
-  @IBAction func loginWithGoogle(sender: AnyObject) {
+    @IBAction func loginWithGoogle(sender: AnyObject) {
     GIDSignIn.sharedInstance().allowsSignInWithBrowser = false
     GIDSignIn.sharedInstance().uiDelegate = self
     GIDSignIn.sharedInstance().clientID = "1095542523991-7s9j46knl20bhge5ggv6ctbn0be6bf0f.apps.googleusercontent.com"
@@ -56,26 +51,30 @@ class Log_inVC: UIViewController
     @IBAction func didLogOut(segue: UIStoryboardSegue) {
     }
     
-    @IBAction func signUp_button(sender: AnyObject) {
-        tableView_sign_in.hidden = true
-        tableView_sign_up.hidden = false
-        signUp_triangle.hidden = false
-        signIn_triangle.hidden = true
-        OR_label.text = "or Sign Up with:"
-        share_thoughts_label.text = "Sign Up \n and start sharing your thoughts"
-        toggleTableViewsUserInteraction()
+    @IBAction func signUpButton(sender: AnyObject) {
+      signInTableView.hidden = true
+      signUpTableView.hidden = false
+      signUpTableViewUserInteraction(true)
+      signInTableViewUserInteraction(false)
+      signUpTriangle.hidden = false
+      signInTriangle.hidden = true
+      orLabel.text = "or Sign Up with:"
+      shareThoughtsLabel.text = "Sign Up \n and start sharing your thoughts"
+      
     }
-    @IBAction func signIn_button(sender: AnyObject) {
-        tableView_sign_up.hidden = true
-        tableView_sign_in.hidden = false
-        signUp_triangle.hidden = true
-        signIn_triangle.hidden = false
-        OR_label.text = "or Sign In with:"
-        share_thoughts_label.text = "Sign In \n and start sharing your thoughts"
-        toggleTableViewsUserInteraction()
+    @IBAction func signInButton(sender: AnyObject) {
+      signUpTableView.hidden = true
+      signInTableView.hidden = false
+      signUpTableViewUserInteraction(false)
+      signInTableViewUserInteraction(true)
+      signUpTriangle.hidden = true
+      signInTriangle.hidden = false
+      orLabel.text = "or Sign In with:"
+      shareThoughtsLabel.text = "Sign In \n and start sharing your thoughts"
+    
     }
     
-    @IBAction func login_start(sender: AnyObject) {
+    @IBAction func startLogin(sender: AnyObject) {
         validator.validate(self)
     }
     
@@ -92,81 +91,68 @@ class Log_inVC: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         FontBlaster.blast()
-        NSBundle.mainBundle().loadNibNamed("Log_in", owner: self, options: nil)
+        NSBundle.mainBundle().loadNibNamed("LogIn", owner: self, options: nil)
         
-        tableView_sign_in.registerNib(UINib(nibName: "tempCell", bundle: nil), forCellReuseIdentifier: "tempCell")
-        tableView_sign_in.delegate = self
-        tableView_sign_in.dataSource = self
-        tableView_sign_in.rowHeight = UITableViewAutomaticDimension;
-        tableView_sign_in.estimatedRowHeight = 44.0;
+        signInTableView.registerNib(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
+        signInTableView.delegate = self
+        signInTableView.dataSource = self
+        signInTableView.rowHeight = UITableViewAutomaticDimension;
+        signInTableView.estimatedRowHeight = 44.0;
         
-        tableView_sign_up.registerNib(UINib(nibName: "tempCell", bundle: nil), forCellReuseIdentifier: "tempCell")
-        tableView_sign_up.delegate = self
-        tableView_sign_up.dataSource = self
-        tableView_sign_up.rowHeight = UITableViewAutomaticDimension;
-        tableView_sign_up.estimatedRowHeight = 44.0;
-        tableView_sign_up.hidden = true
+        signUpTableView.registerNib(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
+        signUpTableView.delegate = self
+        signUpTableView.dataSource = self
+        signUpTableView.rowHeight = UITableViewAutomaticDimension;
+        signUpTableView.estimatedRowHeight = 44.0;
+        signUpTableView.hidden = true
     
-        OR_label.font = UIFont(name: "Nanum Pen", size: OR_label.font.pointSize)
-        signIn_button.titleLabel?.font = UIFont(name: "Nanum Pen", size: signIn_button.titleLabel!.font.pointSize)
-        signUp_button.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUp_button.titleLabel!.font.pointSize)
+        orLabel.font = UIFont(name: "Nanum Pen", size: orLabel.font.pointSize)
+        signInButton.titleLabel?.font = UIFont(name: "Nanum Pen", size: signInButton.titleLabel!.font.pointSize)
+        signUpButton.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
   
-        sign_in_or_up.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUp_button.titleLabel!.font.pointSize)
+        signInOrUp.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
         
-        share_thoughts_label.text = "Sign In \n  and start sharing your thoughts"
-        share_thoughts_label.font = UIFont(name: "Nanum Pen", size: share_thoughts_label.font.pointSize)
-        share_thoughts_label.numberOfLines = 0
+        shareThoughtsLabel.text = "Sign In \n  and start sharing your thoughts"
+        shareThoughtsLabel.font = UIFont(name: "Nanum Pen", size: shareThoughtsLabel.font.pointSize)
+        shareThoughtsLabel.numberOfLines = 0
       
-        disableSignUpTableViewUserInteraction()
-      
-        signIn_triangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
-        signUp_triangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
-        signUp_triangle.hidden = true
+        signInTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
+        signUpTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
+        signUpTriangle.hidden = true
       
         FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "fb:", name: FBSDKProfileDidChangeNotification, object: nil)
     }
 
   
-  func toggleTableViewsUserInteraction(){
-    
-    for var section = 0; section < tableView_sign_in.numberOfSections; ++section {
-      for var row = 0; row < tableView_sign_in.numberOfRowsInSection(section); ++row {
-        let cellPath = NSIndexPath(forRow: row, inSection: section)
-        let sign_in_cell: tempCell = tableView_sign_in.cellForRowAtIndexPath(cellPath) as! tempCell
-        if sign_in_cell.textfield.userInteractionEnabled == true {
-        sign_in_cell.textfield.userInteractionEnabled = false
-        } else {
-          sign_in_cell.textfield.userInteractionEnabled == true
-        }
-      }
-    }
-    
-    for var section = 0; section < tableView_sign_up.numberOfSections; ++section {
-      for var row = 0; row < tableView_sign_up.numberOfRowsInSection(section); ++row {
-        let cellPath = NSIndexPath(forRow: row, inSection: section)
-        let sign_up_cell: tempCell = tableView_sign_up.cellForRowAtIndexPath(cellPath) as! tempCell
-        if sign_up_cell.textfield.userInteractionEnabled == true {
-          sign_up_cell.textfield.userInteractionEnabled = false
-        } else {
-          sign_up_cell.textfield.userInteractionEnabled == true
-        }
 
-      }
-    }
-    
-  }
   
   
-  func disableSignUpTableViewUserInteraction(){
-    for var section = 0; section < tableView_sign_up.numberOfSections; ++section {
-      for var row = 0; row < tableView_sign_up.numberOfRowsInSection(section); ++row {
+  
+  func signUpTableViewUserInteraction(condition: Bool){
+    for var section = 0; section < signUpTableView.numberOfSections; ++section {
+      for var row = 0; row < signUpTableView.numberOfRowsInSection(section); ++row {
         let cellPath = NSIndexPath(forRow: row, inSection: section)
-        let sign_up_cell: tempCell = tableView_sign_up.cellForRowAtIndexPath(cellPath) as! tempCell
-        sign_up_cell.textfield.userInteractionEnabled = false
+        let signUpCell: Cell = signUpTableView.cellForRowAtIndexPath(cellPath) as! Cell
+        signUpCell.textfield.userInteractionEnabled = condition
       }
     }
   }
+  
+  
+  
+  func signInTableViewUserInteraction(condition: Bool){
+    for var section = 0; section < signInTableView.numberOfSections; ++section {
+      for var row = 0; row < signInTableView.numberOfRowsInSection(section); ++row {
+        let cellPath = NSIndexPath(forRow: row, inSection: section)
+        let signInCell: Cell = signInTableView.cellForRowAtIndexPath(cellPath) as! Cell
+        signInCell.textfield.userInteractionEnabled = condition
+      }
+    }
+  }
+  
+
+  
 
   
   
@@ -185,8 +171,8 @@ class Log_inVC: UIViewController
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         var username = ""
-        let email = (tableView_sign_in.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! tempCell).textfield.text
-        let password = (tableView_sign_in.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! tempCell).textfield.text!
+        let email = (signInTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text
+        let password = (signInTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! Cell).textfield.text!
         let query = PFUser.query()
         query?.whereKey("email", equalTo: email!)
         query?.findObjectsInBackgroundWithBlock({ (foundUsers: [AnyObject]?, error: NSError?) -> Void in
@@ -226,17 +212,17 @@ class Log_inVC: UIViewController
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         
-        if !(tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! tempCell).textfield.text!.isEmpty {
-            user.username = (tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! tempCell).textfield.text
+        if !(signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! Cell).textfield.text!.isEmpty {
+            user.username = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! Cell).textfield.text
         }
         else {
-            let arr: Array = ((tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! tempCell).textfield.text?.componentsSeparatedByString("@"))!
+            let arr: Array = ((signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text?.componentsSeparatedByString("@"))!
          user.username = arr[0]
         }
 
         
-        user.password = (tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! tempCell).textfield.text
-        user.email = (tableView_sign_up.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! tempCell).textfield.text
+        user.password = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! Cell).textfield.text
+        user.email = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text
         
         // other fields can be set just like with PFObject
       
@@ -443,10 +429,7 @@ class Log_inVC: UIViewController
     
   
     
-    
   
-  
-
   
     func getUsernameifRegistered(IDType: String, ID: String, completionHandler: ((username : String?) -> Void)) {
         let query = PFUser.query()
@@ -471,7 +454,7 @@ class Log_inVC: UIViewController
 
 
 // MARK: - UITextFieldDelegate
-extension Log_inVC: UITextFieldDelegate {
+extension LogInVC: UITextFieldDelegate {
   func textFieldShouldReturn(textField: UITextField) -> Bool {
     textField.resignFirstResponder()
     return false
@@ -480,14 +463,14 @@ extension Log_inVC: UITextFieldDelegate {
 
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
-extension Log_inVC: UITableViewDataSource, UITableViewDelegate {
+extension LogInVC: UITableViewDataSource, UITableViewDelegate {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("tempCell", forIndexPath: indexPath) as! tempCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! Cell
     cell.textfield.borderStyle = UITextBorderStyle.None
     cell.label.textColor = UIColor.grayColor()
     
-    if tableView == tableView_sign_up {
+    if tableView == signUpTableView {
       switch indexPath.row {
       case 0:
         cell.label.text = "     Email"
@@ -538,7 +521,7 @@ extension Log_inVC: UITableViewDataSource, UITableViewDelegate {
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if tableView == tableView_sign_in {
+    if tableView == signInTableView {
       return 2
     }else {
       return 3
@@ -557,7 +540,7 @@ extension Log_inVC: UITableViewDataSource, UITableViewDelegate {
 
 
 // MARK: - ValidationDelegate
-extension Log_inVC: ValidationDelegate {
+extension LogInVC: ValidationDelegate {
   
   
   func validationSuccessful() {
@@ -574,7 +557,7 @@ extension Log_inVC: ValidationDelegate {
       tempArr.append(field.tag)
     }
     
-    if OR_label.text == "or Sign In with:" {
+    if orLabel.text == "or Sign In with:" {
       
       if tempArr.contains(4) {
         alert.title = "Incorrect Email"
@@ -626,7 +609,7 @@ extension Log_inVC: ValidationDelegate {
 
 
 // MARK: - VKSdkDelegate
-extension Log_inVC: VKSdkDelegate {
+extension LogInVC: VKSdkDelegate {
   
   
   func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
@@ -641,7 +624,10 @@ extension Log_inVC: VKSdkDelegate {
         
         
         
-        if let firstName = json[0]["first_name"].string, let lastName = json[0]["last_name"].string, let VKID = json[0]["id"].number {
+        if let
+          firstName = json[0]["first_name"].string,
+          lastName = json[0]["last_name"].string,
+          VKID = json[0]["id"].number {
           
           self.getUsernameifRegistered("VKID", ID: "\(VKID)", completionHandler: { (username) -> Void in
             let username = username
@@ -707,7 +693,7 @@ extension Log_inVC: VKSdkDelegate {
 
 
 // MARK: - GIDSignInDelegate
-extension Log_inVC: GIDSignInUIDelegate {
+extension LogInVC: GIDSignInUIDelegate {
  
   func signInWillDispatch (signIn: GIDSignIn, error: NSError){
     if signIn.hasAuthInKeychain() {

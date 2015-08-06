@@ -14,23 +14,18 @@
         </mutableArray>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Log_inVC" customModule="Moviethete" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LogInVC" customModule="Moviethete" customModuleProvider="target">
             <connections>
-                <outlet property="OR_label" destination="zh7-6j-FR2" id="hnA-5Q-TiB"/>
-                <outlet property="fb" destination="SiO-1K-INM" id="ilk-Ry-RBn"/>
-                <outlet property="g" destination="Vg9-mB-vR9" id="9Tx-A2-Udp"/>
-                <outlet property="i" destination="Fbe-6n-APi" id="EUK-Tf-hum"/>
-                <outlet property="share_thoughts_label" destination="yXc-wv-wjU" id="qbO-GM-lWg"/>
-                <outlet property="signIn_button" destination="tbo-kA-iVF" id="IdV-dz-F8D"/>
-                <outlet property="signIn_triangle" destination="P9a-7Y-WTb" id="xRi-Ek-LNq"/>
-                <outlet property="signUp_button" destination="51n-yd-fzF" id="LXf-h0-gey"/>
-                <outlet property="signUp_triangle" destination="hVL-Z3-PbK" id="9n6-Nh-LvJ"/>
-                <outlet property="sign_in_or_up" destination="xx7-XN-ka9" id="y9k-fi-Edp"/>
-                <outlet property="t" destination="QgG-tD-swQ" id="Gmf-uF-ekq"/>
-                <outlet property="tableView_sign_in" destination="EYR-Hr-Mu4" id="blM-LI-rUM"/>
-                <outlet property="tableView_sign_up" destination="MV3-CK-GJR" id="ds4-FX-YeO"/>
+                <outlet property="orLabel" destination="zh7-6j-FR2" id="hnA-5Q-TiB"/>
+                <outlet property="shareThoughtsLabel" destination="yXc-wv-wjU" id="qbO-GM-lWg"/>
+                <outlet property="signInButton" destination="tbo-kA-iVF" id="IdV-dz-F8D"/>
+                <outlet property="signInOrUp" destination="xx7-XN-ka9" id="y9k-fi-Edp"/>
+                <outlet property="signInTableView" destination="EYR-Hr-Mu4" id="blM-LI-rUM"/>
+                <outlet property="signInTriangle" destination="P9a-7Y-WTb" id="xRi-Ek-LNq"/>
+                <outlet property="signUpButton" destination="51n-yd-fzF" id="LXf-h0-gey"/>
+                <outlet property="signUpTableView" destination="MV3-CK-GJR" id="ds4-FX-YeO"/>
+                <outlet property="signUpTriangle" destination="hVL-Z3-PbK" id="9n6-Nh-LvJ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="dm8-6U-Q1M"/>
-                <outlet property="vk" destination="rBQ-D7-yox" id="eKB-h6-lXL"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -44,7 +39,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P2m-Kb-aRc">
                             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="login_background" translatesAutoresizingMaskIntoConstraints="NO" id="4KA-M0-isf">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="login_background" translatesAutoresizingMaskIntoConstraints="NO" id="4KA-M0-isf" userLabel="loginBackground">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="282" id="ulj-fc-MAn"/>
@@ -122,10 +117,10 @@
                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
-                                        <action selector="signUp_button:" destination="-1" eventType="touchUpInside" id="J4x-ty-YEn"/>
+                                        <action selector="signUpButton:" destination="-1" eventType="touchUpInside" id="J4x-ty-YEn"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or Sign In with:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zh7-6j-FR2">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or Sign In with:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zh7-6j-FR2" userLabel="ORLabel">
                                     <rect key="frame" x="232" y="453" width="133" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -138,7 +133,7 @@
                                         <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
                                     <connections>
-                                        <action selector="login_start:" destination="-1" eventType="touchUpInside" id="EBy-uL-xfW"/>
+                                        <action selector="startLogin:" destination="-1" eventType="touchUpInside" id="EBy-uL-xfW"/>
                                     </connections>
                                 </button>
                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="EYR-Hr-Mu4">
@@ -197,7 +192,7 @@
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
-                                        <action selector="signIn_button:" destination="-1" eventType="touchUpInside" id="zTJ-UN-UfW"/>
+                                        <action selector="signInButton:" destination="-1" eventType="touchUpInside" id="zTJ-UN-UfW"/>
                                     </connections>
                                 </button>
                             </subviews>

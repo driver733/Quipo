@@ -139,7 +139,7 @@
         <!--Sign in-->
         <scene sceneID="qAj-ll-11h">
             <objects>
-                <viewController storyboardIdentifier="login" id="EBS-We-1ep" customClass="Log_inVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="login" id="EBS-We-1ep" customClass="LogInVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sk8-uU-vYE"/>
                         <viewControllerLayoutGuide type="bottom" id="ue2-jj-ehS"/>

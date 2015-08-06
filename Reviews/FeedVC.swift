@@ -14,6 +14,7 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
 import Parse
+import SDWebImage
 
 extension UIViewController {
     
@@ -38,27 +39,18 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     override func viewDidLoad() {
          super.viewDidLoad()
-         tableView.registerNib(UINib(nibName: "topCell", bundle: nil), forCellReuseIdentifier: "topCell")
-         tableView.registerNib(UINib(nibName: "contentCell", bundle: nil), forCellReuseIdentifier: "contentCell")
+         tableView.registerNib(UINib(nibName: "TopCell", bundle: nil), forCellReuseIdentifier: "TopCell")
+         tableView.registerNib(UINib(nibName: "ContentCell", bundle: nil), forCellReuseIdentifier: "ContentCell")
          tableView.delegate = self
          tableView.dataSource = self
          tableView.rowHeight = UITableViewAutomaticDimension;
          tableView.estimatedRowHeight = 44.0;
          setUpPost()
          shyNavBarManager.scrollView = self.tableView;
-        
-        
+      
       //  FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
       //  NSNotificationCenter.defaultCenter().addObserver(self, selector: "fb:", name: FBSDKProfileDidChangeNotification, object: nil)
-        
-        
-        
-        
-        
-        
-        
       
-          
     }
     
     
@@ -98,7 +90,7 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 /*
         if (indexPath.row == 0)
         {
-            let cell:topCell = tableView.dequeueReusableCellWithIdentifier("topCell", forIndexPath: indexPath) as! topCell
+            let cell:TopCell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
             cell.userName.text = "Loading..."
         }
          else
@@ -109,7 +101,7 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 */
                 if (indexPath.row % 2 == 0){
                     // Set up the cell representing the app
-                    let cell = tableView.dequeueReusableCellWithIdentifier("topCell", forIndexPath: indexPath) as! topCell
+                    let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
                     cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0); 
                     let post = arrayOfPosts[indexPath.row]
                     cell.userName.text = post.userName
@@ -119,41 +111,22 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                    // {
                         if (!tableView.dragging && !tableView.decelerating)
                         {
-                       
-                          let url = NSURL(string: PFUser.currentUser()!.objectForKey("smallProfileImage") as! String)
-                          let placeholderImage = getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size)
-                          /*
-                          cell.profileImage.sd_setImageWithURL(url!, placeholderImage: placeholderImage, completed: {(
-                            image: UIImage!, error: NSError!, cacheType: SDImageCacheType.None, url: NSURL!) -> Void in
-                            Toucan.Mask.maskImageWithEllipse(cell.profileImage.image!)
-                            
-                            })
-                          */
-               //           cell.profileImage.sd_setImageWithURL(url, placeholderImage: nil, options: sd)
-                          
-                          
-                        //  cell.profileImage.sd_setImageWithURL(url, placeholderImage: placeholderImage, options:  , completed:{(
-                        //      image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-                              
-                        //  })
-                          
-                          
-                      cell.profileImage.sd_setImageWithURL(url, placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size))
-  
-                       // cell.profileImage.image = Toucan(image: cell.profileImage.image!).maskWithEllipse().image
-                        Toucan.Mask.maskImageWithEllipse(cell.profileImage.image!)
-
-                            
+                          cell.profileImage.sd_setImageWithURL(
+                            NSURL(string: PFUser.currentUser()!.objectForKey("smallProfileImage") as! String),
+                            placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+                            options: SDWebImageOptions.RefreshCached, completed:{(
+                              image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+                              cell.profileImage.image = Toucan(image: image).maskWithEllipse().image
+                          })
                             return cell
-                                           }
+                  }
                     return cell
                 }
                 // Set up the cell representing the app
-                let cell = tableView.dequeueReusableCellWithIdentifier("contentCell", forIndexPath: indexPath) as! contentCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("ContentCell", forIndexPath: indexPath) as! ContentCell
                 _ = arrayOfPosts[indexPath.row]
                     if (!tableView.dragging && !tableView.decelerating)
                     {
-                    
                           cell.posterImage.sd_setImageWithURL(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg")!, placeholderImage: getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size))
                         return cell
                 }
@@ -179,16 +152,19 @@ class FeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     let post = arrayOfPosts[indexPath.row]
             if (indexPath.row % 2 == 0){
               
-                let cell:topCell = self.tableView.cellForRowAtIndexPath(indexPath as! NSIndexPath) as! topCell
-           
-                    cell.profileImage.sd_setImageWithURL(NSURL(string: PFUser.currentUser()!.objectForKey("smallProfileImage") as! String), placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size))
-                    cell.profileImage.image = Toucan(image: cell.profileImage.image!).maskWithEllipse().image
-               
-            
-                
+                let cell:TopCell = self.tableView.cellForRowAtIndexPath(indexPath as! NSIndexPath) as! TopCell
+              
+              cell.profileImage.sd_setImageWithURL(
+                NSURL(string: PFUser.currentUser()!.objectForKey("smallProfileImage") as! String),
+                placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+                options: SDWebImageOptions.RefreshCached, completed:{(
+                image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+                cell.profileImage.image = Toucan(image: image).maskWithEllipse().image
+              })
+              
             }
            else{
-            let cell: contentCell = self.tableView.cellForRowAtIndexPath(indexPath as! NSIndexPath) as! contentCell
+            let cell: ContentCell = self.tableView.cellForRowAtIndexPath(indexPath as! NSIndexPath) as! ContentCell
                   cell.posterImage.sd_setImageWithURL(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg")!, placeholderImage: self.getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size))
             }
             }

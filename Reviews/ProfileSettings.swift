@@ -29,8 +29,8 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.registerNib(UINib(nibName: "profileSettingsCell", bundle: nil), forCellReuseIdentifier: "profileSettingsCell")
-        tableView.registerNib(UINib(nibName: "profileSettingsFollowFriendsCell", bundle: nil), forCellReuseIdentifier: "profileSettingsFollowFriendsCell")
+        tableView.registerNib(UINib(nibName: "ProfileSettingsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsCell")
+        tableView.registerNib(UINib(nibName: "ProfileSettingsFollowFriendsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsFollowFriendsCell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension;
@@ -47,9 +47,9 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
 
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
+      /*
         if indexPath.section == 0 {
-          let cell = tableView.dequeueReusableCellWithIdentifier("profileSettingsFollowFriendsCell", forIndexPath: indexPath) as! profileSettingsFollowFriendsCell
+          let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsFollowFriendsCell", forIndexPath: indexPath) as! ProfileSettingsFollowFriendsCell
             if indexPath.row == 0 {
                 if FBSDKAccessToken.currentAccessToken() != nil {
                     cell.socialNetworkIcon.image = UIImage(named: "facebook")
@@ -74,10 +74,10 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
                 return cell
             }
             
-        }
-        
+      }
+      */
         if indexPath.section == 1 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("profileSettingsCell", forIndexPath: indexPath) as! profileSettingsCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsCell", forIndexPath: indexPath) as! ProfileSettingsCell
             cell.tempLabel.text = "Log Out"
             return cell
         }
@@ -133,8 +133,8 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        if cell.isKindOfClass(profileSettingsFollowFriendsCell) {
-           let cell = cell as! profileSettingsFollowFriendsCell
+        if cell.isKindOfClass(ProfileSettingsFollowFriendsCell) {
+           let cell = cell as! ProfileSettingsFollowFriendsCell
            cell.separatorInset.left = cell.label.frame.origin.x
         }
     }

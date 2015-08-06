@@ -1,5 +1,5 @@
 //
-//  profile_topCell.swift
+//  ProfileTopCell.swift
 //  Moviethete
 //
 //  Created by Admin on 25/07/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class profile_topCell: UITableViewCell {
+class ProfileTopCell: UITableViewCell {
 
  
     @IBOutlet weak var followersCount: UILabel!

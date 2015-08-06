@@ -1,5 +1,5 @@
 //
-//  profileSettingsCell.swift
+//  ProfileSettingsCell.swift
 //  Moviethete
 //
 //  Created by Mike on 8/1/15.
@@ -9,7 +9,7 @@
 import UIKit
 
 
-class profileSettingsCell: UITableViewCell {
+class ProfileSettingsCell: UITableViewCell {
 
     
     

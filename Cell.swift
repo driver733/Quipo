@@ -1,5 +1,5 @@
 //
-//  tempCell.swift
+//  Cell.swift
 //  Reviews
 //
 //  Created by Admin on 17/07/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class tempCell: UITableViewCell {
+class Cell: UITableViewCell {
     
     @IBOutlet weak var textfield: UITextField!
     @IBOutlet weak var label: UILabel!

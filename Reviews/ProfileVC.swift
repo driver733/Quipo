@@ -39,14 +39,14 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         /*
-        let cell = tableView.dequeueReusableCellWithIdentifier("profile_follower", forIndexPath: indexPath) as! profile_follower_Cell
+        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
         cell.userName.text = "Dachnik"
         let url = NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")
         cell.userImage.setImageWithUrl(url!, placeHolderImage: nil)
         */
         
             if indexPath.row == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("profile_topCell", forIndexPath: indexPath) as! profile_topCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("ProfileTopCell", forIndexPath: indexPath) as! ProfileTopCell
             cell.awaitedView.layer.cornerRadius = 8
             cell.awaitedView.layer.masksToBounds = true
             cell.followersView.layer.cornerRadius = 8
@@ -69,7 +69,7 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
             if str == "reviews" {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("profileUserReviews", forIndexPath: indexPath) as! profileUserReviews
+        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileUserReviews", forIndexPath: indexPath) as! ProfileUserReviews
         cell.movieName.text = "Titanic"
         cell.userReview.text = "Кино"
         cell.posterImage.sd_setImageWithURL(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg"), placeholderImage: getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size))
@@ -77,7 +77,7 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
             } else {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("profile_follower", forIndexPath: indexPath) as! profile_follower_Cell
+        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
         cell.userName.text = "Dachnik"
                             
             
@@ -140,11 +140,9 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
       
         
-          tableView.registerNib(UINib(nibName: "profile_topCell", bundle: nil), forCellReuseIdentifier: "profile_topCell")
-          tableView.registerNib(UINib(nibName: "profileUserReviews", bundle: nil), forCellReuseIdentifier: "profileUserReviews")
-        
-   
-          tableView.registerNib(UINib(nibName: "profile_follower", bundle: nil), forCellReuseIdentifier: "profile_follower")
+          tableView.registerNib(UINib(nibName: "ProfileTopCell", bundle: nil), forCellReuseIdentifier: "ProfileTopCell")
+          tableView.registerNib(UINib(nibName: "ProfileUserReviews", bundle: nil), forCellReuseIdentifier: "ProfileUserReviews")   
+          tableView.registerNib(UINib(nibName: "ProfileFollowerCell", bundle: nil), forCellReuseIdentifier: "ProfileFollowerCell")
           tableView.delegate = self
           tableView.dataSource = self
           tableView.rowHeight = UITableViewAutomaticDimension;
@@ -194,7 +192,7 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             let location = press.locationInView(tableView)
             let path = tableView.indexPathForRowAtPoint(location)
             if path!.row == 0 {
-                let newCell: profile_topCell = tableView.cellForRowAtIndexPath(path!) as! profile_topCell
+                let newCell: ProfileTopCell = tableView.cellForRowAtIndexPath(path!) as! ProfileTopCell
                 
                 
                 var viewPoint = newCell.awaitedView.convertPoint(location, fromView: tableView)

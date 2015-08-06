@@ -14,8 +14,8 @@ class Post{
     var timeSincePosted = "three hours ago"
     var profileImage:UIImage? = UIImage()
     var posterImage:UIImage? = UIImage()
-    // var topCell:CustomCell? = CustomCell()
-    //  var contentCell:CustomCell? = CustomCell()
+    // var TopCell:CustomCell? = CustomCell()
+    //  var ContentCell:CustomCell? = CustomCell()
    
     
     init (userName: String, timeSincePosted: String, profileImage: UIImage?, posterImage: UIImage?){
