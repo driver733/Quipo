@@ -289,6 +289,7 @@
 				8F62BDEE1B73EFEB00B87865 /* Resources */,
 				130D33E29F56BF307D79DC1F /* Embed Pods Frameworks */,
 				7C1AED9618BCA0587ADD5506 /* Copy Pods Resources */,
+				8F4F97C41B7418E5006CA7C9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -463,6 +464,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8F4F97C41B7418E5006CA7C9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/Fabric.framework/run\" 5ed73828141bfc6b5cd201384f8aa2e059190876 dcedab5c416825310e93e34b16cff54865084b07f77dd77cd4be19e7540c3ede";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -615,6 +629,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Mikhail Yakushin (SSVGY9896H)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Moviethete/Info.plist;
