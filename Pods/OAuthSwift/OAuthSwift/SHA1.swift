@@ -17,7 +17,7 @@ class SHA1 {
     }
     
     /** Common part for hash calculation. Prepare header data. */
-    func prepare(len:Int = 64) -> NSMutableData {
+    func prepare(_ len:Int = 64) -> NSMutableData {
         let tmpMessage: NSMutableData = NSMutableData(data: self.message)
         
         // Step 1. Append Padding Bits
@@ -37,7 +37,7 @@ class SHA1 {
         let len = 64
         let h:[UInt32] = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]
 
-        let tmpMessage: NSMutableData = NSMutableData(data: self.message)
+        var tmpMessage: NSMutableData = NSMutableData(data: self.message)
         
         // Step 1. Append Padding Bits
         tmpMessage.appendBytes([0x80]) // append one bit (Byte with one bit) to message
@@ -106,7 +106,7 @@ class SHA1 {
                     break
                 }
                 
-                let temp = (rotateLeft(A,n: 5) &+ f &+ E &+ M[j] &+ k) & 0xffffffff
+                var temp = (rotateLeft(A,n: 5) &+ f &+ E &+ M[j] &+ k) & 0xffffffff
                 E = D
                 D = C
                 C = rotateLeft(B, n: 30)
@@ -123,7 +123,7 @@ class SHA1 {
         }
         
         // Produce the final hash value (big-endian) as a 160 bit number:
-        let buf: NSMutableData = NSMutableData()
+        var buf: NSMutableData = NSMutableData()
         hh.map({ (item) -> () in
             var i:UInt32 = item.bigEndian
             buf.appendBytes(&i, length: sizeofValue(i))

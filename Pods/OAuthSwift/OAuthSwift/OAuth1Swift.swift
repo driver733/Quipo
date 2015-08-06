@@ -5,7 +5,6 @@
 //  Created by Dongri Jin on 6/22/14.
 //  Copyright (c) 2014 Dongri Jin. All rights reserved.
 //
-/*
 
 import Foundation
 
@@ -95,9 +94,9 @@ public class OAuth1Swift: NSObject {
     // 1. Request token
     public func postOAuthRequestTokenWithCallbackURL(callbackURL: NSURL, success: TokenSuccessHandler, failure: FailureHandler?) {
         var parameters =  Dictionary<String, AnyObject>()
-        if let callbackURLString = callbackURL.absoluteString {
+        let callbackURLString = callbackURL.absoluteString
             parameters["oauth_callback"] = callbackURLString
-        }
+        
         self.client.post(self.request_token_url, parameters: parameters, success: {
             data, response in
             let responseString = NSString(data: data, encoding: NSUTF8StringEncoding) as String!
@@ -130,4 +129,3 @@ public class OAuth1Swift: NSObject {
     }
 
 }
-*/

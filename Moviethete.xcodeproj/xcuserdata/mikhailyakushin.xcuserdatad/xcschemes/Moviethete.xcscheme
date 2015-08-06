@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "84E23E431B50268400667AF5"
+               BlueprintIdentifier = "8F62BDEF1B73EFEB00B87865"
                BuildableName = "Moviethete.app"
                BlueprintName = "Moviethete"
                ReferencedContainer = "container:Moviethete.xcodeproj">
@@ -28,11 +28,31 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8F62BE031B73EFEB00B87865"
+               BuildableName = "MovietheteTests.xctest"
+               BlueprintName = "MovietheteTests"
+               ReferencedContainer = "container:Moviethete.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8F62BE0E1B73EFEB00B87865"
+               BuildableName = "MovietheteUITests.xctest"
+               BlueprintName = "MovietheteUITests"
+               ReferencedContainer = "container:Moviethete.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "84E23E431B50268400667AF5"
+            BlueprintIdentifier = "8F62BDEF1B73EFEB00B87865"
             BuildableName = "Moviethete.app"
             BlueprintName = "Moviethete"
             ReferencedContainer = "container:Moviethete.xcodeproj">
@@ -55,7 +75,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "84E23E431B50268400667AF5"
+            BlueprintIdentifier = "8F62BDEF1B73EFEB00B87865"
             BuildableName = "Moviethete.app"
             BlueprintName = "Moviethete"
             ReferencedContainer = "container:Moviethete.xcodeproj">
@@ -74,7 +94,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "84E23E431B50268400667AF5"
+            BlueprintIdentifier = "8F62BDEF1B73EFEB00B87865"
             BuildableName = "Moviethete.app"
             BlueprintName = "Moviethete"
             ReferencedContainer = "container:Moviethete.xcodeproj">

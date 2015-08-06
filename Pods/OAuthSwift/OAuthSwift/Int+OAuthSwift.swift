@@ -9,14 +9,14 @@
 import Foundation
 
 extension Int {
-    public func bytes(totalBytes: Int = sizeof(Int)) -> [UInt8] {
+    public func bytes(_ totalBytes: Int = sizeof(Int)) -> [UInt8] {
         return arrayOfBytes(self, length: totalBytes)
     }
 }
 
 func arrayOfBytes<T>(value:T, length:Int? = nil) -> [UInt8] {
     let totalBytes = length ?? (sizeofValue(value) * 8)
-   // var v = value
+    var v = value
     
     let valuePointer = UnsafeMutablePointer<T>.alloc(1)
     valuePointer.memory = value

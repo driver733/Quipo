@@ -1,3 +1,0 @@
-# Moviethete
-
-Moviethete app repo
