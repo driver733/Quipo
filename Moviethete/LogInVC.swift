@@ -629,12 +629,14 @@ extension LogInVC: VKSdkDelegate {
           lastName = json[0]["last_name"].string,
           VKID = json[0]["id"].number {
           
-          self.getUsernameifRegistered("VKID", ID: "\(VKID)", completionHandler: { (username) -> Void in
+          self.getUsernameifRegistered("VKID", ID: "\(VKID)", completionHandler: {
+            (username) -> Void in
             let username = username
             
             switch username {
             case let username?:
-              PFUser.logInWithUsernameInBackground(username, password: "", block: { (user: PFUser?, error: NSError?) -> Void in
+              PFUser.logInWithUsernameInBackground(username, password: "", block: {
+                (user: PFUser?, error: NSError?) -> Void in
                 if error == nil{
                   self.performSegueWithIdentifier("did_log_in", sender: nil)
                 }

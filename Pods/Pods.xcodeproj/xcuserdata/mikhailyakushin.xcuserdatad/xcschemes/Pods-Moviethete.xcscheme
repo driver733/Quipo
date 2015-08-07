@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CB40059C7ADF94F976E858DC"
+               BlueprintIdentifier = "96741DABE82C45576F0BA307"
                BuildableName = "Pods_Moviethete.framework"
                BlueprintName = "Pods-Moviethete"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -43,7 +43,6 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.4.0):
     - FBSDKCoreKit
-  - FontBlaster (1.0.7)
   - Google/Core (1.0.7):
     - GoogleNetworkingUtilities (~> 1.0)
     - GoogleSymbolUtilities (~> 1.0)
@@ -82,7 +81,6 @@ PODS:
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
-  - SwiftValidator (2.1.1)
   - SwiftyJSON (2.2.1)
   - TLYShyNavBar (0.9.11)
   - TPKeyboardAvoiding (1.2.9)
@@ -96,7 +94,6 @@ DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
-  - FontBlaster (from `https://github.com/AndrewSB/FontBlaster.git`)
   - Google/SignIn
   - InstagramKit (~> 3.0)
   - KeychainAccess (from `https://github.com/kishikawakatsumi/KeychainAccess.git`,
@@ -106,7 +103,6 @@ DEPENDENCIES:
   - ParseFacebookUtilsV4 (~> 1.7)
   - ParseUI (~> 1.1)
   - SDWebImage (~> 3.7)
-  - SwiftValidator (from `https://github.com/i-schuetz/SwiftValidator.git`)
   - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`, branch `xcode7`)
   - TLYShyNavBar
   - TPKeyboardAvoiding (~> 1.2)
@@ -118,15 +114,11 @@ EXTERNAL SOURCES:
   Async:
     :branch: feature/Swift_2.0
     :git: https://github.com/duemunk/Async.git
-  FontBlaster:
-    :git: https://github.com/AndrewSB/FontBlaster.git
   KeychainAccess:
     :branch: swift-2.0
     :git: https://github.com/kishikawakatsumi/KeychainAccess.git
   OAuthSwift:
     :git: https://github.com/rpowelll/OAuthSwift.git
-  SwiftValidator:
-    :git: https://github.com/i-schuetz/SwiftValidator.git
   SwiftyJSON:
     :branch: xcode7
     :git: https://github.com/SwiftyJSON/SwiftyJSON.git
@@ -135,18 +127,12 @@ CHECKOUT OPTIONS:
   Async:
     :commit: abe23c18d8d3a708a325b5db10231388e1ca5b88
     :git: https://github.com/duemunk/Async.git
-  FontBlaster:
-    :commit: b46d4d94afe5f6ebec71db2a7185ec485e397b3c
-    :git: https://github.com/AndrewSB/FontBlaster.git
   KeychainAccess:
     :commit: 7879a49b81c553ad9b40cbafda34a881648e2ff3
     :git: https://github.com/kishikawakatsumi/KeychainAccess.git
   OAuthSwift:
     :commit: db8c44142674103a1fb904c9a654ac3978163e14
     :git: https://github.com/rpowelll/OAuthSwift.git
-  SwiftValidator:
-    :commit: ca6509687eb869b542544757956cdd84b9585a5e
-    :git: https://github.com/i-schuetz/SwiftValidator.git
   SwiftyJSON:
     :commit: 45ca854ce75948858f65e31fbc58cbf214669250
     :git: https://github.com/SwiftyJSON/SwiftyJSON.git
@@ -159,7 +145,6 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 75bdd75c980e811db218488d99dd93b7740f4474
   FBSDKLoginKit: 02a9254a4c132412fa03577b0d53e936d068a7fb
   FBSDKShareKit: a42865f20ba2d1cc548c4d0f73ad22cff6377ddb
-  FontBlaster: 2f3fc74593612c134398b8eb2b914ec1fe3d4cd6
   Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
   GoogleAppUtilities: c01c6a5671e9da8b9d690fdaec5959d6c2aac699
   GoogleAuthUtilities: 049ffd3a297cdffd271451b82fd4e75304f15ef3
@@ -174,7 +159,6 @@ SPEC CHECKSUMS:
   ParseFacebookUtilsV4: ea5db22e87b91cbf99b9d156642e2b97a4db7d51
   ParseUI: d1228541b02a36a7354c8f47747f5f7a89cf1ff0
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
-  SwiftValidator: 79936ea870f1dba8a0824763375375bb209fe30d
   SwiftyJSON: ae2d0a3d68025d136602a33c4ee215091ced3e33
   TLYShyNavBar: e0d7b6719a8860144415708bbe8b6fbddd36f419
   TPKeyboardAvoiding: ff1ee4e5a5a0c119b965552af8f183868ea20207

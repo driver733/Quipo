@@ -17,7 +17,7 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
-import FontBlaster
+//import FontBlaster
 import TLYShyNavBar
 
 
