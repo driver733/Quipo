@@ -87,7 +87,6 @@ class LogInVC: UIViewController
     let vkontakteKeychain = Keychain(server: "https://oauth.vk.com/authorize", protocolType: .HTTPS, authenticationType: .HTMLForm)
     
     
-  
     override func viewDidLoad() {
         super.viewDidLoad()
         FontBlaster.blast()
@@ -227,7 +226,7 @@ class LogInVC: UIViewController
         // other fields can be set just like with PFObject
       
         user.signUpInBackgroundWithBlock {
-            (succeeded: Bool, error: NSError?) -> Void in
+            (succeeded: ObjCBool, error: NSError?) -> Void in
             if error == nil {
                 // signed up!
             }
@@ -362,19 +361,16 @@ class LogInVC: UIViewController
   
     
     @IBAction func loginWithFacebook(sender: AnyObject) {
-        
     let fbLoginManager = FBSDKLoginManager()
     fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
     fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"], handler: {
         (result: FBSDKLoginManagerLoginResult!, error:NSError!) -> Void in
         if error == nil && result.token != nil {
-            
-        
+            // logged in
         } else {
             // process error
         }
     })
-        
     }
     
     
@@ -408,7 +404,7 @@ class LogInVC: UIViewController
                         // process error
                     }
                 })
-                
+
             } else {
                 print("Uh oh. There was an error logging in.")
             }
@@ -649,7 +645,7 @@ extension LogInVC: VKSdkDelegate {
               user.setObject(json[0]["photo_100"].string!, forKey: "smallProfileImage")
               user.setObject(json[0]["photo_200_orig"].string!, forKey: "bigProfileImage")
               
-              user.signUpInBackgroundWithBlock({ (result: Bool, error: NSError?) -> Void in
+              user.signUpInBackgroundWithBlock({ (result: ObjCBool, error: NSError?) -> Void in
                 if error == nil{
                   self.performSegueWithIdentifier("did_log_in", sender: nil)
                 }
@@ -713,6 +709,20 @@ extension LogInVC: GIDSignInUIDelegate {
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
