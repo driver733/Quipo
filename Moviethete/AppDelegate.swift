@@ -50,17 +50,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         
      //   GIDSignIn.sharedInstance().delegate = self
         
-        
         PFTwitterUtils.initializeWithConsumerKey("IeJhyNYLW5bgaZtrQTJ9Rq7Vb",  consumerSecret:"Ze2eFiBSVHA1dIOM8bu2gsK2cBO9Maw4nmqVzbJUv9B82G9vaw")
         
-        let isLoggedIn = PFUser.currentUser()
-        
-        let storyboardId = isLoggedIn != nil ? "main" : "login"
-        
-      
-        
-        self.window?.rootViewController = self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier(storyboardId)
-        
+        self.window?.rootViewController = self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("login")
+        if (PFUser.currentUser() != nil) {
+            self.window?.rootViewController?.addChildViewController((self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))!)
+        }
         
         return true
     }

@@ -101,6 +101,8 @@
 	<string>122664868071644</string>
 	<key>FacebookDisplayName</key>
 	<string>TestSheesh</string>
+	<key>InstagramAppClientId</key>
+	<string>1c2e2066145342c3a841bdbdca8e53ae</string>
 	<key>InstagramAppRedirectURL</key>
 	<string>oauth-swift://oauth-callback/instagram</string>
 	<key>LSApplicationCategoryType</key>

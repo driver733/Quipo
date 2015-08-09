@@ -51,6 +51,8 @@ class FeedVC: UIViewController {
     
     
     
+  
+    
 
     
     // This function will be called when the Dynamic Type user setting changes (from the system Settings app)
@@ -83,6 +85,13 @@ class FeedVC: UIViewController {
         if segue.identifier == "showDetailedPost" {
             if let vc = segue.destinationViewController as? DetailedPostVC {
                     vc.num = tableView.indexPathForSelectedRow!.row
+                /*
+                if segue.identifier == "didLogOut" {
+                    if let destVC = segue.destinationViewController as? LogInVC {
+                        destVC.hidesBottomBarWhenPushed = true
+                    }
+                }
+                */
             }
         }
     }

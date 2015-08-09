@@ -48,8 +48,8 @@ class LogInVC: UIViewController
     
   }
 
-    @IBAction func didLogOut(segue: UIStoryboardSegue) {
-    }
+    //@IBAction func didLogOut(segue: UIStoryboardSegue) {
+    //}
     
     @IBAction func signUpButton(sender: AnyObject) {
       signInTableView.hidden = true
@@ -87,10 +87,14 @@ class LogInVC: UIViewController
     let vkontakteKeychain = Keychain(server: "https://oauth.vk.com/authorize", protocolType: .HTTPS, authenticationType: .HTMLForm)
     
     
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         FontBlaster.blast()
         NSBundle.mainBundle().loadNibNamed("LogIn", owner: self, options: nil)
+        self.navigationController?.navigationBarHidden = true
+        self.hidesBottomBarWhenPushed = true
         
         signInTableView.registerNib(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
         signInTableView.delegate = self
@@ -121,10 +125,12 @@ class LogInVC: UIViewController
       
         FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "fb:", name: FBSDKProfileDidChangeNotification, object: nil)
+        
+        //(UIApplication.sharedApplication().delegate as! AppDelegate).window?.rootViewController = self
     }
 
   
-
+   
   
   
   
@@ -165,6 +171,13 @@ class LogInVC: UIViewController
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+    
+    
+    func didLogIn(){
+        //self.presentViewController((self.storyboard?.instantiateViewControllerWithIdentifier("main"))!, animated: true, completion: nil)
+        performSegueWithIdentifier("didLogIn", sender: self)
+    }
+    
   
     func signIn(){
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
@@ -186,7 +199,7 @@ class LogInVC: UIViewController
                 block: {
                 (user: PFUser?, error: NSError?) -> Void in
                 if user != nil {
-                    self.performSegueWithIdentifier("did_log_in", sender: nil)
+                    self.performSegueWithIdentifier("didLogIn", sender: nil)
                 } else {
                     switch error!.code {
                     case 101:
@@ -256,7 +269,7 @@ class LogInVC: UIViewController
       
         Twitter.sharedInstance().logInWithCompletion { session, error in
             if (session != nil) {
-                self.performSegueWithIdentifier("did_log_in", sender: nil)
+                self.performSegueWithIdentifier("didLogIn", sender: nil)
             } else {
                 print("error: \(error.localizedDescription)");
             }
@@ -279,84 +292,106 @@ class LogInVC: UIViewController
         )
         
         auth.authorize_url_handler = WebVC()
-        self.view.opaque = false
-        self.view.backgroundColor = UIColor.whiteColor()
         
+
         
-        if let at = self.instagramKeychain.get("access_token"){
-            let url :String = "https://api.instagram.com/v1/users/self/?access_token=\(at)"
-            let parameters :Dictionary = Dictionary<String, AnyObject>()
-            auth.client.get(url, parameters: parameters,
-                success: {
-                    data, response in
-                    let json = JSON(data: data)
-                     
-                    // println(json)
-                }, failure: {(error:NSError!) -> Void in
-                    print(error)
-            })
-            
-        } else {
-            
-            auth.authorizeWithCallbackURL( NSURL(string: "oauth-swift://oauth-callback/instagram")!,
+            auth.authorizeWithCallbackURL(
+                NSURL(string: "oauth-swift://oauth-callback/instagram")!,
                 scope: "likes+comments",
                 state:"INSTAGRAM",
                 success: {
                     credential, response, parameters in
                     
+                    let engine = InstagramEngine.sharedEngine()
+                    engine.accessToken = credential.oauth_token
+                    
                     self.instagramKeychain.set(credential.oauth_token, key: "access_token")
                     
-                    /*
-                    [engine getMediaForUser:user.Id
-                    count:15
-                    maxId:self.currentPaginationInfo.nextMaxId
-                    withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo)
-                    {
-                    if (paginationInfo) {
-                    self.currentPaginationInfo = paginationInfo;
-                    }
-                    ...
-                    }
-                    failure:^(NSError *error)
-                    {
-                    ...
-                    }];
-                    */
-                    
-                    let engine = InstagramEngine.sharedEngine()
-                    
-                    /*
-                    engine.getSelfUserDetailsWithSuccess({
-                    success     in
-                    }, failure: { (error:NSError!)   in
-                    
-                    })
-                    */
-                    
-                    
-                    /*
-                    let url :String = "https://api.instagram.com/v1/users/self/?access_token=\(credential.oauth_token)"
-                    let parameters :Dictionary = Dictionary<String, AnyObject>()
+                    let url = "https://api.instagram.com/v1/users/self/?access_token=\(credential.oauth_token)"
+                    let parameters: Dictionary = Dictionary<String, AnyObject>()
                     auth.client.get(url, parameters: parameters,
-                    success: {
-                    data, response in
-                    let json = JSON(data: data)
-                    self.testLoginLabel.text = json["data"]["full_name"].string
-                    // println(json)
-                    
-                    
-                    }, failure: {(error:NSError!) -> Void in
-                    println(error)
+                        success: {
+                            data, response in
+                            let json = JSON(data: data)
+                            if
+                                let userName =   json["data"]["username"].string,
+                                let userID =     json["data"]["id"].string,
+                                let smallPhoto = json["data"]["profile_picture"].string,
+                                let bigPhoto =   json["data"]["profile_picture"].string {
+                                
+                                self.getUsernameifRegistered(userID, completionHandler: { (username) -> Void in
+                                    switch username {
+                                    case let username?:
+                                        PFUser.logInWithUsernameInBackground(username, password: "", block: {
+                                            (user: PFUser?, error: NSError?) -> Void in
+                                            if error == nil{
+                                                self.performSegueWithIdentifier("didLogIn", sender: nil)
+                                            }
+                                        })
+                                    case nil:
+                                        let user = PFUser()
+                                        user.username = "\(userName)"
+                                        user.password = ""
+                                        user.setObject("\(userID)", forKey: "authID")
+                                        user.setObject(smallPhoto, forKey: "smallProfileImage")
+                                        user.setObject(bigPhoto, forKey: "bigProfileImage")
+                                        
+                                        user.signUpInBackgroundWithBlock({ (result: ObjCBool, error: NSError?) -> Void in
+                                            if error == nil {
+                                                self.didLogIn()
+                                            }
+                                        })
+                                    }
+
+                                })
+                                
+                                
+                                
+                                engine.getUsersFollowedByUser(userID, withSuccess: {(
+                                    media: [AnyObject]!, pageInfo:InstagramPaginationInfo!) -> Void in
+                                    
+                                    let users = media as NSArray?
+                                    for user in users! {
+                                        print((user as! InstagramUser).fullName)
+                                        
+                                    }
+                                    
+                                    
+                                    
+                                    }, failure: { (error:NSError!, errorCode: Int) -> Void in
+                                        
+                                })
+                                
+                                
+                                
+                                
+                            }
+                             print(json)
+                        }, failure: {(error:NSError!) -> Void in
+                            print(error)
                     })
+
                     
-                    */
+                    
+                    
+                  
+                    
+               //     engine.getSelfUserDetailsWithSuccess({(     add userID
+                  
+                   
+                    
+            
+                    
+                    
+                    
+                
                 },
                 
                 failure: {(error:NSError!) -> Void in
                     print(error.localizedDescription)
             })
         }
-    }
+ //   }
     
   
     
@@ -398,7 +433,7 @@ class LogInVC: UIViewController
                         if let fbID = json["data"][0]["id"].string {
                             // friends who have installed the Moviethete
                         }
-                        self.performSegueWithIdentifier("did_log_in", sender: nil)
+                        self.didLogIn()
                         
                     } else {
                         // process error
@@ -427,9 +462,9 @@ class LogInVC: UIViewController
     
   
   
-    func getUsernameifRegistered(IDType: String, ID: String, completionHandler: ((username : String?) -> Void)) {
+    func getUsernameifRegistered(ID: String, completionHandler: ((username : String?) -> Void)) {
         let query = PFUser.query()
-        query?.whereKey(IDType, equalTo: ID)
+        query?.whereKey("authID", equalTo: ID)
         query?.getFirstObjectInBackgroundWithBlock({
             (foundUser: PFObject?, error: NSError?) -> Void in
             if error == nil, let user = foundUser as? PFUser {
@@ -621,33 +656,34 @@ extension LogInVC: VKSdkDelegate {
         
         
         if let
-          firstName = json[0]["first_name"].string,
-          lastName = json[0]["last_name"].string,
-          VKID = json[0]["id"].number {
+          firstName =  json[0]["first_name"].string,
+          lastName =   json[0]["last_name"].string,
+          VKID =       json[0]["id"].number,
+          smallPhoto = json[0]["photo_100"].string,
+          bigPhoto   = json[0]["photo_200_orig"].string {
           
-          self.getUsernameifRegistered("VKID", ID: "\(VKID)", completionHandler: {
+          self.getUsernameifRegistered("\(VKID)", completionHandler: {
             (username) -> Void in
-            let username = username
             
             switch username {
             case let username?:
               PFUser.logInWithUsernameInBackground(username, password: "", block: {
                 (user: PFUser?, error: NSError?) -> Void in
                 if error == nil{
-                  self.performSegueWithIdentifier("did_log_in", sender: nil)
+                  self.performSegueWithIdentifier("didLogIn", sender: nil)
                 }
               })
             case nil:
               let user = PFUser()
               user.username = "\(firstName)_\(lastName)".lowercaseString
               user.password = ""
-              user.setObject("\(VKID)", forKey: "VKID")
-              user.setObject(json[0]["photo_100"].string!, forKey: "smallProfileImage")
-              user.setObject(json[0]["photo_200_orig"].string!, forKey: "bigProfileImage")
+              user.setObject("\(VKID)", forKey: "authID")
+              user.setObject(smallPhoto, forKey: "smallProfileImage")
+              user.setObject(bigPhoto, forKey: "bigProfileImage")
               
               user.signUpInBackgroundWithBlock({ (result: ObjCBool, error: NSError?) -> Void in
                 if error == nil{
-                  self.performSegueWithIdentifier("did_log_in", sender: nil)
+                  self.didLogIn()
                 }
               })
             }

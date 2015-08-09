@@ -47,7 +47,7 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
 
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      /*
+      
         if indexPath.section == 0 {
           let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsFollowFriendsCell", forIndexPath: indexPath) as! ProfileSettingsFollowFriendsCell
             if indexPath.row == 0 {
@@ -75,7 +75,7 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
             }
             
       }
-      */
+
         if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsCell", forIndexPath: indexPath) as! ProfileSettingsCell
             cell.tempLabel.text = "Log Out"
@@ -91,11 +91,11 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         if indexPath.section == 1 {
             PFUser.logOut()
+            InstagramEngine.sharedEngine().logout()
             VKSdk.forceLogout()
             FBSDKLoginManager().logOut()
             Twitter.sharedInstance().logOut()
-            self.presentViewController((self.storyboard?.instantiateViewControllerWithIdentifier("login"))!, animated: true, completion: nil)
-            
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
        
         
@@ -147,14 +147,16 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "didLogOut" {
+            if let vc = segue.destinationViewController as? LogInVC {
+                
+            }
+        }
+        
+        
+        
+        
     }
-    */
 
 }
