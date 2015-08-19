@@ -20,7 +20,9 @@ import SwiftValidator
 import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
-import Async
+
+
+let DID_LOG_IN_SEGUE_IDENTIFIER = "didLogIn"
 
 
 
@@ -83,8 +85,6 @@ class LogInVC: UIViewController
     var tempArr: [Int] = [Int]()
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     var textArray: NSMutableArray! = NSMutableArray()
-    let instagramKeychain = Keychain(server: "https://api.instagram.com/oauth/authorize", protocolType: .HTTPS, authenticationType: .HTMLForm)
-    let vkontakteKeychain = Keychain(server: "https://oauth.vk.com/authorize", protocolType: .HTTPS, authenticationType: .HTMLForm)
     
     
 
@@ -124,10 +124,11 @@ class LogInVC: UIViewController
         signUpTriangle.hidden = true
       
         FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "fb:", name: FBSDKProfileDidChangeNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
         
-        //(UIApplication.sharedApplication().delegate as! AppDelegate).window?.rootViewController = self
-    }
+        
+        
+        }
 
   
    
@@ -172,12 +173,6 @@ class LogInVC: UIViewController
         return true
     }
     
-    
-    func didLogIn(){
-        //self.presentViewController((self.storyboard?.instantiateViewControllerWithIdentifier("main"))!, animated: true, completion: nil)
-        performSegueWithIdentifier("didLogIn", sender: self)
-    }
-    
   
     func signIn(){
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
@@ -199,7 +194,7 @@ class LogInVC: UIViewController
                 block: {
                 (user: PFUser?, error: NSError?) -> Void in
                 if user != nil {
-                    self.performSegueWithIdentifier("didLogIn", sender: nil)
+                    self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                 } else {
                     switch error!.code {
                     case 101:
@@ -220,7 +215,6 @@ class LogInVC: UIViewController
     
     func SignUp(){
         let user = PFUser()
-        
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         
@@ -246,7 +240,7 @@ class LogInVC: UIViewController
                 else if let error = error {
                 switch error.code {
                 case 202:
-                    alert.title = "Username already taken"
+                    alert.title = "Username already taken"   // "Or email is already taken. Have trouble logging in? " -> Needs to take into account email too.
                     alert.message = "This username is already taken. Please use a different one."
                     self.presentViewController(alert, animated: true, completion: nil)
                 default: break
@@ -269,7 +263,7 @@ class LogInVC: UIViewController
       
         Twitter.sharedInstance().logInWithCompletion { session, error in
             if (session != nil) {
-                self.performSegueWithIdentifier("didLogIn", sender: nil)
+                self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
             } else {
                 print("error: \(error.localizedDescription)");
             }
@@ -293,8 +287,6 @@ class LogInVC: UIViewController
         
         auth.authorize_url_handler = WebVC()
         
-
-        
             auth.authorizeWithCallbackURL(
                 NSURL(string: "oauth-swift://oauth-callback/instagram")!,
                 scope: "likes+comments",
@@ -305,123 +297,115 @@ class LogInVC: UIViewController
                     let engine = InstagramEngine.sharedEngine()
                     engine.accessToken = credential.oauth_token
                     
-                    self.instagramKeychain.set(credential.oauth_token, key: "access_token")
-                    
-                    let url = "https://api.instagram.com/v1/users/self/?access_token=\(credential.oauth_token)"
-                    let parameters: Dictionary = Dictionary<String, AnyObject>()
-                    auth.client.get(url, parameters: parameters,
-                        success: {
-                            data, response in
-                            let json = JSON(data: data)
-                            if
-                                let userName =   json["data"]["username"].string,
-                                let userID =     json["data"]["id"].string,
-                                let smallPhoto = json["data"]["profile_picture"].string,
-                                let bigPhoto =   json["data"]["profile_picture"].string {
-                                
-                                self.getUsernameifRegistered(userID, completionHandler: { (username) -> Void in
-                                    switch username {
-                                    case let username?:
-                                        PFUser.logInWithUsernameInBackground(username, password: "", block: {
-                                            (user: PFUser?, error: NSError?) -> Void in
-                                            if error == nil{
-                                                self.performSegueWithIdentifier("didLogIn", sender: nil)
-                                            }
-                                        })
-                                    case nil:
-                                        let user = PFUser()
-                                        user.username = "\(userName)"
-                                        user.password = ""
-                                        user.setObject("\(userID)", forKey: "authID")
-                                        user.setObject(smallPhoto, forKey: "smallProfileImage")
-                                        user.setObject(bigPhoto, forKey: "bigProfileImage")
-                                        
-                                        user.signUpInBackgroundWithBlock({ (result: ObjCBool, error: NSError?) -> Void in
-                                            if error == nil {
-                                                self.didLogIn()
-                                            }
-                                        })
+                    engine.getSelfUserDetailsWithSuccess({ (user: InstagramUser!) -> Void in
+                        let userName =   user.username
+                        let userID =     user.Id
+                        let smallPhoto = user.profilePictureURL
+                        let bigPhoto =   user.profilePictureURL
+                        
+                        self.getUsernameifRegistered(userID,
+                            completionHandler: { (username) -> Void in
+                            switch username {
+                            case let username?:
+                                PFUser.logInWithUsernameInBackground(username, password: "", block: {
+                                    (user: PFUser?, error: NSError?) -> Void in
+                                    if error == nil{
+                                        self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                                     }
-
                                 })
+                            case nil:
+                                let user = PFUser()
+                                user.username = userName
+                                user.password = ""
+                                user.setObject("INSTM\(userID)", forKey: "authID")
+                                user.setObject("\(smallPhoto)", forKey: "smallProfileImage")
+                                user.setObject("\(bigPhoto)", forKey: "bigProfileImage")
                                 
-                                
-                                
-                                engine.getUsersFollowedByUser(userID, withSuccess: {(
-                                    media: [AnyObject]!, pageInfo:InstagramPaginationInfo!) -> Void in
-                                    
-                                    let users = media as NSArray?
-                                    for user in users! {
-                                        print((user as! InstagramUser).fullName)
-                                        
+                                user.signUpInBackgroundWithBlock({ (result: ObjCBool, error: NSError?) -> Void in
+                                    if error == nil {
+                                        self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                                     }
-                                    
-                                    
-                                    
-                                    }, failure: { (error:NSError!, errorCode: Int) -> Void in
-                                        
+                                    else if let error = error {
+                                        switch error {
+                                        case 202:   // parse: "username already taken"
+                                            self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
+                                        default: break
+                                        }
+                                    }
                                 })
-                                
-                                
-                                
+                            }
+                            
+                        })
+                        
+                        
+                        engine.getUsersFollowedByUser(userID, withSuccess: {(
+                            media: [AnyObject]!, pageInfo:InstagramPaginationInfo!) -> Void in
+                            
+                            let users = media as NSArray?
+                            for user in users! {
+                                print((user as! InstagramUser).fullName)
                                 
                             }
-                             print(json)
-                        }, failure: {(error:NSError!) -> Void in
-                            print(error)
-                    })
 
-                    
-                    
-                    
-                  
-                    
-               //     engine.getSelfUserDetailsWithSuccess({(     add userID
-                  
-                   
-                    
-            
-                    
-                    
-                    
-                
+                            }, failure: { (error:NSError!, errorCode: Int) -> Void in
+                                
+                        })
+                        
+                        }, failure: { (error: NSError!, errorCode: Int) -> Void in
+                            
+                    })
                 },
                 
                 failure: {(error:NSError!) -> Void in
                     print(error.localizedDescription)
             })
         }
- //   }
     
   
     
     @IBAction func loginWithFacebook(sender: AnyObject) {
-    let fbLoginManager = FBSDKLoginManager()
-    fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
-    fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"], handler: {
-        (result: FBSDKLoginManagerLoginResult!, error:NSError!) -> Void in
-        if error == nil && result.token != nil {
-            // logged in
-        } else {
-            // process error
-        }
-    })
+        let fbLoginManager = FBSDKLoginManager()
+        fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
+        fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"], handler: {
+            (result: FBSDKLoginManagerLoginResult!, error:NSError!) -> Void in
+            if error == nil && result.token != nil {
+                // logged in
+            } else {
+                // process error
+            }
+        })
     }
     
     
     
     
-    func fb(notif:NSNotification){
-        if FBSDKAccessToken.currentAccessToken() != nil {
+    func didReceiveFacebookProfile(notif:NSNotification){
+        if FBSDKAccessToken.currentAccessToken() != nil { //did FB log in or log out?
         PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken(), block: {
             (user: PFUser?, error: NSError?) -> Void in
             if let user = user {
                 if user.isNew {
+                    
                     let smallProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
                     let bigProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(600, 600))
+                    user.username = "\(FBSDKProfile.currentProfile().firstName.lowercaseString)_\(FBSDKProfile.currentProfile().lastName.lowercaseString)"
                     user.setObject("https://graph.facebook.com/\(smallProfileImage)", forKey: "smallProfileImage")
                     user.setObject("https://graph.facebook.com/\(bigProfileImage)", forKey: "bigProfileImage")
-                    PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken())
+                    
+                    
+                    
+                PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken(), block: { (result: ObjCBool, error: NSError?) -> Void in
+                        if error == nil {
+                            print("ok!")
+                        }
+                        else if let error = error where error.code == 202 {
+                            let userID = FBSDKProfile.currentProfile().userID
+                            user.username?.extend(userID.substringWithRange(Range<String.Index>(start: advance(userID.endIndex, -3), end: (userID.endIndex))))
+                            PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken())
+                        }
+                    })
+                    
+                    
                 }
                 
                 let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: nil)
@@ -432,8 +416,9 @@ class LogInVC: UIViewController
                         print(json)
                         if let fbID = json["data"][0]["id"].string {
                             // friends who have installed the Moviethete
+                            print("////// \(fbID)  /////////")
                         }
-                        self.didLogIn()
+                        self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                         
                     } else {
                         // process error
@@ -459,9 +444,8 @@ class LogInVC: UIViewController
     
     
   
-    
   
-  
+  // MARK: - Utility
     func getUsernameifRegistered(ID: String, completionHandler: ((username : String?) -> Void)) {
         let query = PFUser.query()
         query?.whereKey("authID", equalTo: ID)
@@ -477,7 +461,14 @@ class LogInVC: UIViewController
     }
     
     
-  
+    func extendUsernameWithUserIDAndRegister(userID: String, user: PFUser){
+        user.username?.extend(userID.substringWithRange(Range<String.Index>(start: advance(userID.endIndex, -3), end: (userID.endIndex))))
+        user.signUpInBackgroundWithBlock({ (result: ObjCBool, error: NSError?) -> Void in
+            if error == nil {
+                self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+            }
+        })
+    }
   
  
 
@@ -652,39 +643,43 @@ extension LogInVC: VKSdkDelegate {
         print("//////////////////////////////")
         print(json)
         
-        
-        
-        
         if let
           firstName =  json[0]["first_name"].string,
           lastName =   json[0]["last_name"].string,
-          VKID =       json[0]["id"].number,
+          userID =     json[0]["id"].number,
           smallPhoto = json[0]["photo_100"].string,
           bigPhoto   = json[0]["photo_200_orig"].string {
           
-          self.getUsernameifRegistered("\(VKID)", completionHandler: {
+          self.getUsernameifRegistered("VK\(userID)", completionHandler: {
             (username) -> Void in
             
             switch username {
             case let username?:
-              PFUser.logInWithUsernameInBackground(username, password: "", block: {
-                (user: PFUser?, error: NSError?) -> Void in
+              PFUser.logInWithUsernameInBackground(username, password: "",
+                block: {(user: PFUser?, error: NSError?) -> Void in
                 if error == nil{
-                  self.performSegueWithIdentifier("didLogIn", sender: nil)
+                  self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                 }
               })
             case nil:
               let user = PFUser()
               user.username = "\(firstName)_\(lastName)".lowercaseString
               user.password = ""
-              user.setObject("\(VKID)", forKey: "authID")
+              user.setObject("VK\(userID)", forKey: "authID")
               user.setObject(smallPhoto, forKey: "smallProfileImage")
               user.setObject(bigPhoto, forKey: "bigProfileImage")
               
               user.signUpInBackgroundWithBlock({ (result: ObjCBool, error: NSError?) -> Void in
-                if error == nil{
-                  self.didLogIn()
+                if error == nil {
+                  self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+                } else if let error = error {
+                    switch error {
+                    case 202:   // parse: "username already taken"
+                        self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
+                    default: break
+                    }
                 }
+                
               })
             }
             
@@ -694,12 +689,13 @@ extension LogInVC: VKSdkDelegate {
         },  errorBlock: {(error: NSError!) -> Void in
           print(error.localizedDescription)
       })
-      
-      
-      
     }
   }
 
+    
+    
+    
+    
   
   func vkSdkIsBasicAuthorization() -> Bool {
     return false

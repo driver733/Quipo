@@ -20,6 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - Alamofire (2.0.0-beta.1)
   - Async (1.3.1)
   - Bolts (1.2.0):
     - Bolts/AppLinks (= 1.2.0)
@@ -69,6 +70,7 @@ PODS:
   - InstagramKit (3.6.5):
     - AFNetworking (~> 2.0)
   - KeychainAccess (1.2.1)
+  - OAStackView (0.1.0)
   - OAuthSwift (0.3.6)
   - Parse (1.7.5.3):
     - Bolts/Tasks (>= 1.2.0)
@@ -91,6 +93,7 @@ PODS:
   - VK-ios-sdk (1.1.12)
 
 DEPENDENCIES:
+  - Alamofire (from `https://github.com/Alamofire/Alamofire.git`, branch `swift-2.0`)
   - Async (from `https://github.com/duemunk/Async.git`, branch `feature/Swift_2.0`)
   - Fabric
   - FBSDKCoreKit
@@ -101,6 +104,7 @@ DEPENDENCIES:
   - InstagramKit (~> 3.0)
   - KeychainAccess (from `https://github.com/kishikawakatsumi/KeychainAccess.git`,
     branch `swift-2.0`)
+  - OAStackView
   - OAuthSwift (from `https://github.com/rpowelll/OAuthSwift.git`)
   - Parse (~> 1.7)
   - ParseFacebookUtilsV4 (~> 1.7)
@@ -115,6 +119,9 @@ DEPENDENCIES:
   - VK-ios-sdk
 
 EXTERNAL SOURCES:
+  Alamofire:
+    :branch: swift-2.0
+    :git: https://github.com/Alamofire/Alamofire.git
   Async:
     :branch: feature/Swift_2.0
     :git: https://github.com/duemunk/Async.git
@@ -132,6 +139,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/SwiftyJSON/SwiftyJSON.git
 
 CHECKOUT OPTIONS:
+  Alamofire:
+    :commit: 9a1e321cf0a345b32142394446fa1a7e08cf6942
+    :git: https://github.com/Alamofire/Alamofire.git
   Async:
     :commit: abe23c18d8d3a708a325b5db10231388e1ca5b88
     :git: https://github.com/duemunk/Async.git
@@ -153,6 +163,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Alamofire: 96feccc1e48a735edb92395cf023ba4ed52bdb45
   Async: edb15b1e34181d7c9873ce6b5d6eabc1c99e638b
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
   Fabric: a9eabe53915e9f1db55a84dd2838737928675878
@@ -169,6 +180,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
   InstagramKit: 90759652c8c4579bfaa5c9f001927e162c3e1c66
   KeychainAccess: 2ffa8b1b7130263bb7fe90b359d778696fc2d8ce
+  OAStackView: 76e64242351e2746374b9161a03021cbc19341ff
   OAuthSwift: 3517e94380923085dfa7f23421bc3d4a61ce48c0
   Parse: 373adbb1ad2e34d383542c3b28f678c49ebe4881
   ParseFacebookUtilsV4: ea5db22e87b91cbf99b9d156642e2b97a4db7d51
@@ -179,7 +191,7 @@ SPEC CHECKSUMS:
   TLYShyNavBar: e0d7b6719a8860144415708bbe8b6fbddd36f419
   TPKeyboardAvoiding: ff1ee4e5a5a0c119b965552af8f183868ea20207
   TwitterCore: 98ed97a6047c4ef109522840337e815683ead7e5
-  TwitterKit: 7ec3d60ef21776f9e5726ecb85856e024d8c25b3
+  TwitterKit: 1492792649dee11c2087498f7993f529bdb6c870
   VK-ios-sdk: 53e366d221b24cc0ef6f31c6e9dfae5f12eea054
 
 COCOAPODS: 0.38.2

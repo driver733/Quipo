@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8173.3" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SearchResultCell" rowHeight="126" id="KGk-i7-Jjw" customClass="SearchResultCell" customModule="Moviethete" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="595" height="126"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="595" height="125"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8gc-8o-Ima" customClass="OAStackView">
+                        <rect key="frame" x="10" y="0.0" width="585" height="125"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6Yt-wG-oi0">
+                                <rect key="frame" x="20" y="8" width="72" height="102"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="102" id="V1m-xF-XhY"/>
+                                    <constraint firstAttribute="width" constant="72" id="h8V-fm-OxM"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R9x-pm-hkL" customClass="OAStackView">
+                                <rect key="frame" x="106" y="8" width="145" height="102"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="localizedMovieTitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BtD-2i-i6x">
+                                        <rect key="frame" x="0.0" y="-1" width="145" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="movieTitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XyX-81-Ugd">
+                                        <rect key="frame" x="0.0" y="22" width="78" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="genre" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nVA-o7-Ll8">
+                                        <rect key="frame" x="0.0" y="44" width="44" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="releaseDate" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3X5-ns-0YI">
+                                        <rect key="frame" x="0.0" y="73" width="92" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="axisValue">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="distributionValue">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="R9x-pm-hkL" firstAttribute="centerY" secondItem="6Yt-wG-oi0" secondAttribute="centerY" id="5Gv-Km-d0I"/>
+                            <constraint firstItem="R9x-pm-hkL" firstAttribute="leading" secondItem="6Yt-wG-oi0" secondAttribute="trailing" constant="14" id="LZ1-i4-DKO"/>
+                            <constraint firstItem="6Yt-wG-oi0" firstAttribute="top" secondItem="8gc-8o-Ima" secondAttribute="topMargin" id="m7A-GU-WWt"/>
+                            <constraint firstItem="R9x-pm-hkL" firstAttribute="top" secondItem="6Yt-wG-oi0" secondAttribute="top" id="qOm-9j-Xfx"/>
+                            <constraint firstItem="R9x-pm-hkL" firstAttribute="bottom" secondItem="6Yt-wG-oi0" secondAttribute="bottom" id="rHZ-VI-JTT"/>
+                            <constraint firstItem="R9x-pm-hkL" firstAttribute="height" secondItem="6Yt-wG-oi0" secondAttribute="height" id="syW-uJ-I8k"/>
+                            <constraint firstItem="6Yt-wG-oi0" firstAttribute="leading" secondItem="8gc-8o-Ima" secondAttribute="leading" constant="20" id="vNZ-WS-qgG"/>
+                            <constraint firstAttribute="trailing" secondItem="R9x-pm-hkL" secondAttribute="trailing" constant="334" id="yuK-kh-oe8"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="axisValue">
+                                <integer key="value" value="0"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="alignmentValue">
+                                <integer key="value" value="3"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                                <real key="value" value="20"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="distributionValue">
+                                <integer key="value" value="0"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="8gc-8o-Ima" secondAttribute="bottom" id="E7H-Bg-slW"/>
+                    <constraint firstAttribute="trailing" secondItem="8gc-8o-Ima" secondAttribute="trailing" id="i4i-BF-fNi"/>
+                    <constraint firstItem="8gc-8o-Ima" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="nyZ-HE-GnP"/>
+                    <constraint firstItem="8gc-8o-Ima" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="oyf-4h-Chk"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="genre" destination="nVA-o7-Ll8" id="pcF-qf-dJ9"/>
+                <outlet property="localizedMovieTitle" destination="BtD-2i-i6x" id="f6S-S2-zsu"/>
+                <outlet property="movieTitle" destination="XyX-81-Ugd" id="AVA-w0-gDN"/>
+                <outlet property="posterImage" destination="6Yt-wG-oi0" id="nMd-JH-xay"/>
+                <outlet property="releaseDate" destination="3X5-ns-0YI" id="o9B-WA-YGB"/>
+            </connections>
+            <point key="canvasLocation" x="471.5" y="327"/>
+        </tableViewCell>
+    </objects>
+</document>

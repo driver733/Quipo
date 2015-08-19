@@ -5,6 +5,9 @@
       location = "group:Moviethete.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Externals/iTunesSwift/ITunesSwift.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

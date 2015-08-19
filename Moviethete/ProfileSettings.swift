@@ -47,11 +47,10 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
 
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      
+      if FBSDKAccessToken.currentAccessToken() != nil {
         if indexPath.section == 0 {
           let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsFollowFriendsCell", forIndexPath: indexPath) as! ProfileSettingsFollowFriendsCell
             if indexPath.row == 0 {
-                if FBSDKAccessToken.currentAccessToken() != nil {
                     cell.socialNetworkIcon.image = UIImage(named: "facebook")
                     let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: nil)
                     graphRequest.startWithCompletionHandler({
@@ -95,7 +94,8 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
             VKSdk.forceLogout()
             FBSDKLoginManager().logOut()
             Twitter.sharedInstance().logOut()
-            self.dismissViewControllerAnimated(true, completion: nil)
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            self.presentViewController((appDelegate.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("login"))!, animated: true, completion: nil)
         }
        
         
@@ -108,7 +108,7 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         switch section {
         case 0:
-            if (FBSDKAccessToken.currentAccessToken() != nil) {
+            if FBSDKAccessToken.currentAccessToken() != nil {
                 numberOfRows++
             }
             if VKSdk.isLoggedIn() {

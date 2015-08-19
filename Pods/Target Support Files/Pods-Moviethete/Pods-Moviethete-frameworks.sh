@@ -53,6 +53,7 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-Moviethete/AFNetworking.framework'
+  install_framework 'Pods-Moviethete/Alamofire.framework'
   install_framework 'Pods-Moviethete/Async.framework'
   install_framework 'Pods-Moviethete/Bolts.framework'
   install_framework 'Pods-Moviethete/FBSDKCoreKit.framework'
@@ -61,6 +62,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-Moviethete/FontBlaster.framework'
   install_framework 'Pods-Moviethete/InstagramKit.framework'
   install_framework 'Pods-Moviethete/KeychainAccess.framework'
+  install_framework 'Pods-Moviethete/OAStackView.framework'
   install_framework 'Pods-Moviethete/OAuthSwift.framework'
   install_framework 'Pods-Moviethete/Parse.framework'
   install_framework 'Pods-Moviethete/ParseFacebookUtilsV4.framework'
@@ -74,6 +76,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-Moviethete/AFNetworking.framework'
+  install_framework 'Pods-Moviethete/Alamofire.framework'
   install_framework 'Pods-Moviethete/Async.framework'
   install_framework 'Pods-Moviethete/Bolts.framework'
   install_framework 'Pods-Moviethete/FBSDKCoreKit.framework'
@@ -82,6 +85,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-Moviethete/FontBlaster.framework'
   install_framework 'Pods-Moviethete/InstagramKit.framework'
   install_framework 'Pods-Moviethete/KeychainAccess.framework'
+  install_framework 'Pods-Moviethete/OAStackView.framework'
   install_framework 'Pods-Moviethete/OAuthSwift.framework'
   install_framework 'Pods-Moviethete/Parse.framework'
   install_framework 'Pods-Moviethete/ParseFacebookUtilsV4.framework'

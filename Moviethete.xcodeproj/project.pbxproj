@@ -35,14 +35,19 @@
 		8F7FF4BD1B73F2AB001317E2 /* Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F7FF49A1B73F2AB001317E2 /* Cell.xib */; };
 		8F7FF4BE1B73F2AB001317E2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7FF49B1B73F2AB001317E2 /* AppDelegate.swift */; };
 		8F7FF4BF1B73F2AB001317E2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8F7FF49C1B73F2AB001317E2 /* Info.plist */; };
-		8F7FF4C01B73F2AB001317E2 /* AddVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7FF49D1B73F2AB001317E2 /* AddVC.swift */; };
 		8F7FF4C11B73F2AB001317E2 /* DetailedPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7FF49E1B73F2AB001317E2 /* DetailedPostVC.swift */; };
 		8F7FF4C21B73F2AB001317E2 /* LikesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7FF49F1B73F2AB001317E2 /* LikesVC.swift */; };
 		8F7FF4C31B73F2AB001317E2 /* NanumPenScript-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7FF4A01B73F2AB001317E2 /* NanumPenScript-Regular.ttf */; };
-		8F7FF4C41B73F2AB001317E2 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7FF4A21B73F2AB001317E2 /* SearchVC.swift */; };
 		8F7FF4C61B73F2AB001317E2 /* WebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7FF4A41B73F2AB001317E2 /* WebViewVC.swift */; };
+		8F8A57381B825D65001D4E0A /* Search.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F8A57371B825D65001D4E0A /* Search.xib */; };
 		8FA4DC061B74B39400AB84AA /* LogInVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA4DC051B74B39400AB84AA /* LogInVC.swift */; };
 		8FA4DC081B74B3A300AB84AA /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA4DC071B74B3A300AB84AA /* FeedVC.swift */; };
+		8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB871A91B80FB9E00256787 /* SearchResultCell.swift */; };
+		8FB871AC1B80FB9E00256787 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */; };
+		8FB871AE1B80FC7200256787 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB871AD1B80FC7200256787 /* SearchResult.swift */; };
+		8FC5B8EB1B7E3EC90066ABAE /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8FC5B8EC1B7E3EC90066ABAE /* ITunesSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8FFB07DB1B802E9C00C9C789 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFB07D91B802E9C00C9C789 /* SearchVC.swift */; };
 		EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAECE6804A560D6747EC5E20 /* Pods_Moviethete.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -63,10 +68,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		8FC5B8ED1B7E3EC90066ABAE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8FC5B8EC1B7E3EC90066ABAE /* ITunesSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		2AE186941922961479F9BCB9 /* Pods-Moviethete.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.debug.xcconfig"; sourceTree = "<group>"; };
 		6A66909234E5A995E96035A1 /* Pods-Moviethete.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.release.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.release.xcconfig"; sourceTree = "<group>"; };
-		8F0E79CD1B73F8CA00C730AF /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toucan.swift; sourceTree = "<group>"; };
+		8F0E79CD1B73F8CA00C730AF /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Toucan.swift; path = Moviethete/Toucan.swift; sourceTree = "<group>"; };
 		8F0E79D81B73FA9800C730AF /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		8F0E79D91B73FA9800C730AF /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		8F62BDF01B73EFEB00B87865 /* Moviethete.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moviethete.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,14 +119,18 @@
 		8F7FF49A1B73F2AB001317E2 /* Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Cell.xib; sourceTree = "<group>"; };
 		8F7FF49B1B73F2AB001317E2 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8F7FF49C1B73F2AB001317E2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8F7FF49D1B73F2AB001317E2 /* AddVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddVC.swift; sourceTree = "<group>"; };
 		8F7FF49E1B73F2AB001317E2 /* DetailedPostVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedPostVC.swift; sourceTree = "<group>"; };
 		8F7FF49F1B73F2AB001317E2 /* LikesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LikesVC.swift; sourceTree = "<group>"; };
 		8F7FF4A01B73F2AB001317E2 /* NanumPenScript-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NanumPenScript-Regular.ttf"; sourceTree = "<group>"; };
-		8F7FF4A21B73F2AB001317E2 /* SearchVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		8F7FF4A41B73F2AB001317E2 /* WebViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewVC.swift; sourceTree = "<group>"; };
+		8F8A57371B825D65001D4E0A /* Search.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Search.xib; sourceTree = "<group>"; };
 		8FA4DC051B74B39400AB84AA /* LogInVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInVC.swift; sourceTree = "<group>"; };
 		8FA4DC071B74B3A300AB84AA /* FeedVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
+		8FB871A91B80FB9E00256787 /* SearchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
+		8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultCell.xib; sourceTree = "<group>"; };
+		8FB871AD1B80FC7200256787 /* SearchResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
+		8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = ITunesSwift.framework; path = "/Users/mikhailyakushin/Library/Developer/Xcode/DerivedData/Moviethete-btmlsatvnyfpkzaxusstbmuocrtc/Build/Products/Debug-iphoneos/ITunesSwift.framework"; sourceTree = "<absolute>"; };
+		8FFB07D91B802E9C00C9C789 /* SearchVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchVC.swift; path = ../SearchVC.swift; sourceTree = "<group>"; };
 		EAECE6804A560D6747EC5E20 /* Pods_Moviethete.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moviethete.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -116,6 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FC5B8EB1B7E3EC90066ABAE /* ITunesSwift.framework in Frameworks */,
 				EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -172,13 +196,12 @@
 		8F62BDF21B73EFEB00B87865 /* Moviethete */ = {
 			isa = PBXGroup;
 			children = (
+				8FFB07DD1B802EB000C9C789 /* Search */,
 				8F7FF4CB1B73F380001317E2 /* LogIn */,
 				8F7FF4CC1B73F39D001317E2 /* Feed */,
 				8F7FF4CA1B73F351001317E2 /* Profile */,
-				8F7FF49D1B73F2AB001317E2 /* AddVC.swift */,
 				8F7FF49E1B73F2AB001317E2 /* DetailedPostVC.swift */,
 				8F7FF49F1B73F2AB001317E2 /* LikesVC.swift */,
-				8F7FF4A21B73F2AB001317E2 /* SearchVC.swift */,
 				8F0E79D81B73FA9800C730AF /* Main.storyboard */,
 				8F0E79D91B73FA9800C730AF /* LaunchScreen.xib */,
 				8F7FF49B1B73F2AB001317E2 /* AppDelegate.swift */,
@@ -208,7 +231,6 @@
 		8F7FF4C91B73F2F8001317E2 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
-				8F0E79CD1B73F8CA00C730AF /* Toucan.swift */,
 				8F7FF4841B73F2AB001317E2 /* Images.xcassets */,
 				8F7FF49C1B73F2AB001317E2 /* Info.plist */,
 				8F7FF4A01B73F2AB001317E2 /* NanumPenScript-Regular.ttf */,
@@ -268,9 +290,23 @@
 			name = ProfileSettings;
 			sourceTree = "<group>";
 		};
+		8FFB07DD1B802EB000C9C789 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				8FFB07D91B802E9C00C9C789 /* SearchVC.swift */,
+				8F8A57371B825D65001D4E0A /* Search.xib */,
+				8FB871A91B80FB9E00256787 /* SearchResultCell.swift */,
+				8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */,
+				8FB871AD1B80FC7200256787 /* SearchResult.swift */,
+			);
+			name = Search;
+			sourceTree = "<group>";
+		};
 		C76F4F8BDF23CEBB89CA0EA3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8F0E79CD1B73F8CA00C730AF /* Toucan.swift */,
+				8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */,
 				EAECE6804A560D6747EC5E20 /* Pods_Moviethete.framework */,
 			);
 			name = Frameworks;
@@ -290,6 +326,7 @@
 				130D33E29F56BF307D79DC1F /* Embed Pods Frameworks */,
 				7C1AED9618BCA0587ADD5506 /* Copy Pods Resources */,
 				8F4F97C41B7418E5006CA7C9 /* ShellScript */,
+				8FC5B8ED1B7E3EC90066ABAE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -394,8 +431,10 @@
 				8F7FF4B11B73F2AB001317E2 /* ProfileUserReviews.xib in Resources */,
 				8F0E79DA1B73FA9800C730AF /* Main.storyboard in Resources */,
 				8F7FF4B61B73F2AB001317E2 /* ContentCell.xib in Resources */,
+				8FB871AC1B80FB9E00256787 /* SearchResultCell.xib in Resources */,
 				8F7FF4C31B73F2AB001317E2 /* NanumPenScript-Regular.ttf in Resources */,
 				8F0E79DB1B73FA9800C730AF /* LaunchScreen.xib in Resources */,
+				8F8A57381B825D65001D4E0A /* Search.xib in Resources */,
 				8F7FF4BF1B73F2AB001317E2 /* Info.plist in Resources */,
 				8F7FF4AF1B73F2AB001317E2 /* ProfileFollowerCell.xib in Resources */,
 				8F7FF4B71B73F2AB001317E2 /* TopCell.xib in Resources */,
@@ -484,6 +523,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FB871AE1B80FC7200256787 /* SearchResult.swift in Sources */,
 				8F7FF4B21B73F2AB001317E2 /* ProfileUserReviews.swift in Sources */,
 				8F7FF4B91B73F2AB001317E2 /* ContentCell.swift in Sources */,
 				8F7FF4BA1B73F2AB001317E2 /* Post.swift in Sources */,
@@ -491,16 +531,16 @@
 				8F7FF4B31B73F2AB001317E2 /* ProfileVC.swift in Sources */,
 				8F7FF4BC1B73F2AB001317E2 /* Cell.swift in Sources */,
 				8F7FF4B81B73F2AB001317E2 /* TopCell.swift in Sources */,
+				8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */,
 				8F7FF4B51B73F2AB001317E2 /* ProfileTopCell.swift in Sources */,
-				8F7FF4C01B73F2AB001317E2 /* AddVC.swift in Sources */,
 				8F7FF4C11B73F2AB001317E2 /* DetailedPostVC.swift in Sources */,
 				8F7FF4AE1B73F2AB001317E2 /* ProfileSettingsCell.swift in Sources */,
 				8F7FF4C61B73F2AB001317E2 /* WebViewVC.swift in Sources */,
 				8FA4DC081B74B3A300AB84AA /* FeedVC.swift in Sources */,
 				8F0E79CE1B73F8CA00C730AF /* Toucan.swift in Sources */,
-				8F7FF4C41B73F2AB001317E2 /* SearchVC.swift in Sources */,
 				8F7FF4AC1B73F2AB001317E2 /* ProfileSettingsFollowFriendsCell.swift in Sources */,
 				8F7FF4AA1B73F2AB001317E2 /* ProfileSettings.swift in Sources */,
+				8FFB07DB1B802E9C00C9C789 /* SearchVC.swift in Sources */,
 				8F7FF4C21B73F2AB001317E2 /* LikesVC.swift in Sources */,
 				8FA4DC061B74B39400AB84AA /* LogInVC.swift in Sources */,
 				8F7FF4B41B73F2AB001317E2 /* ProfileFollowerCell.swift in Sources */,
@@ -634,6 +674,11 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/iTunesSwift/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = Moviethete/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -654,6 +699,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/iTunesSwift/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = Moviethete/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

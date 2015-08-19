@@ -15,6 +15,7 @@ import FBSDKLoginKit
 import FBSDKShareKit
 import Parse
 import SDWebImage
+import ITunesSwift
 
 extension UIViewController {
     
@@ -35,7 +36,6 @@ class FeedVC: UIViewController {
     @IBOutlet var tableView: UITableView!
     
     var arrayOfPosts: [Post] = [Post]()
-    var fbProfile = false
     
     override func viewDidLoad() {
          super.viewDidLoad()
@@ -43,17 +43,60 @@ class FeedVC: UIViewController {
          tableView.registerNib(UINib(nibName: "ContentCell", bundle: nil), forCellReuseIdentifier: "ContentCell")
          tableView.delegate = self
          tableView.dataSource = self
-         tableView.rowHeight = UITableViewAutomaticDimension;
-         tableView.estimatedRowHeight = 44.0;
+         tableView.rowHeight = UITableViewAutomaticDimension
+         tableView.estimatedRowHeight = 44.0
          setUpPost()
-         shyNavBarManager.scrollView = self.tableView;
+         shyNavBarManager.scrollView = self.tableView
+        
+        
+        
+        
+        
+        
+        
+        let user = PFUser.currentUser()!
+        
+        
+        /*
+        let obj = PFObject(className: "Post")
+        obj.setObject("titanic", forKey: "title")
+        obj.setObject("1990", forKey: "year")
+        obj.setObject(user, forKey: "createdBy")
+        obj.save()
+        */
+        
+        
+        
+        /*
+        
+        let query = PFQuery(className: "Post")
+        query.limit = 10
+        query.whereKey("createdBy", equalTo: user)
+      
+        
+        let arr: [PFObject] = query.findObjects()! as! [PFObject]
+        
+        print("/////////////")
+        print(arr)
+        for obj in arr {
+            let user = obj.objectForKey("createdBy") as! PFUser
+            print(user.username)
+            print(obj.objectForKey("title"))
+        }
+        print("/////////////")
+        
+        
+    */
+        
+        
+
+        
+        
+  
     }
     
     
-    
   
-    
-
     
     // This function will be called when the Dynamic Type user setting changes (from the system Settings app)
     func contentSizeCategoryChanged(notification: NSNotification)
@@ -68,30 +111,20 @@ class FeedVC: UIViewController {
     }
 
     func setUpPost(){
-        let post1 = Post(userName: "Dachnik", timeSincePosted: "two hours ago", profileImage: nil, posterImage: nil)
+        let post = Post()
         for var i = 0; i < 200; i++ {
-        arrayOfPosts.append(post1)
+            arrayOfPosts.append(post)
         }
         
     }
     
-    func fb(notif: NSNotification) {
-        fbProfile = true
-        tableView.reloadData()
-    }
+
   
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetailedPost" {
             if let vc = segue.destinationViewController as? DetailedPostVC {
                     vc.num = tableView.indexPathForSelectedRow!.row
-                /*
-                if segue.identifier == "didLogOut" {
-                    if let destVC = segue.destinationViewController as? LogInVC {
-                        destVC.hidesBottomBarWhenPushed = true
-                    }
-                }
-                */
             }
         }
     }
@@ -119,12 +152,18 @@ extension FeedVC: UITableViewDelegate, UITableViewDataSource {
         {
         */
         if (indexPath.row % 2 == 0){
-            // Set up the cell representing the app
             let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
             cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0);
             let post = arrayOfPosts[indexPath.row]
+            
+            
+            
+            
             cell.userName.text = post.userName
             cell.timeSincePosted.text = post.timeSincePosted
+            
+            
+            
             // Only load cached images; defer new downloads until scrolling ends
             // if (post.profileImage == nil)
             // {
@@ -135,7 +174,7 @@ extension FeedVC: UITableViewDelegate, UITableViewDataSource {
                     placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
                     options: SDWebImageOptions.RefreshCached, completed:{(
                         image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-                        cell.profileImage.image = Toucan(image: image).maskWithEllipse().image
+                        cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
                 })
                 return cell
             }
@@ -175,7 +214,7 @@ extension FeedVC: UITableViewDelegate, UITableViewDataSource {
                         placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
                         options: SDWebImageOptions.RefreshCached, completed:{(
                             image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-                            cell.profileImage.image = Toucan(image: image).maskWithEllipse().image
+                            cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
                     })
                     
                 }

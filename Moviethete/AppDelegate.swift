@@ -18,8 +18,7 @@ import Parse
 import ParseFacebookUtilsV4
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate
-//,GIDSignInDelegate
+class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate
 {
 
     var window: UIWindow?
@@ -43,19 +42,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         
         Fabric.with([Twitter()])
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
         // Initialize sign-in
         var configureError: NSError?
-  //      GGLContext.sharedInstance().configureWithError(&configureError)
         assert(configureError == nil, "Error configuring Google services: \(configureError)")
-        
-     //   GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().delegate = self
         
         PFTwitterUtils.initializeWithConsumerKey("IeJhyNYLW5bgaZtrQTJ9Rq7Vb",  consumerSecret:"Ze2eFiBSVHA1dIOM8bu2gsK2cBO9Maw4nmqVzbJUv9B82G9vaw")
         
-        self.window?.rootViewController = self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("login")
         if (PFUser.currentUser() != nil) {
-            self.window?.rootViewController?.addChildViewController((self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))!)
+          self.window?.rootViewController? = (self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))!
         }
+      
+      
+   //   self.window?.rootViewController?.tabBarController!.delegate = self
+    //  ((self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))! as! UITabBarController).delegate = self
+      
+      
+      
         
         return true
     }
@@ -96,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     }
     
  
-    /*
+    
     
     func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!, withError error: NSError!) {
         if (error != nil){
@@ -114,9 +118,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     }
     
     
-    */
+
     
 
 
 }
+
+
+
+
+
+
+
+
+
+
 

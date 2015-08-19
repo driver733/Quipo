@@ -9,20 +9,20 @@
 import Foundation
 import UIKit
 
-class Post{
-    var userName = "userName"
-    var timeSincePosted = "three hours ago"
-    var profileImage:UIImage? = UIImage()
-    var posterImage:UIImage? = UIImage()
-    // var TopCell:CustomCell? = CustomCell()
-    //  var ContentCell:CustomCell? = CustomCell()
+class Post {
+    var userName: String!
+    var timeSincePosted: String!
+    var profileImage: UIImage?
+    var posterImage: UIImage?
+ 
    
-    
+    /*
     init (userName: String, timeSincePosted: String, profileImage: UIImage?, posterImage: UIImage?){
         self.userName = userName
         self.timeSincePosted = timeSincePosted
         self.profileImage = profileImage
         self.posterImage = posterImage
     }
+    */
     
 }

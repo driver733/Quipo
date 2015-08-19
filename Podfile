@@ -1,9 +1,12 @@
 # Uncomment this line to define a global platform for your project
 platform :ios, '8.4'
 use_frameworks!
+workspace 'Moviethete'
 
 target 'Moviethete' do
-pod 'Fabric'
+    pod 'OAStackView'
+    pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'swift-2.0'
+    pod 'Fabric'
     pod 'TwitterKit'
     pod 'TwitterCore'
     pod 'Google/SignIn'
@@ -35,3 +38,8 @@ target 'MovietheteUITests' do
 
 end
 
+target 'ITunesSwift' do
+   xcodeproj 'Externals/iTunesSwift/ITunesSwift.xcodeproj'
+    pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'swift-2.0'
+
+end
