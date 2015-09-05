@@ -10,8 +10,10 @@ install_framework()
 {
   if [ -r "${BUILT_PRODUCTS_DIR}/$1" ]; then
     local source="${BUILT_PRODUCTS_DIR}/$1"
-  else
+  elif [ -r "${BUILT_PRODUCTS_DIR}/$(basename "$1")" ]; then
     local source="${BUILT_PRODUCTS_DIR}/$(basename "$1")"
+  elif [ -r "$1" ]; then
+    local source="$1"
   fi
 
   local destination="${CONFIGURATION_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}"
@@ -25,14 +27,24 @@ install_framework()
   echo "rsync -av --filter \"- CVS/\" --filter \"- .svn/\" --filter \"- .git/\" --filter \"- .hg/\" --filter \"- Headers\" --filter \"- PrivateHeaders\" --filter \"- Modules\" \"${source}\" \"${destination}\""
   rsync -av --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "${source}" "${destination}"
 
+  local basename
+  basename="$(basename -s .framework "$1")"
+  binary="${destination}/${basename}.framework/${basename}"
+  if ! [ -r "$binary" ]; then
+    binary="${destination}/${basename}"
+  fi
+
+  # Strip invalid architectures so "fat" simulator / device frameworks work on device
+  if [[ "$(file "$binary")" == *"dynamically linked shared library"* ]]; then
+    strip_invalid_archs "$binary"
+  fi
+
   # Resign the code if required by the build settings to avoid unstable apps
   code_sign_if_enabled "${destination}/$(basename "$1")"
 
   # Embed linked Swift runtime libraries
-  local basename
-  basename="$(basename "$1" | sed -E s/\\..+// && exit ${PIPESTATUS[0]})"
   local swift_runtime_libs
-  swift_runtime_libs=$(xcrun otool -LX "${CONFIGURATION_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/${basename}.framework/${basename}" | grep --color=never @rpath/libswift | sed -E s/@rpath\\/\(.+dylib\).*/\\1/g | uniq -u  && exit ${PIPESTATUS[0]})
+  swift_runtime_libs=$(xcrun otool -LX "$binary" | grep --color=never @rpath/libswift | sed -E s/@rpath\\/\(.+dylib\).*/\\1/g | uniq -u  && exit ${PIPESTATUS[0]})
   for lib in $swift_runtime_libs; do
     echo "rsync -auv \"${SWIFT_STDLIB_PATH}/${lib}\" \"${destination}\""
     rsync -auv "${SWIFT_STDLIB_PATH}/${lib}" "${destination}"
@@ -50,50 +62,74 @@ code_sign_if_enabled() {
   fi
 }
 
+# Strip invalid architectures
+strip_invalid_archs() {
+  binary="$1"
+  # Get architectures for current file
+  archs="$(lipo -info "$binary" | rev | cut -d ':' -f1 | rev)"
+  stripped=""
+  for arch in $archs; do
+    if ! [[ "${VALID_ARCHS}" == *"$arch"* ]]; then
+      # Strip non-valid architectures in-place
+      lipo -remove "$arch" -output "$binary" "$binary" || exit 1
+      stripped="$stripped $arch"
+    fi
+  done
+  if [[ "$stripped" ]]; then
+    echo "Stripped $binary of architectures:$stripped"
+  fi
+}
+
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework 'Pods-Moviethete/AFNetworking.framework'
-  install_framework 'Pods-Moviethete/Alamofire.framework'
-  install_framework 'Pods-Moviethete/Async.framework'
-  install_framework 'Pods-Moviethete/Bolts.framework'
-  install_framework 'Pods-Moviethete/FBSDKCoreKit.framework'
-  install_framework 'Pods-Moviethete/FBSDKLoginKit.framework'
-  install_framework 'Pods-Moviethete/FBSDKShareKit.framework'
-  install_framework 'Pods-Moviethete/FontBlaster.framework'
-  install_framework 'Pods-Moviethete/InstagramKit.framework'
-  install_framework 'Pods-Moviethete/KeychainAccess.framework'
-  install_framework 'Pods-Moviethete/OAStackView.framework'
-  install_framework 'Pods-Moviethete/OAuthSwift.framework'
-  install_framework 'Pods-Moviethete/Parse.framework'
-  install_framework 'Pods-Moviethete/ParseFacebookUtilsV4.framework'
-  install_framework 'Pods-Moviethete/ParseUI.framework'
-  install_framework 'Pods-Moviethete/SDWebImage.framework'
-  install_framework 'Pods-Moviethete/SwiftValidator.framework'
-  install_framework 'Pods-Moviethete/SwiftyJSON.framework'
-  install_framework 'Pods-Moviethete/TLYShyNavBar.framework'
-  install_framework 'Pods-Moviethete/TPKeyboardAvoiding.framework'
-  install_framework 'Pods-Moviethete/VK_ios_sdk.framework'
+  install_framework "Pods-Moviethete/AFNetworking.framework"
+  install_framework "Pods-Moviethete/Alamofire.framework"
+  install_framework "Pods-Moviethete/Async.framework"
+  install_framework "Pods-Moviethete/Bolts.framework"
+  install_framework "Pods-Moviethete/FBSDKCoreKit.framework"
+  install_framework "Pods-Moviethete/FBSDKLoginKit.framework"
+  install_framework "Pods-Moviethete/FBSDKShareKit.framework"
+  install_framework "Pods-Moviethete/FontBlaster.framework"
+  install_framework "Pods-Moviethete/HCSStarRatingView.framework"
+  install_framework "Pods-Moviethete/InstagramKit.framework"
+  install_framework "Pods-Moviethete/Ji.framework"
+  install_framework "Pods-Moviethete/KeychainAccess.framework"
+  install_framework "Pods-Moviethete/OAStackView.framework"
+  install_framework "Pods-Moviethete/OAuthSwift.framework"
+  install_framework "Pods-Moviethete/Parse.framework"
+  install_framework "Pods-Moviethete/ParseFacebookUtilsV4.framework"
+  install_framework "Pods-Moviethete/ParseTwitterUtils.framework"
+  install_framework "Pods-Moviethete/ParseUI.framework"
+  install_framework "Pods-Moviethete/SDWebImage.framework"
+  install_framework "Pods-Moviethete/SwiftValidator.framework"
+  install_framework "Pods-Moviethete/SwiftyJSON.framework"
+  install_framework "Pods-Moviethete/TLYShyNavBar.framework"
+  install_framework "Pods-Moviethete/TPKeyboardAvoiding.framework"
+  install_framework "Pods-Moviethete/VK_ios_sdk.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework 'Pods-Moviethete/AFNetworking.framework'
-  install_framework 'Pods-Moviethete/Alamofire.framework'
-  install_framework 'Pods-Moviethete/Async.framework'
-  install_framework 'Pods-Moviethete/Bolts.framework'
-  install_framework 'Pods-Moviethete/FBSDKCoreKit.framework'
-  install_framework 'Pods-Moviethete/FBSDKLoginKit.framework'
-  install_framework 'Pods-Moviethete/FBSDKShareKit.framework'
-  install_framework 'Pods-Moviethete/FontBlaster.framework'
-  install_framework 'Pods-Moviethete/InstagramKit.framework'
-  install_framework 'Pods-Moviethete/KeychainAccess.framework'
-  install_framework 'Pods-Moviethete/OAStackView.framework'
-  install_framework 'Pods-Moviethete/OAuthSwift.framework'
-  install_framework 'Pods-Moviethete/Parse.framework'
-  install_framework 'Pods-Moviethete/ParseFacebookUtilsV4.framework'
-  install_framework 'Pods-Moviethete/ParseUI.framework'
-  install_framework 'Pods-Moviethete/SDWebImage.framework'
-  install_framework 'Pods-Moviethete/SwiftValidator.framework'
-  install_framework 'Pods-Moviethete/SwiftyJSON.framework'
-  install_framework 'Pods-Moviethete/TLYShyNavBar.framework'
-  install_framework 'Pods-Moviethete/TPKeyboardAvoiding.framework'
-  install_framework 'Pods-Moviethete/VK_ios_sdk.framework'
+  install_framework "Pods-Moviethete/AFNetworking.framework"
+  install_framework "Pods-Moviethete/Alamofire.framework"
+  install_framework "Pods-Moviethete/Async.framework"
+  install_framework "Pods-Moviethete/Bolts.framework"
+  install_framework "Pods-Moviethete/FBSDKCoreKit.framework"
+  install_framework "Pods-Moviethete/FBSDKLoginKit.framework"
+  install_framework "Pods-Moviethete/FBSDKShareKit.framework"
+  install_framework "Pods-Moviethete/FontBlaster.framework"
+  install_framework "Pods-Moviethete/HCSStarRatingView.framework"
+  install_framework "Pods-Moviethete/InstagramKit.framework"
+  install_framework "Pods-Moviethete/Ji.framework"
+  install_framework "Pods-Moviethete/KeychainAccess.framework"
+  install_framework "Pods-Moviethete/OAStackView.framework"
+  install_framework "Pods-Moviethete/OAuthSwift.framework"
+  install_framework "Pods-Moviethete/Parse.framework"
+  install_framework "Pods-Moviethete/ParseFacebookUtilsV4.framework"
+  install_framework "Pods-Moviethete/ParseTwitterUtils.framework"
+  install_framework "Pods-Moviethete/ParseUI.framework"
+  install_framework "Pods-Moviethete/SDWebImage.framework"
+  install_framework "Pods-Moviethete/SwiftValidator.framework"
+  install_framework "Pods-Moviethete/SwiftyJSON.framework"
+  install_framework "Pods-Moviethete/TLYShyNavBar.framework"
+  install_framework "Pods-Moviethete/TPKeyboardAvoiding.framework"
+  install_framework "Pods-Moviethete/VK_ios_sdk.framework"
 fi

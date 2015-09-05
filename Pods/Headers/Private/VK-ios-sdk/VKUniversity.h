@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/API/models/VKUniversity.h
+../../../VK-ios-sdk/library/Source/API/models/VKUniversity.h

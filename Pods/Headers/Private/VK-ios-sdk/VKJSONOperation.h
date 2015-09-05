@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Core/VKJSONOperation.h
+../../../VK-ios-sdk/library/Source/Core/VKJSONOperation.h

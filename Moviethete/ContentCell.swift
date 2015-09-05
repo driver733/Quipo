@@ -23,7 +23,9 @@ class ContentCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-
+  override func prepareForReuse() {
+    posterImage.image = nil // put placeholder image - light gray color
+  }
 
     
 }

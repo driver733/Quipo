@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Views/VKSharedTransitioningObject.h
+../../../VK-ios-sdk/library/Source/Views/VKSharedTransitioningObject.h

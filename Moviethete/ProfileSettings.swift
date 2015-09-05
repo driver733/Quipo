@@ -9,7 +9,7 @@
 import UIKit
 import VK_ios_sdk
 import TwitterKit
-import OAuthSwift
+//import OAuthSwift
 import SwiftyJSON
 import VK_ios_sdk
 import InstagramKit
@@ -17,7 +17,7 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
-import SwiftValidator
+//import SwiftValidator
 import FontBlaster
 import Parse
 import ParseFacebookUtilsV4

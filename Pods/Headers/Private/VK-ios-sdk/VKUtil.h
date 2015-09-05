@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Utils/VKUtil.h
+../../../VK-ios-sdk/library/Source/Utils/VKUtil.h

@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/API/models/VKCounters.h
+../../../VK-ios-sdk/library/Source/API/models/VKCounters.h

@@ -18,10 +18,10 @@ public class FullNameRule : Rule {
     }
         
     public func validate(value: String) -> Bool {
-        var nameArray: [String] = value.characters.split { $0 == " " }.map { String($0) }
+        var nameArray: [String] =  value.characters.split{ $0 == " " }.map(String.init)  //split(value) { $0 == " " }
         return nameArray.count >= 2
     }
-    
+  
     public func errorMessage() -> String {
         return message
     }

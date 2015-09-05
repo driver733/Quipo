@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Views/VKCaptchaViewController.h
+../../../VK-ios-sdk/library/Source/Views/VKCaptchaViewController.h

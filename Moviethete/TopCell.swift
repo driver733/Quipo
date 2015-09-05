@@ -26,5 +26,11 @@ class TopCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+  
+  override func prepareForReuse() {
+    profileImage.image = nil
+    userName.text = nil
+    timeSincePosted.text = nil
+  }
 
 }

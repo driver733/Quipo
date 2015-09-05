@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/API/methods/VKApiPhotos.h
+../../../VK-ios-sdk/library/Source/API/methods/VKApiPhotos.h

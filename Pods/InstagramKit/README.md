@@ -24,7 +24,7 @@ InstagramEngine *engine = [InstagramEngine sharedEngine];
 The framework is built atop AFNetworking’s blocks-based architecture and additionally, parses JSON data and creates model objects asynchronously so there’s absolutely no parsing on the main thread.
 It’s neat, fast and works like a charm.
 
-####Installation
+##Installation
 
 Getting started is easy. Just include the files from the directory 'InstagramKit' into your project and you'll be up and running. You may need to add AFNetworking to your project as well if you haven't already.
 
@@ -32,21 +32,108 @@ Getting started is easy. Just include the files from the directory 'InstagramKit
 ```ruby
 pod 'InstagramKit', '~> 3.0'
 ```
+If your App uses authorization and you'd like the storage and retrieval of the access token to and from the Keychain to be automatically handled for you by InstagramKit, include the following pods instead -
 
-####Compatibility
-Earliest supported deployment target = iOS 6
+```ruby
+pod 'InstagramKit', '~> 3.0'
+pod 'InstagramKit/UICKeyChainStore', '~> 2.0'
+```
+ 
+InstagramKit uses [UICKeyChainStore](https://github.com/kishikawakatsumi/UICKeyChainStore) as an optional sub-dependency for Keychain access. 
+If you opt to use the optional pod, InstagramKit resumes your authenticated sessions across App launches, without needing any additional code.
 
-####Instagram Developer Registration
-Head over to http://instagram.com/developer/clients/manage/ to register your app with Instagram and insert the right credentials into your App's Info.plist file.
+#### Instagram Developer Registration
+Head over to http://instagram.com/developer/clients/manage/ to register your app with Instagram and set the right credentials for ```InstagramAppClientId``` and ```InstagramAppRedirectURL``` in your App's Info.plist file. 
 
-####Authentication and Usage
+```InstagramAppClientId``` is your App's Client Id and ```InstagramAppRedirectURL```, the redirect URI which is obtained on registering your App on Instagram's Developer Dashboard.
+The redirect URI specifies where Instagram should redirect users after they have chosen whether or not to authenticate your application. 
 
-For detailed instructions on configuring, authenticating and using InstagramKit, refer to the [Authentication Guide](https://github.com/shyambhat/InstagramKit/wiki/Authentication).
-Download and run the Demo Project to understand how the engine is intended to be used.
+##Usage
 
-Note: To use POST or DELETE requests to change likes, comments or follows, you must [apply to Instagram here](https://www.facebook.com/help/instagram/contact/185819881608116#).
+#### Unauthenticated Requests
 
-Read about implementing Pagination for your requests effortlessly in the [Pagination Wiki](https://github.com/shyambhat/InstagramKit/wiki/Pagination).
+Some API calls only require the use of a Client Id, which simply associates the call with your specific App.
+
+```Objective-C
+InstagramEngine *engine = [InstagramEngine sharedEngine];
+[engine getPopularMediaWithSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
+    // media is an array of InstagramMedia objects
+    ...
+} failure:^(NSError *error, NSInteger statusCode) {
+    ...
+}];
+```
+
+#### Authentication
+
+For most API calls, you will need an Access Token and often times a User Id. To get your Access Token, the user needs to authenticate your app to access his Instagram account. 
+
+To do so, redirect the user to ```https://instagram.com/oauth/authorize/?client_id=[Client ID]&redirect_uri=[Redirect URI]&response_type=token``` 
+or allow InstagramEngine's helper method do the hard work for you - 
+
+```Objective-C
+NSURL *authURL = [[InstagramEngine sharedEngine] authorizarionURL];
+[self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
+```
+
+#### Scopes
+All apps have basic read access by default, but if you plan on asking for extended access such as liking, commenting, or managing friendships, you need to specify these scopes in your authorization request using the InstagramKitScope enum. 
+
+_Note that in order to use these extended permissions, first you need to submit your app for review to Instagram._
+
+_For your app to POST or DELETE likes, comments or follows, you must apply to Instagram here : https://www.facebook.com/help/instagram/contact/185819881608116#_
+
+```Objective-C
+// Set scope depending on permissions your App has been granted from Instagram
+// InstagramKitScopeBasic is included by default.
+
+InstagramKitScope scope = InstagramKitScopeRelationships | InstagramKitScopeComments | InstagramKitScopeLikes; 
+
+NSURL *authURL = [[InstagramEngine sharedEngine] authorizarionURLForScope:scope];
+[self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
+```
+
+Once the user grants your app permission, they will be redirected to a url in the form of something like ```http://localhost/#access_token=[access_token]``` and ```[access_token]``` will be split by a period like ```[userID].[rest of access token]```. 
+InstagramEngine includes a helper method to validate this token.
+
+```Objective-C
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    NSError *error;
+    if ([[InstagramEngine sharedEngine] receivedValidAccessTokenFromURL:request.URL error:&error]) {
+        // success!
+        ...
+    }
+    return YES;
+}
+```
+
+#### Authenticated Requests
+
+Once you're authenticated and InstagramKit has been provided an `accessToken`, it will automatically persist it until you call `-logout` on InstagramEngine. An authenticated call looks no different:
+
+```Objective-C
+InstagramEngine *engine = [InstagramEngine sharedEngine];
+[engine getSelfFeedWithSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
+    // media is an array of InstagramMedia objects
+    ...
+} failure:^(NSError *error, NSInteger statusCode) {
+    ...
+}];
+```
+
+####Pagination 
+The `InstagramPaginationInfo` object has everything it needs to make your next pagination call. 
+Read in detail about implementing Pagination for your requests effortlessly in the [Pagination Wiki](https://github.com/shyambhat/InstagramKit/wiki/Pagination).
+
+
+####Changelog
+**Version 3.6.6**
+- Persisting access token using UICKeyChainStore. UICKeyChainStore is added as an optional sub-spec.
+- Discontinued support for iOS 6, to comply with AFNetworking's compatible SDKs.
+- More changes here : https://github.com/shyambhat/InstagramKit/releases/tag/3.6.6
+
 
 ####Contributions?
 

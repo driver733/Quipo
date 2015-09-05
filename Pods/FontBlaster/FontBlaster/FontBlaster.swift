@@ -103,11 +103,11 @@ private extension FontBlaster
                 var fullPath: String?
                 if item.respondsToSelector(Selector("containsString:")) { // iOS 8+
                     if item.containsString(".bundle") {
-                        fullPath = (path as NSString).stringByAppendingPathComponent(item as String)
+                        fullPath = path.stringByAppendingString(item as String)
                     }
                 } else { // iOS 7
                     if item.rangeOfString(".bundle").location != NSNotFound {
-                        fullPath = (path as NSString).stringByAppendingPathComponent(item as String)
+                        fullPath = path.stringByAppendingString(item as String)
                     }
                 }
                 if let fullPath = fullPath {

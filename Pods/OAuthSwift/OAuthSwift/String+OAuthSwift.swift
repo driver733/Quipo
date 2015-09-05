@@ -15,7 +15,7 @@ extension String {
         
         if let range = self.rangeOfString(sub) {
             if !range.isEmpty {
-                pos = distance(self.startIndex, range.startIndex)
+                pos = self.startIndex.distanceTo(range.startIndex)
             }
         }
         
@@ -24,8 +24,8 @@ extension String {
     
     internal subscript (r: Range<Int>) -> String {
         get {
-            let startIndex = advance(self.startIndex, r.startIndex)
-            let endIndex = advance(startIndex, r.endIndex - r.startIndex)
+            let startIndex = self.startIndex.advancedBy(r.startIndex)
+            let endIndex = startIndex.advancedBy(r.endIndex - r.startIndex)
             
             return self[Range(start: startIndex, end: endIndex)]
         }
@@ -35,7 +35,7 @@ extension String {
         let charactersToBeEscaped = ":/?&=;+!@#$()',*" as CFStringRef
         let charactersToLeaveUnescaped = "[]." as CFStringRef
 
-        let raw: NSString = self
+        var raw: NSString = self
         
         let result = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, raw, charactersToLeaveUnescaped, charactersToBeEscaped, CFStringConvertNSStringEncodingToEncoding(encoding))
 
@@ -123,7 +123,7 @@ extension String {
     }
     //反转
     func reverse()-> String{
-        let s=Array(self.split("").reverse())
+        var s=self.split("").reverse()
         var x=""
         for y in s{
             x+=y

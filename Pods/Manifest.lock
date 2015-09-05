@@ -1,48 +1,48 @@
 PODS:
-  - AFNetworking (2.5.4):
-    - AFNetworking/NSURLConnection (= 2.5.4)
-    - AFNetworking/NSURLSession (= 2.5.4)
-    - AFNetworking/Reachability (= 2.5.4)
-    - AFNetworking/Security (= 2.5.4)
-    - AFNetworking/Serialization (= 2.5.4)
-    - AFNetworking/UIKit (= 2.5.4)
-  - AFNetworking/NSURLConnection (2.5.4):
+  - AFNetworking (2.6.0):
+    - AFNetworking/NSURLConnection (= 2.6.0)
+    - AFNetworking/NSURLSession (= 2.6.0)
+    - AFNetworking/Reachability (= 2.6.0)
+    - AFNetworking/Security (= 2.6.0)
+    - AFNetworking/Serialization (= 2.6.0)
+    - AFNetworking/UIKit (= 2.6.0)
+  - AFNetworking/NSURLConnection (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.4):
+  - AFNetworking/NSURLSession (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.4)
-  - AFNetworking/Security (2.5.4)
-  - AFNetworking/Serialization (2.5.4)
-  - AFNetworking/UIKit (2.5.4):
+  - AFNetworking/Reachability (2.6.0)
+  - AFNetworking/Security (2.6.0)
+  - AFNetworking/Serialization (2.6.0)
+  - AFNetworking/UIKit (2.6.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Alamofire (2.0.0-beta.1)
+  - Alamofire (2.0.0-beta.3)
   - Async (1.3.1)
-  - Bolts (1.2.0):
-    - Bolts/AppLinks (= 1.2.0)
-    - Bolts/Tasks (= 1.2.0)
-  - Bolts/AppLinks (1.2.0):
+  - Bolts (1.2.1):
+    - Bolts/AppLinks (= 1.2.1)
+    - Bolts/Tasks (= 1.2.1)
+  - Bolts/AppLinks (1.2.1):
     - Bolts/Tasks
-  - Bolts/Tasks (1.2.0)
-  - Fabric (1.2.8):
-    - Fabric/Base (= 1.2.8)
-  - Fabric/Base (1.2.8)
-  - FBSDKCoreKit (4.4.0):
+  - Bolts/Tasks (1.2.1)
+  - Fabric (1.4.1):
+    - Fabric/Base (= 1.4.1)
+  - Fabric/Base (1.4.1)
+  - FBSDKCoreKit (4.5.1):
     - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc (= 4.4.0)
-    - FBSDKCoreKit/no-arc (= 4.4.0)
-  - FBSDKCoreKit/arc (4.4.0):
+    - FBSDKCoreKit/arc (= 4.5.1)
+    - FBSDKCoreKit/no-arc (= 4.5.1)
+  - FBSDKCoreKit/arc (4.5.1):
     - Bolts (~> 1.1)
-  - FBSDKCoreKit/no-arc (4.4.0):
+  - FBSDKCoreKit/no-arc (4.5.1):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc
-  - FBSDKLoginKit (4.4.0):
+  - FBSDKLoginKit (4.5.1):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.4.0):
+  - FBSDKShareKit (4.5.1):
     - FBSDKCoreKit
   - FontBlaster (1.0.7)
   - Google/Core (1.0.7):
@@ -67,30 +67,43 @@ PODS:
   - GoogleSymbolUtilities (1.0.0)
   - GoogleUtilities (1.0.1):
     - GoogleSymbolUtilities (~> 1.0)
-  - InstagramKit (3.6.5):
+  - HCSStarRatingView (1.4.2)
+  - InstagramKit (3.6.8):
     - AFNetworking (~> 2.0)
+    - InstagramKit/Exclude-UICKeyChainStore (= 3.6.8)
+  - InstagramKit/Exclude-UICKeyChainStore (3.6.8):
+    - AFNetworking (~> 2.0)
+  - Ji (1.1):
+    - Ji/Ji (= 1.1)
+  - Ji/Ji (1.1):
+    - Ji/Ji-libxml
+  - Ji/Ji-libxml (1.1)
   - KeychainAccess (1.2.1)
   - OAStackView (0.1.0)
   - OAuthSwift (0.3.6)
-  - Parse (1.7.5.3):
-    - Bolts/Tasks (>= 1.2.0)
-  - ParseFacebookUtilsV4 (1.7.5.3):
-    - Bolts/Tasks (>= 1.2.0)
+  - Parse (1.8.2):
+    - Bolts/Tasks (>= 1.2.1)
+  - ParseFacebookUtilsV4 (1.8.2):
+    - Bolts/Tasks (>= 1.2.1)
     - FBSDKCoreKit (~> 4.0)
     - FBSDKLoginKit (~> 4.0)
-    - Parse (~> 1.7.5.3)
-  - ParseUI (1.1.4):
-    - Parse (~> 1.7)
+    - Parse (~> 1.8.2)
+  - ParseTwitterUtils (1.8.2):
+    - Bolts/Tasks (>= 1.2.1)
+    - Parse (~> 1.8.2)
+  - ParseUI (1.1.5):
+    - Bolts/Tasks (~> 1.2)
+    - Parse (~> 1.8)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
   - SwiftValidator (2.1.1)
   - SwiftyJSON (2.2.1)
-  - TLYShyNavBar (0.9.11)
+  - TLYShyNavBar (0.9.12)
   - TPKeyboardAvoiding (1.2.9)
   - TwitterCore (1.9.0)
   - TwitterKit (1.9.0)
-  - VK-ios-sdk (1.1.12)
+  - VK-ios-sdk (1.2.0)
 
 DEPENDENCIES:
   - Alamofire (from `https://github.com/Alamofire/Alamofire.git`, branch `swift-2.0`)
@@ -101,13 +114,16 @@ DEPENDENCIES:
   - FBSDKShareKit
   - FontBlaster (from `https://github.com/AndrewSB/FontBlaster.git`)
   - Google/SignIn
+  - HCSStarRatingView (~> 1.4.2)
   - InstagramKit (~> 3.0)
+  - Ji (from `https://github.com/honghaoz/Ji.git`, branch `swift-2.0`)
   - KeychainAccess (from `https://github.com/kishikawakatsumi/KeychainAccess.git`,
     branch `swift-2.0`)
   - OAStackView
   - OAuthSwift (from `https://github.com/rpowelll/OAuthSwift.git`)
   - Parse (~> 1.7)
   - ParseFacebookUtilsV4 (~> 1.7)
+  - ParseTwitterUtils
   - ParseUI (~> 1.1)
   - SDWebImage (~> 3.7)
   - SwiftValidator (from `https://github.com/i-schuetz/SwiftValidator.git`)
@@ -127,6 +143,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/duemunk/Async.git
   FontBlaster:
     :git: https://github.com/AndrewSB/FontBlaster.git
+  Ji:
+    :branch: swift-2.0
+    :git: https://github.com/honghaoz/Ji.git
   KeychainAccess:
     :branch: swift-2.0
     :git: https://github.com/kishikawakatsumi/KeychainAccess.git
@@ -140,16 +159,19 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Alamofire:
-    :commit: 9a1e321cf0a345b32142394446fa1a7e08cf6942
+    :commit: 64a004472c16313d04671518ef03ef4b72293dbc
     :git: https://github.com/Alamofire/Alamofire.git
   Async:
     :commit: abe23c18d8d3a708a325b5db10231388e1ca5b88
     :git: https://github.com/duemunk/Async.git
   FontBlaster:
-    :commit: b46d4d94afe5f6ebec71db2a7185ec485e397b3c
+    :commit: 46776e41f95b9e92a24f9a7d52236f19c128ecf2
     :git: https://github.com/AndrewSB/FontBlaster.git
+  Ji:
+    :commit: 4bc71f5337bd087468e4913d0f34ad8d2c83e8b8
+    :git: https://github.com/honghaoz/Ji.git
   KeychainAccess:
-    :commit: 7879a49b81c553ad9b40cbafda34a881648e2ff3
+    :commit: d1799b703b6b58e2d6ad7becb3cde620a20fcce2
     :git: https://github.com/kishikawakatsumi/KeychainAccess.git
   OAuthSwift:
     :commit: db8c44142674103a1fb904c9a654ac3978163e14
@@ -158,18 +180,18 @@ CHECKOUT OPTIONS:
     :commit: ca6509687eb869b542544757956cdd84b9585a5e
     :git: https://github.com/i-schuetz/SwiftValidator.git
   SwiftyJSON:
-    :commit: 45ca854ce75948858f65e31fbc58cbf214669250
+    :commit: f269523ac572979245baa99c8475eab73caf1e9b
     :git: https://github.com/SwiftyJSON/SwiftyJSON.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
-  Alamofire: 96feccc1e48a735edb92395cf023ba4ed52bdb45
+  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
+  Alamofire: 39dddb7d3725d1771b1d2f7099c8bd45bd83ffbb
   Async: edb15b1e34181d7c9873ce6b5d6eabc1c99e638b
-  Bolts: d176cb1e0012175589e389a9db49b85e27787576
-  Fabric: a9eabe53915e9f1db55a84dd2838737928675878
-  FBSDKCoreKit: 75bdd75c980e811db218488d99dd93b7740f4474
-  FBSDKLoginKit: 02a9254a4c132412fa03577b0d53e936d068a7fb
-  FBSDKShareKit: a42865f20ba2d1cc548c4d0f73ad22cff6377ddb
+  Bolts: 7686a5cb204d1ac54cee26f12d9b7622db3f80d1
+  Fabric: 4f718eeca4c02c7d6f6f4e5f0e5f87c63aa38458
+  FBSDKCoreKit: f335eaf6865e1e1597dee1debfb533045500da47
+  FBSDKLoginKit: 225cc9a388a92916ee3f3bb14422017b6e44b65b
+  FBSDKShareKit: 642034ac9f30793dfd897851b724bb4281750266
   FontBlaster: 2f3fc74593612c134398b8eb2b914ec1fe3d4cd6
   Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
   GoogleAppUtilities: c01c6a5671e9da8b9d690fdaec5959d6c2aac699
@@ -178,20 +200,23 @@ SPEC CHECKSUMS:
   GoogleSignIn: c45d8d1a873784a3283b4f47f331dc06d8a727b6
   GoogleSymbolUtilities: a7b0feed1fe667c8d5e647177938d0ecd62d6948
   GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
-  InstagramKit: 90759652c8c4579bfaa5c9f001927e162c3e1c66
+  HCSStarRatingView: 6157471eff9fe3ec7240e131a5b0aba39f097e57
+  InstagramKit: 2dc81dd8a9b534bbf918fbf8c4bc11eef11040a3
+  Ji: ba1026300109491e9340e01b65532ead43e0ebff
   KeychainAccess: 2ffa8b1b7130263bb7fe90b359d778696fc2d8ce
   OAStackView: 76e64242351e2746374b9161a03021cbc19341ff
   OAuthSwift: 3517e94380923085dfa7f23421bc3d4a61ce48c0
-  Parse: 373adbb1ad2e34d383542c3b28f678c49ebe4881
-  ParseFacebookUtilsV4: ea5db22e87b91cbf99b9d156642e2b97a4db7d51
-  ParseUI: d1228541b02a36a7354c8f47747f5f7a89cf1ff0
+  Parse: 188601c6cd91fae55906badd283b513104a3a8c9
+  ParseFacebookUtilsV4: 6e7415146935e1238ebabbee7e5d32d148027b2d
+  ParseTwitterUtils: af5c073b0750519b9efb33c3069a161cdeafe433
+  ParseUI: 2c53621ed028ee793f5ab92a551b099689265525
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SwiftValidator: 79936ea870f1dba8a0824763375375bb209fe30d
   SwiftyJSON: ae2d0a3d68025d136602a33c4ee215091ced3e33
-  TLYShyNavBar: e0d7b6719a8860144415708bbe8b6fbddd36f419
+  TLYShyNavBar: c39c12e01861ab87cc6d0d51867845c87d05f39d
   TPKeyboardAvoiding: ff1ee4e5a5a0c119b965552af8f183868ea20207
   TwitterCore: 98ed97a6047c4ef109522840337e815683ead7e5
   TwitterKit: 1492792649dee11c2087498f7993f529bdb6c870
-  VK-ios-sdk: 53e366d221b24cc0ef6f31c6e9dfae5f12eea054
+  VK-ios-sdk: 809c4cdb5706545bcc235d385b23d87b24391980
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0.beta.4

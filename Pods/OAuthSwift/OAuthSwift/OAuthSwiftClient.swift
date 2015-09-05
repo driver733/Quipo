@@ -79,7 +79,7 @@ public class OAuthSwiftClient {
         
         if let url = NSURL(string: url) {
         
-            let request = OAuthSwiftHTTPRequest(URL: url, method: method, parameters: parameters)
+            var request = OAuthSwiftHTTPRequest(URL: url, method: method, parameters: parameters)
             if self.credential.oauth2 {
                 request.headers = ["Authorization": "Bearer \(self.credential.oauth_token)"]
             } else {
@@ -94,8 +94,8 @@ public class OAuthSwiftClient {
             var parmaImage = [String: AnyObject]()
             parmaImage["media"] = image
             let boundary = "AS-boundary-\(arc4random())-\(arc4random())"
-            let type = "multipart/form-data; boundary=\(boundary)"
-            let body = self.multiPartBodyFromParams(parmaImage, boundary: boundary)
+            var type = "multipart/form-data; boundary=\(boundary)"
+            var body = self.multiPartBodyFromParams(parmaImage, boundary: boundary)
             
             request.HTTPBodyMultipart = body
             request.contentTypeMultipart = type
@@ -105,7 +105,7 @@ public class OAuthSwiftClient {
     }
     
     public func multiPartBodyFromParams(parameters: [String: AnyObject], boundary: String) -> NSData {
-        let data = NSMutableData()
+        var data = NSMutableData()
         
         let prefixData = "--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)
         let seperData = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)
@@ -169,7 +169,7 @@ public class OAuthSwiftClient {
         authorizationParameters["oauth_signature"] = self.signatureForMethod(method, url: url, parameters: finalParameters, credential: credential)
         
         var parameterComponents = authorizationParameters.urlEncodedQueryStringWithEncoding(dataEncoding).componentsSeparatedByString("&") as [String]
-        parameterComponents.sortInPlace { $0 < $1 }
+        parameterComponents.sort { $0 < $1 }
         
         var headerComponents = [String]()
         for component in parameterComponents {
@@ -179,7 +179,7 @@ public class OAuthSwiftClient {
             }
         }
         
-        return "OAuth " + ", ".join(headerComponents)
+        return "OAuth " + headerComponents.joinWithSeparator(", ")
     }
     
     public class func signatureForMethod(method: String, url: NSURL, parameters: Dictionary<String, AnyObject>, credential: OAuthSwiftCredential) -> String {
@@ -191,9 +191,9 @@ public class OAuthSwiftClient {
         let signingKey = "\(encodedConsumerSecret)&\(tokenSecret)"
         
         var parameterComponents = parameters.urlEncodedQueryStringWithEncoding(dataEncoding).componentsSeparatedByString("&") as [String]
-        parameterComponents.sortInPlace { $0 < $1 }
+        parameterComponents.sort { $0 < $1 }
         
-        let parameterString = "&".join(parameterComponents)
+        let parameterString = parameterComponents.joinWithSeparator("&")
         let encodedParameterString = parameterString.urlEncodedStringWithEncoding(dataEncoding)
         
         let encodedURL = url.absoluteString.urlEncodedStringWithEncoding(dataEncoding)
@@ -203,6 +203,7 @@ public class OAuthSwiftClient {
         let key = signingKey.dataUsingEncoding(NSUTF8StringEncoding)!
         let msg = signatureBaseString.dataUsingEncoding(NSUTF8StringEncoding)!
         let sha1 = HMAC.sha1(key: key, message: msg)!
-        return sha1.base64EncodedStringWithOptions([])
+       // return sha1.base64EncodedStringWithOptions(nil)
+        return sha1.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
     }
 }

@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Core/VKObject.h
+../../../VK-ios-sdk/library/Source/Core/VKObject.h

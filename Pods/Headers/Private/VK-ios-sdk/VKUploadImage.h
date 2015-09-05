@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Image/VKUploadImage.h
+../../../VK-ios-sdk/library/Source/Image/VKUploadImage.h

@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/VKAccessToken.h
+../../../VK-ios-sdk/library/Source/VKAccessToken.h

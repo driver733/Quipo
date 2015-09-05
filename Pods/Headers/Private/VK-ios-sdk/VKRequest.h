@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Core/VKRequest.h
+../../../VK-ios-sdk/library/Source/Core/VKRequest.h

@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Utils/OrderedDictionary.h
+../../../VK-ios-sdk/library/Source/Utils/OrderedDictionary.h

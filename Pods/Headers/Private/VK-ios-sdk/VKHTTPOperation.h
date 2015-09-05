@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Core/VKHTTPOperation.h
+../../../VK-ios-sdk/library/Source/Core/VKHTTPOperation.h

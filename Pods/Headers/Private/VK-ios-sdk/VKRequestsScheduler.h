@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Core/VKRequestsScheduler.h
+../../../VK-ios-sdk/library/Source/Core/VKRequestsScheduler.h

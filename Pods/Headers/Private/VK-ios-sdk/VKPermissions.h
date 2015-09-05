@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/VKPermissions.h
+../../../VK-ios-sdk/library/Source/VKPermissions.h

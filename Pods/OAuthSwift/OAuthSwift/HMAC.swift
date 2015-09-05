@@ -15,7 +15,7 @@ public class HMAC {
     
     class internal func sha1(key  key: NSData, message: NSData) -> NSData? {
         var key = key.bytes()
-        let message = message.bytes()
+        var message = message.bytes()
         
         // key
         if (key.count > 64) {

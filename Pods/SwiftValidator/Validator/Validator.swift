@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-@objc public protocol ValidationDelegate {
+public protocol ValidationDelegate {
     func validationSuccessful()
     func validationFailed(errors: [UITextField:ValidationError])
 }
@@ -30,7 +30,7 @@ public class Validator {
         errors = [:]
         
         for (textField, rule) in validations {
-            if let error = rule.validateField() {
+            if var error = rule.validateField() {
                 errors[textField] = error
                 
                 // let the user transform the field if they want

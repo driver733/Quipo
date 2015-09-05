@@ -17,17 +17,16 @@ public class FloatRule:Rule {
     }
     
     public func validate(value: String) -> Bool {
-        let regex: NSRegularExpression?
-        do {
-            regex = try NSRegularExpression(pattern: "[-+]?(\\d*[.])?\\d+", options: [])
-        } catch _ {
-            regex = nil
-        }
-        if let regex = regex {
-            let match = regex.numberOfMatchesInString(value, options: [], range: NSRange(location: 0, length: value.characters.count))
+      do {
+        let regex = try NSRegularExpression(pattern: ("[-+]?(\\d*[.])?\\d+" as? String)!, options: NSRegularExpressionOptions.AllowCommentsAndWhitespace)
+            let match = regex.numberOfMatchesInString(value, options: NSMatchingOptions.Anchored, range: NSRange(location: 0, length: value.characters.count))
             return match == 1
-        }
         return false
+      }
+      catch {
+      
+      }
+      return false
     }
     
     public func errorMessage() -> String {

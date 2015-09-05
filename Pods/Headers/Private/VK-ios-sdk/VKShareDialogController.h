@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Views/VKShareDialogController.h
+../../../VK-ios-sdk/library/Source/Views/VKShareDialogController.h

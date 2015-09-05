@@ -4,6 +4,8 @@ use_frameworks!
 workspace 'Moviethete'
 
 target 'Moviethete' do
+    pod 'HCSStarRatingView', '~> 1.4.2'
+    pod 'Ji', :git => 'https://github.com/honghaoz/Ji.git', :branch => 'swift-2.0'
     pod 'OAStackView'
     pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'swift-2.0'
     pod 'Fabric'
@@ -13,7 +15,8 @@ target 'Moviethete' do
     pod 'Parse', '~> 1.7'
     pod 'ParseUI', '~> 1.1'
     pod 'ParseFacebookUtilsV4', '~> 1.7'
-    pod 'SDWebImage', '~>3.7'
+    pod 'ParseTwitterUtils'
+    pod 'SDWebImage', '~> 3.7'
     pod 'FontBlaster', :git => 'https://github.com/AndrewSB/FontBlaster.git'
     pod 'SwiftValidator', :git => 'https://github.com/i-schuetz/SwiftValidator.git'
     pod 'TPKeyboardAvoiding', '~> 1.2'

@@ -16,6 +16,7 @@ import Bolts
 import SDWebImage
 import Parse
 import ParseFacebookUtilsV4
+import ParseTwitterUtils
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate
@@ -26,7 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        
+      
+      
+      
         // [Optional] Power your app with Local Datastore. For more info, go to
         // https://parse.com/docs/ios_guide#localdatastore/iOS
         Parse.enableLocalDatastore()
@@ -55,8 +58,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate
         }
       
       
-   //   self.window?.rootViewController?.tabBarController!.delegate = self
+    //   self.window?.rootViewController?.tabBarController!.delegate = self
     //  ((self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))! as! UITabBarController).delegate = self
+      
+  //    UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+ //     UIBarButtonItem.appearance().tintColor = UIColor.whiteColor()
       
       
       

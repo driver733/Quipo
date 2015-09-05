@@ -105,13 +105,8 @@ public class OAuth2Swift: NSObject {
         
         self.client.post(self.access_token_url!, parameters: parameters, success: {
             data, response in
-            var responseJSON: AnyObject?
-            do {
-                responseJSON = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)
-            } catch _ {
-                responseJSON = nil
-            }
-
+          do {
+            var responseJSON: AnyObject? = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)
             let responseParameters: NSDictionary
 
             if responseJSON != nil {
@@ -125,6 +120,10 @@ public class OAuth2Swift: NSObject {
             self.client.credential.oauth_token = accessToken
             self.client.credential.oauth2 = true
             success(credential: self.client.credential, response: response, parameters: responseParameters)
+          }
+          catch {
+            
+          }
         }, failure: failure)
     }
     

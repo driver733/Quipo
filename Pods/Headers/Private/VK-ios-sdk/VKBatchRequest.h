@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/VKBatchRequest.h
+../../../VK-ios-sdk/library/Source/VKBatchRequest.h

@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/API/models/VKPhotoSize.h
+../../../VK-ios-sdk/library/Source/API/models/VKPhotoSize.h

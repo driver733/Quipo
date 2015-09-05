@@ -1,1 +1,1 @@
-../../../VK-ios-sdk/sdk/Source/Core/VKHTTPClient.h
+../../../VK-ios-sdk/library/Source/Core/VKHTTPClient.h
