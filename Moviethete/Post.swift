@@ -12,6 +12,7 @@ import Bolts
 import Parse
 import ITunesSwift
 import SwiftyJSON
+import Async
 
   public struct Post {
     
@@ -137,53 +138,92 @@ import SwiftyJSON
   }
 
     
-    
-  func loadFeedPosts() -> BFTask {
-      let task = BFTaskCompletionSource()
-      let user = PFUser.currentUser()!
-      let relation = user.relationForKey("feed")
-      let query = relation.query()
-      query?.addDescendingOrder("createdAt")
-      query?.findObjectsInBackgroundWithBlock({ (result: [AnyObject]?, error: NSError?) -> Void in
-        if error == nil, let result = result {
-          let posts = result as! [PFObject]
-          for post in posts {
-            var tempPost = Post()
-            tempPost.userName = (post["createdBy"] as! PFUser).username
-            tempPost.timeSincePosted = self.getTimeSincePostedfromDate(post.createdAt!)
-            tempPost.profileImageURL = (post["createdBy"] as! PFUser)["smallProfileImage"] as? String  // change to user.object for key -profilePicture
-            //
-            // needs fix!
-            //
-            self.getMovieInfoByITunesID(post["trackID"] as! Int, completionHandler: { (responseJSON: JSON) -> Void in
-              let json = responseJSON["results"][0]
-              tempPost.bigPosterImageURL = self.getBigPosterImageURL(json["artworkUrl100"].stringValue)
-              Post.sharedInstance.feedPosts.append(tempPost)
-            })
-          }
-          task.setResult(nil)
-        } else {
-          task.setError(error)
-        }
-      })
-      return task.task
+    func test() -> BFTask {
+      var tasks = [BFTask]()
+      tasks.append(self.getMovieInfoByITunesID(270711065))
+      return BFTask(forCompletionOfAllTasksWithResults: tasks)
     }
     
     
-    func getMovieInfoByTitleAtCountry(movieTitle: String, country: String, completionHandler: ((responseJSON : JSON) -> Void)) {
+  func loadFeedPosts() -> BFTask {
+    
+    test()
+    
+    
+    let mainTask = BFTaskCompletionSource()
+   
+//    let user = PFUser.currentUser()!
+//    let relation = user.relationForKey("feed")
+//    let query = relation.query()
+//    
+//    query?.addDescendingOrder("createdAt")
+//    
+//    query?.findObjectsInBackground().continueWithBlock({ (task: BFTask!) -> AnyObject! in
+//      var tasks = [BFTask]()
+//      if task.error == nil, let result = task.result {
+//        let posts = result as! [PFObject]
+//        
+//        for post in posts {
+//          var tempPost = Post()
+//          tempPost.userName = (post["createdBy"] as! PFUser).username
+//          tempPost.timeSincePosted = self.getTimeSincePostedfromDate(post.createdAt!)
+//          tempPost.profileImageURL = (post["createdBy"] as! PFUser)["smallProfileImage"] as? String
+//          tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))
+//         }
+//        
+//      }
+//      
+//      return BFTask(forCompletionOfAllTasksWithResults: tasks)
+//    }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
+//      
+//      for var i = 0; i < Post.sharedInstance.feedPosts.count; ++i {
+//         Post.sharedInstance.feedPosts[i].bigPosterImageURL = self.getBigPosterImageURL((task.result as! JSON)[i]["artworkUrl100"].stringValue)
+//      }
+//      
+//      mainTask.setResult(nil)
+//      return nil
+//    })
+//    
+//    return mainTask.task
+    
+    return BFTask()
+    
+    }
+    
+    
+    func getMovieInfoByTitleAtCountry(movieTitle: String, country: String, completionHandler: (responseJSON: JSON) -> Void) {
+      let task = BFTaskCompletionSource()
       ITunesApi.find(Entity.Movie).by(movieTitle).at(country).request({ (responseString: String?, error: NSError?) -> Void in
         if
           //     error == nil,
           let responseString = responseString,
           let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            return completionHandler(responseJSON: JSON(data: dataFromString))
+            let json = JSON(data: dataFromString)
+            completionHandler(responseJSON: json["results"])
         } else {
+          task.setError(error)
           print(error!.localizedDescription)
         }
       })
-      
     }
     
+    
+    
+    
+    func getMovieInfoByITunesID(iTunesID: Int) -> BFTask {
+      let task = BFTaskCompletionSource()
+      ITunesApi.lookup(iTunesID).request({ (responseString: String?, error: NSError?) -> Void in
+        if
+          //        error == nil,
+          let responseString = responseString, let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+            let json = JSON(data: dataFromString)
+            task.setResult(json["results"].arrayObject!)
+        } else {
+          // process error
+        }
+      })
+      return task.task
+    }
   
     
   func getTinyPosterImageURL(defaultPosterImageURL: String) -> String {
@@ -204,15 +244,7 @@ import SwiftyJSON
     return str
   }
     
-  func getMovieInfoByITunesID(iTunesID: Int, completionHandler: ((responseJSON : JSON) -> Void)) {
-    ITunesApi.lookup(iTunesID).request({ (responseString: String?, error: NSError?) -> Void in
-      if
-//        error == nil,
-        let responseString = responseString, let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-        return completionHandler(responseJSON: JSON(data: dataFromString))
-      }
-    })
-  }
+
 
 
   func getReformattedReleaseDate(rawReleaseDate: String) -> String {

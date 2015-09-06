@@ -50,8 +50,8 @@ class LogInVC: UIViewController {
     
   }
 
-    //@IBAction func didLogOut(segue: UIStoryboardSegue) {
-    //}
+    @IBAction func didLogOut(segue: UIStoryboardSegue) {
+    }
     
     @IBAction func signUpButton(sender: AnyObject) {
       signInTableView.hidden = true
@@ -173,6 +173,7 @@ class LogInVC: UIViewController {
     
   
     func signIn(){
+      
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         var username = ""
@@ -180,47 +181,59 @@ class LogInVC: UIViewController {
         let password = (signInTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! Cell).textfield.text!
         let query = PFUser.query()
         query?.whereKey("email", equalTo: email!)
-      query?.findObjectsInBackground().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+        query?.findObjectsInBackground().continueWithSuccessBlock({
+          (task: BFTask!) -> AnyObject! in
         if task.error == nil, let foundUsers = task.result as? [PFObject] where foundUsers.count == 1 {
           for user in foundUsers {
             username = (user as! PFUser).username!
           }
         }
         return task
-        })
-      
-      
-        query?.findObjectsInBackgroundWithBlock({ (foundUsers: [AnyObject]?, error: NSError?) -> Void in
-            if error == nil, let foundUsers = foundUsers as? [PFObject] where foundUsers.count == 1 {
-                    for user in foundUsers {
-                        username = (user as! PFUser).username!
-                    }
-            }
+        }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
+          if task.error == nil {
+            
             PFUser.logInWithUsernameInBackground(
-                username,
-                password: password,
-                block: {
+              username,
+              password: password,
+              block: {
                 (user: PFUser?, error: NSError?) -> Void in
                 if user != nil {
-                    self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+                  self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                 } else {
-                    switch error!.code {
-                    case 101:
-                        alert.title = "Incorrect Email or Password"
-                        alert.message = "Please check your Email and Password!"
-                        self.presentViewController(alert, animated: true, completion: nil)
-                        
-                    default: break
-                    }
+                  print(username, password)
+                  switch error!.code {
+                  case 101:
+                    alert.title = "Incorrect Email or Password"
+                    alert.message = "Please check your Email and Password!"
+                    self.presentViewController(alert, animated: true, completion: nil)
+                    
+                  default: break
+                  }
                 }
-
+                
             })
-            
+
+          }
+          
+        return nil
+          
         })
+      
+      
+      
+          
+      
+          
+          
+          
+            
+    
     }
     
     
     func SignUp(){
+      
+      
         let user = PFUser()
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
@@ -239,9 +252,10 @@ class LogInVC: UIViewController {
         
         // other fields can be set just like with PFObject
       
-      user.signUpInBackground().continueWithBlock { (task: BFTask!) -> AnyObject! in
+      user.signUpInBackground().continueWithBlock {
+        (task: BFTask!) -> AnyObject! in
         if task.error == nil {
-          // signed up!
+          self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
         } else {
           switch task.error.code {
           case 202:
@@ -254,23 +268,10 @@ class LogInVC: UIViewController {
         }
         return nil
       }
-      /*
-        user.signUpInBackgroundWithBlock {
-            (succeeded: Bool, error: NSError?) -> Void in
-            if error == nil {
-                // signed up!
-            }
-                else if let error = error {
-                switch error.code {
-                case 202:
-                    alert.title = "Username already taken"   // "Or email is already taken. Have trouble logging in? " -> Needs to take into account email too.
-                    alert.message = "This username is already taken. Please use a different one."
-                    self.presentViewController(alert, animated: true, completion: nil)
-                default: break
-                }
-            }
-        }
-      */
+      
+      
+      
+      
     }
     
     
@@ -313,17 +314,17 @@ class LogInVC: UIViewController {
                     let engine = InstagramEngine.sharedEngine()
                     engine.accessToken = credential.oauth_token
                     
-                    engine.getSelfUserDetailsWithSuccess({ (user: InstagramUser!) -> Void in
+                    engine.getSelfUserDetailsWithSuccess({
+                      (user: InstagramUser!) -> Void in
                         let userName =   user.username
                         let userID =     user.Id
                         let smallPhoto = user.profilePictureURL
                         let bigPhoto =   user.profilePictureURL
                       
-                      self.getUsernameifRegistered(userID).continueWithBlock({
+                      self.getUsernameifRegistered("INSTM\(userID)").continueWithBlock({
                         (task: BFTask!) -> AnyObject! in
                         if task.error == nil, let username = task.result as? String {
-                        
-                        if task.result != nil {
+                          
                           PFUser.logInWithUsernameInBackground(username, password: "").continueWithBlock({
                             (task: BFTask!) -> AnyObject! in
                             if task.error == nil {
@@ -333,8 +334,8 @@ class LogInVC: UIViewController {
                             }
                             return nil
                           })
-                        }
-                        else {
+                          
+                        } else {
                           let user = PFUser()
                           user.username = userName
                           user.password = ""
@@ -346,15 +347,16 @@ class LogInVC: UIViewController {
                             (task: BFTask!) -> AnyObject! in
                             if task.error == nil {
                               self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                            }
-                            switch task.error {
-                            case 202:   // parse: "username already taken"
-                              self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
-                            default: break
+                            } else {
+                              switch task.error {
+                              case 202:   // parse: "username already taken"
+                                self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
+                              default: break
+                              }
                             }
                             return nil
                           })
-                          }
+                          
                         }
                         return nil
                       })
@@ -402,63 +404,66 @@ class LogInVC: UIViewController {
     
     func didReceiveFacebookProfile(notif:NSNotification){
       
+        if FBSDKAccessToken.currentAccessToken() != nil {               //did FB log in or log out?
+          
+          PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken()).continueWithBlock({
+            (task: BFTask!) -> AnyObject! in
+            if let user = task.result as? PFUser {
+              if user.isNew {
+                
+                let smallProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
+                let bigProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(600, 600))
+                user.username = "\(FBSDKProfile.currentProfile().firstName.lowercaseString)_\(FBSDKProfile.currentProfile().lastName.lowercaseString)"
+                user.setObject("https://graph.facebook.com/\(smallProfileImage)", forKey: "smallProfileImage")
+                user.setObject("https://graph.facebook.com/\(bigProfileImage)", forKey: "bigProfileImage")
+                
+                PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken()).continueWithBlock({
+                  (task: BFTask!) -> AnyObject! in
+                  if task.error == nil {
+                    // ok
+                  } else {
+                    switch task.error.code {
+                    case 202:
+                      let userID = FBSDKProfile.currentProfile().userID
+                      user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
+                      PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken())
+                    default: break
+                    }
+                  }
+                  return nil
+                })
+                
+              }
+            }
+            
+            return nil
+          })
+          
+              
+          let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "email"])
+            graphRequest.startWithCompletionHandler({
+                (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
+                if error == nil {
+                    let json = JSON(result)
+                    print(json)
+                    if let fbID = json["data"][0]["id"].string {
+                        // friends who have installed the Moviethete
+                        print("////// \(fbID)  /////////")
+                    }
+                    self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+                    
+                } else {
+                    // process error
+                }
+            })
+          
+
+        } else {
+            print("Uh oh. There was an error logging in.")
+        }
     
       
-        if FBSDKAccessToken.currentAccessToken() != nil {               //did FB log in or log out?
-        PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken(), block: {
-            (user: PFUser?, error: NSError?) -> Void in
-            if let user = user {
-                if user.isNew {
-                    
-                    let smallProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
-                    let bigProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(600, 600))
-                    user.username = "\(FBSDKProfile.currentProfile().firstName.lowercaseString)_\(FBSDKProfile.currentProfile().lastName.lowercaseString)"
-                    user.setObject("https://graph.facebook.com/\(smallProfileImage)", forKey: "smallProfileImage")
-                    user.setObject("https://graph.facebook.com/\(bigProfileImage)", forKey: "bigProfileImage")
-                    
-                  PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken()).continueWithBlock({ (task: BFTask!) -> AnyObject! in
-                    if task.error == nil {
-                      // ok
-                    } else {
-                      switch task.error.code {
-                      case 202:
-                        let userID = FBSDKProfile.currentProfile().userID
-                        user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
-                        PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken())
-                        default: break
-                      }
-                    }
-                    return nil
-                    })
-              }
-              
     
-              
-              
-              
-              let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "email"])
-                graphRequest.startWithCompletionHandler({
-                    (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
-                    if error == nil {
-                        let json = JSON(result)
-                        print(json)
-                        if let fbID = json["data"][0]["id"].string {
-                            // friends who have installed the Moviethete
-                            print("////// \(fbID)  /////////")
-                        }
-                        self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                        
-                    } else {
-                        // process error
-                    }
-                })
-
-            } else {
-                print("Uh oh. There was an error logging in.")
-            }
-        })
-        
-    }
 
     }
     
@@ -682,41 +687,48 @@ extension LogInVC: VKSdkDelegate {
             self.getUsernameifRegistered("VK\(userID)").continueWithBlock({
               (task: BFTask!) -> AnyObject! in
               if task.error == nil, let username = task.result as? String {
-                if task.result != nil {
-                  PFUser.logInWithUsernameInBackground(username, password: "").continueWithBlock({ (task: BFTask!) -> AnyObject! in
-                    if task.error == nil {
-                      self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                    }
-                    return nil
-                  })
-              } else {
-                  let user = PFUser()
-                  user.username = "\(firstName)_\(lastName)".lowercaseString
-                  user.password = ""
-                  user.setObject("VK\(userID)", forKey: "authID")
-                  user.setObject(smallPhoto, forKey: "smallProfileImage")
-                  user.setObject(bigPhoto, forKey: "bigProfileImage")
-                  
-                  user.signUpInBackground().continueWithBlock({ (task: BFTask!) -> AnyObject! in
+                
+                  PFUser.logInWithUsernameInBackground(username, password: "").continueWithBlock({
+                    (task: BFTask!) -> AnyObject! in
                     if task.error == nil {
                       self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                     } else {
-                      switch task.error {
-                      case 202:   // parse: "username already taken"
-                        self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
-                      default: break
-                      }
+                      // process error
                     }
                     return nil
                   })
-                }
+                
+              } else {
+
+                let user = PFUser()
+                user.username = "\(firstName)_\(lastName)".lowercaseString
+                user.password = ""
+                user.setObject("VK\(userID)", forKey: "authID")
+                user.setObject(smallPhoto, forKey: "smallProfileImage")
+                user.setObject(bigPhoto, forKey: "bigProfileImage")
+                user.signUpInBackground().continueWithBlock({
+                  (task: BFTask!) -> AnyObject! in
+                  if task.error == nil {
+                    self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+                  } else {
+                    switch task.error {
+                    case 202:   // parse: "username already taken"
+                      self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
+                    default: break
+                    }
+                  }
+                  return nil
+                })
+                
               }
+              
               return nil
+              
+              
             })
-            
         }
-        
-        },  errorBlock: {(error: NSError!) -> Void in
+        },  errorBlock: {
+          (error: NSError!) -> Void in
           print(error.localizedDescription)
           })
     }

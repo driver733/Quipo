@@ -9,7 +9,7 @@
 import UIKit
 import VK_ios_sdk
 import TwitterKit
-//import OAuthSwift
+import OAuthSwift
 import SwiftyJSON
 import VK_ios_sdk
 import InstagramKit
@@ -17,7 +17,7 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
-//import SwiftValidator
+import SwiftValidator
 import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
@@ -89,13 +89,17 @@ class ProfileSettings: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         if indexPath.section == 1 {
-            PFUser.logOut()
-            InstagramEngine.sharedEngine().logout()
-            VKSdk.forceLogout()
-            FBSDKLoginManager().logOut()
-            Twitter.sharedInstance().logOut()
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+          PFUser.logOut()
+          InstagramEngine.sharedEngine().logout()
+          VKSdk.forceLogout()
+          FBSDKLoginManager().logOut()
+          Twitter.sharedInstance().logOut()
+          let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+          if (self.tabBarController?.navigationController?.viewControllers[0].isKindOfClass(LogInVC) != nil) {
+            self.performSegueWithIdentifier("didLogOut", sender: nil)
+          } else {
             self.presentViewController((appDelegate.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("login"))!, animated: true, completion: nil)
+          }
         }
        
         

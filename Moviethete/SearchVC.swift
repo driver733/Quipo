@@ -13,6 +13,7 @@ import SDWebImage
 import Ji
 import Alamofire
 import Async
+import Bolts
 
 
 
@@ -327,7 +328,7 @@ extension SearchVC: UISearchResultsUpdating {
       let userSearchInput = searchController.searchBar.text!
       if userSearchInput.characters.count > 1 {
         Post.sharedInstance.getMovieInfoByTitleAtCountry(userSearchInput, country: "US", completionHandler: { (responseJSON: JSON) -> Void in
-          for (_, subJSON) in responseJSON["results"] {
+          for (_, subJSON) in responseJSON {
             let foundMovie = Post(
               theTrackID: subJSON["trackId"].numberValue.integerValue,
               theMovieTitle: subJSON["trackName"].stringValue,
@@ -342,6 +343,7 @@ extension SearchVC: UISearchResultsUpdating {
         })
       }
     }
+
   }
   
   
