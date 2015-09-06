@@ -140,7 +140,7 @@ import Async
     
     func test() -> BFTask {
       var tasks = [BFTask]()
-      tasks.append(self.getMovieInfoByITunesID(270711065))
+      tasks.append(getMovieInfoByITunesID(270711065))
       return BFTask(forCompletionOfAllTasksWithResults: tasks)
     }
     
@@ -152,39 +152,43 @@ import Async
     
     let mainTask = BFTaskCompletionSource()
    
-//    let user = PFUser.currentUser()!
-//    let relation = user.relationForKey("feed")
-//    let query = relation.query()
-//    
-//    query?.addDescendingOrder("createdAt")
-//    
-//    query?.findObjectsInBackground().continueWithBlock({ (task: BFTask!) -> AnyObject! in
-//      var tasks = [BFTask]()
-//      if task.error == nil, let result = task.result {
-//        let posts = result as! [PFObject]
-//        
-//        for post in posts {
-//          var tempPost = Post()
-//          tempPost.userName = (post["createdBy"] as! PFUser).username
-//          tempPost.timeSincePosted = self.getTimeSincePostedfromDate(post.createdAt!)
-//          tempPost.profileImageURL = (post["createdBy"] as! PFUser)["smallProfileImage"] as? String
-//          tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))
-//         }
-//        
-//      }
-//      
-//      return BFTask(forCompletionOfAllTasksWithResults: tasks)
-//    }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
-//      
-//      for var i = 0; i < Post.sharedInstance.feedPosts.count; ++i {
-//         Post.sharedInstance.feedPosts[i].bigPosterImageURL = self.getBigPosterImageURL((task.result as! JSON)[i]["artworkUrl100"].stringValue)
-//      }
-//      
-//      mainTask.setResult(nil)
-//      return nil
-//    })
-//    
-//    return mainTask.task
+    let user = PFUser.currentUser()!
+    let relation = user.relationForKey("feed")
+    let query = relation.query()
+    
+    query?.addDescendingOrder("createdAt")
+    
+    query?.findObjectsInBackground().continueWithBlock({ (task: BFTask!) -> AnyObject! in
+      var tasks = [BFTask]()
+      if task.error == nil, let result = task.result {
+        let posts = result as! [PFObject]
+        
+        for post in posts {
+          var tempPost = Post()
+          tempPost.userName = (post["createdBy"] as! PFUser).username
+          tempPost.timeSincePosted = self.getTimeSincePostedfromDate(post.createdAt!)
+          tempPost.profileImageURL = (post["createdBy"] as! PFUser)["smallProfileImage"] as? String
+          tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))
+         }
+        
+      }
+      
+      return BFTask(forCompletionOfAllTasksWithResults: tasks)
+    }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
+      
+      let jsonArray = task.result as! JSON // array of all posts for feed represented as a JSON array
+      
+      for var i = 0; i < Post.sharedInstance.feedPosts.count; ++i {
+        print(task.result as! JSON)
+        let post = jsonArray[i]
+         Post.sharedInstance.feedPosts[i].bigPosterImageURL = self.getBigPosterImageURL(post["artworkUrl100"].stringValue)
+      }
+      
+      mainTask.setResult(nil)
+      return nil
+    })
+    
+    return mainTask.task
     
     return BFTask()
     
@@ -217,7 +221,7 @@ import Async
           //        error == nil,
           let responseString = responseString, let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
             let json = JSON(data: dataFromString)
-            task.setResult(json["results"].arrayObject!)
+            task.setResult(json["results"].object)
         } else {
           // process error
         }

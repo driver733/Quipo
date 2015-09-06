@@ -129,9 +129,6 @@ class LogInVC: UIViewController {
   
   
   
-
-  
-  
   
   func signUpTableViewUserInteraction(condition: Bool){
     for var section = 0; section < signUpTableView.numberOfSections; ++section {
@@ -145,7 +142,7 @@ class LogInVC: UIViewController {
   
   
   
-  func signInTableViewUserInteraction(condition: Bool){
+  func signInTableViewUserInteraction(condition: Bool) {
     for var section = 0; section < signInTableView.numberOfSections; ++section {
       for var row = 0; row < signInTableView.numberOfRowsInSection(section); ++row {
         let cellPath = NSIndexPath(forRow: row, inSection: section)
@@ -155,9 +152,6 @@ class LogInVC: UIViewController {
     }
   }
   
-
-  
-
   
   
     override func didReceiveMemoryWarning() {
@@ -420,7 +414,7 @@ class LogInVC: UIViewController {
                 PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken()).continueWithBlock({
                   (task: BFTask!) -> AnyObject! in
                   if task.error == nil {
-                    // ok
+                    // successfully linked user
                   } else {
                     switch task.error.code {
                     case 202:
