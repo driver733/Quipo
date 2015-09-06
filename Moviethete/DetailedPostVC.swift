@@ -78,7 +78,7 @@ extension DetailedPostVC: UITableViewDataSource {
     switch indexPath.row {
     case 0:
       let cell = tableView.dequeueReusableCellWithIdentifier("detailedPostCell", forIndexPath: indexPath) as! DetailedPostCell
-      cell.posterImage.sd_setImageWithURL(NSURL(string: (passedPost?.smallPosterImageURL)!),
+      cell.posterImage.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!),
         placeholderImage: getImageWithColor(UIColor.lightGrayColor(),size: cell.posterImage.bounds.size))
       cell.movieInfo.text = passedPost?.movieGenre
       cell.movieInfo.textColor = textColor

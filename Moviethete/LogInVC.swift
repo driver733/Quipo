@@ -216,12 +216,6 @@ class LogInVC: UIViewController {
       
       
           
-      
-          
-          
-          
-            
-    
     }
     
     

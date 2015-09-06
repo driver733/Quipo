@@ -16,19 +16,10 @@ import Async
 import Bolts
 
 
-
-
 let DID_SELECT_SEARCH_RESULT_CELL_SEGUE_IDENTIFIER = "didSelectSearchResultCell"
 
 
-
-
 class SearchVC: UITableViewController {
-  
-  
-  
-
- // @IBOutlet var tableView: UITableView!
   
   
   var searchController = UISearchController()
@@ -49,8 +40,6 @@ class SearchVC: UITableViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-  //  NSBundle.mainBundle().loadNibNamed("Search", owner: self, options: nil)
 
     let notificationCenter = NSNotificationCenter.defaultCenter()
     notificationCenter.addObserver(self, selector: "keyboardDidHide:", name: UIKeyboardDidHideNotification, object: nil)
@@ -64,7 +53,7 @@ class SearchVC: UITableViewController {
       controller.dimsBackgroundDuringPresentation = false
       controller.searchBar.searchBarStyle = .Minimal
       controller.searchBar.sizeToFit()
-      controller.searchBar.placeholder = "Minimum two letters"
+      controller.searchBar.placeholder = "At least two letters"
       return controller
     })()
     
@@ -244,16 +233,40 @@ class SearchVC: UITableViewController {
     cell.genre.text = foundMovie.movieGenre
     cell.releaseDate.text = foundMovie.movieReleaseDate
     
+  
+//  if (tableView.dragging || tableView.decelerating) {
+//    
+//    SDWebImageManager.sharedManager().cachedImageExistsForURL(NSURL(string: foundMovie.standardPosterImageURL!), completion: {
+//      (exists: Bool) -> Void in
+//      if exists {
+//        cell.posterImage.sd_setImageWithURL(
+//          NSURL(string: foundMovie.standardPosterImageURL!),
+//          placeholderImage: self.getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
+//          options: SDWebImageOptions.AvoidAutoSetImage,
+//          completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+//            if error == nil && image != nil {
+//              cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: .Scale).image
+//            }
+//          }
+//        )
+//
+//      }
+//    })
+//    
+//    return cell
+//    
+//  } else {
     cell.posterImage.sd_setImageWithURL(
-      NSURL(string: foundMovie.smallPosterImageURL!),
-      placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
-      options: SDWebImageOptions.AvoidAutoSetImage,
-      completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-        if error == nil {
-          cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: .Scale).image
-        }
+    NSURL(string: foundMovie.standardPosterImageURL!),
+    placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
+    options: SDWebImageOptions.AvoidAutoSetImage,
+    completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+      if error == nil {
+        cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: .Scale).image
       }
+    }
     )
+//    }
     
     return cell
   }
@@ -280,11 +293,8 @@ class SearchVC: UITableViewController {
    override func scrollViewDidScroll(scrollView: UIScrollView) {
     if !searchResults.isEmpty {
       if scrollView.contentOffset.y <= 0 {
-     //   setTabBarHidden(false)
       } else if lastContentOffset < scrollView.contentOffset.y {
-      //  setTabBarHidden(true)
       } else {
-      //  setTabBarHidden(false)
       }
       lastContentOffset = scrollView.contentOffset.y
     }
@@ -327,7 +337,13 @@ extension SearchVC: UISearchResultsUpdating {
       searchResults.removeAll(keepCapacity: false)
       let userSearchInput = searchController.searchBar.text!
       if userSearchInput.characters.count > 1 {
-        Post.sharedInstance.getMovieInfoByTitleAtCountry(userSearchInput, country: "US", completionHandler: { (responseJSON: JSON) -> Void in
+        
+        
+        Post.sharedInstance.getMovieInfoByTitleAtCountry(userSearchInput, country: "US").continueWithBlock({
+          (task: BFTask!) -> AnyObject! in
+          let result = task.result as! NSData
+          let responseJSON = JSON(data: result)
+          
           for (_, subJSON) in responseJSON {
             let foundMovie = Post(
               theTrackID: subJSON["trackId"].numberValue.integerValue,
@@ -335,12 +351,13 @@ extension SearchVC: UISearchResultsUpdating {
               theLocalizedMovieTitle: subJSON["trackName"].stringValue,
               theMovieGenre: subJSON["primaryGenreName"].stringValue,
               theMovieReleaseDate: Post.sharedInstance.getReformattedReleaseDate(subJSON["releaseDate"].stringValue),
-              theSmallPosterImageURL: Post.sharedInstance.getSmallPosterImageURL(subJSON["artworkUrl100"].stringValue),
-              theBigPosterImageURL: Post.sharedInstance.getBigPosterImageURL(subJSON["artworkUrl100"].stringValue)
+              theStandardPosterImageURL: Post.sharedInstance.getStandardPosterImageURL(subJSON["artworkUrl100"].stringValue)
             )
             self.searchResults.append(foundMovie)
           }
+          return nil
         })
+        
       }
     }
 

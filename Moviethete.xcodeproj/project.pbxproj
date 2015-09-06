@@ -58,8 +58,6 @@
 		8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB871A91B80FB9E00256787 /* SearchResultCell.swift */; };
 		8FB871AC1B80FB9E00256787 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */; };
 		8FD456D31B85793200945E3E /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD456D21B85793200945E3E /* Toucan.swift */; };
-		8FDEDBD81B97E78B005FFC5A /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8FDEDBD91B97E78B005FFC5A /* ITunesSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8FF20B551B940B540067AFB7 /* UIImageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF20B541B940B540067AFB7 /* UIImageColors.swift */; settings = {ASSET_TAGS = (); }; };
 		EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAECE6804A560D6747EC5E20 /* Pods_Moviethete.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -80,20 +78,6 @@
 			remoteInfo = Moviethete;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		8FDEDBDA1B97E78B005FFC5A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				8FDEDBD91B97E78B005FFC5A /* ITunesSwift.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2AE186941922961479F9BCB9 /* Pods-Moviethete.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.debug.xcconfig"; sourceTree = "<group>"; };
@@ -166,7 +150,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8FDEDBD81B97E78B005FFC5A /* ITunesSwift.framework in Frameworks */,
 				8F8151551B894517001545E9 /* ITunesSwift.framework in Frameworks */,
 				EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */,
 			);
@@ -244,10 +227,7 @@
 				8F415FDE1B92622C00BD5BC7 /* DetailedPost */,
 				8F893F081B99445B005D8305 /* AddPost */,
 				8F7FF4CD1B73F3EA001317E2 /* ProfileSettings */,
-				8F44554E1B92DC6900FB1541 /* Main.storyboard */,
-				8F0E79D91B73FA9800C730AF /* LaunchScreen.xib */,
-				8F7FF49F1B73F2AB001317E2 /* LikesVC.swift */,
-				8F7FF49B1B73F2AB001317E2 /* AppDelegate.swift */,
+				8F71E9A91B9CB64900643843 /* Likes */,
 				8F7FF4C91B73F2F8001317E2 /* SupportingFiles */,
 			);
 			path = Moviethete;
@@ -271,9 +251,20 @@
 			path = MovietheteUITests;
 			sourceTree = "<group>";
 		};
+		8F71E9A91B9CB64900643843 /* Likes */ = {
+			isa = PBXGroup;
+			children = (
+				8F7FF49F1B73F2AB001317E2 /* LikesVC.swift */,
+			);
+			name = Likes;
+			sourceTree = "<group>";
+		};
 		8F7FF4C91B73F2F8001317E2 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				8F44554E1B92DC6900FB1541 /* Main.storyboard */,
+				8F0E79D91B73FA9800C730AF /* LaunchScreen.xib */,
+				8F7FF49B1B73F2AB001317E2 /* AppDelegate.swift */,
 				8F7FF4841B73F2AB001317E2 /* Images.xcassets */,
 				8F7FF49C1B73F2AB001317E2 /* Info.plist */,
 				8F7FF4A01B73F2AB001317E2 /* NanumPenScript-Regular.ttf */,
@@ -392,7 +383,6 @@
 				130D33E29F56BF307D79DC1F /* Embed Pods Frameworks */,
 				7C1AED9618BCA0587ADD5506 /* Copy Pods Resources */,
 				8F4F97C41B7418E5006CA7C9 /* ShellScript */,
-				8FDEDBDA1B97E78B005FFC5A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

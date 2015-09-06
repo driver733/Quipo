@@ -22,10 +22,7 @@ public struct UserReview {
   /// The review of the movie
   
   
-  
   init(){}
-  
-  
   
   
   init(theStarRating: Int, theTitle: String, theReview: String) {

@@ -102,7 +102,6 @@ class FeedVC: UIViewController {
         if self.refreshControl.refreshing {
           self.refreshControl.endRefreshing()
         }
-        print(Post.sharedInstance.feedPosts)
         self.tableView.reloadData()
         return nil
       } else {
@@ -291,6 +290,7 @@ extension FeedVC: UITableViewDataSource {
     
     
     if Post.sharedInstance.feedPosts.count * 2 > indexPath.row {
+      
       if (tableView.dragging || tableView.decelerating) {
         SDWebImageManager.sharedManager().cachedImageExistsForURL(
           NSURL(string: Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)].bigPosterImageURL!),
@@ -305,6 +305,7 @@ extension FeedVC: UITableViewDataSource {
         )
         
         return cell
+        
       } else {
         cell.posterImage.sd_setImageWithURL(
           NSURL(string: Post.sharedInstance.feedPosts[self.getCellPostIndex(indexPath.row)].bigPosterImageURL!),
@@ -313,12 +314,6 @@ extension FeedVC: UITableViewDataSource {
       }
     }
     return cell
-    
-    
-    //  }
-    
-    //   return cell
-    //  }
     
   }
 
@@ -330,7 +325,7 @@ extension FeedVC: UITableViewDataSource {
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    let count = Post.sharedInstance.feedPosts.count
+    let count = Post.sharedInstance.feedPosts.count * 2
     if count == 0 {
       //  return 4
     }

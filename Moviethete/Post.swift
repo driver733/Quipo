@@ -45,6 +45,8 @@ import Async
     /// The release date of the movie that the post is dedicated to
     var smallPosterImageURL: String?
     /// The small poster image URL of the movie that the post is dedicated to
+    var standardPosterImageURL: String?
+    /// The small poster image URL of the movie that the post is dedicated to
     var bigPosterImageURL: String?
     /// The big poster image URL of the movie that the post is dedicated to
     
@@ -69,14 +71,13 @@ import Async
     }
     
     // Search result post initializer
-    init (theTrackID: Int, theMovieTitle: String, theLocalizedMovieTitle: String, theMovieGenre: String, theMovieReleaseDate: String, theSmallPosterImageURL: String, theBigPosterImageURL: String) {
+    init (theTrackID: Int, theMovieTitle: String, theLocalizedMovieTitle: String, theMovieGenre: String, theMovieReleaseDate: String, theStandardPosterImageURL: String) {
       trackID = theTrackID
       movieTitle = theMovieTitle
       localizedMovieTitle = theLocalizedMovieTitle
       movieGenre = theMovieGenre
       movieReleaseDate = theMovieReleaseDate
-      smallPosterImageURL = theSmallPosterImageURL
-      bigPosterImageURL = theBigPosterImageURL
+      standardPosterImageURL = theStandardPosterImageURL
     }
     
     
@@ -138,17 +139,10 @@ import Async
   }
 
     
-    func test() -> BFTask {
-      var tasks = [BFTask]()
-      tasks.append(getMovieInfoByITunesID(270711065))
-      return BFTask(forCompletionOfAllTasksWithResults: tasks)
-    }
     
     
-  func loadFeedPosts() -> BFTask {
     
-    test()
-    
+  mutating func loadFeedPosts() -> BFTask {
     
     let mainTask = BFTaskCompletionSource()
    
@@ -165,9 +159,11 @@ import Async
         
         for post in posts {
           var tempPost = Post()
-          tempPost.userName = (post["createdBy"] as! PFUser).username
+          let postAuthor = post["createdBy"] as! PFUser
+          tempPost.userName = postAuthor.username
           tempPost.timeSincePosted = self.getTimeSincePostedfromDate(post.createdAt!)
-          tempPost.profileImageURL = (post["createdBy"] as! PFUser)["smallProfileImage"] as? String
+          tempPost.profileImageURL = postAuthor["smallProfileImage"] as? String
+          Post.sharedInstance.feedPosts.append(tempPost)
           tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))
          }
         
@@ -176,26 +172,24 @@ import Async
       return BFTask(forCompletionOfAllTasksWithResults: tasks)
     }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
       
-      let jsonArray = task.result as! JSON // array of all posts for feed represented as a JSON array
+      let results = task.result as! NSArray
       
-      for var i = 0; i < Post.sharedInstance.feedPosts.count; ++i {
-        print(task.result as! JSON)
-        let post = jsonArray[i]
-         Post.sharedInstance.feedPosts[i].bigPosterImageURL = self.getBigPosterImageURL(post["artworkUrl100"].stringValue)
+      for (index, postData) in results.enumerate() {
+        let json = JSON(data: postData as! NSData)
+        Post.sharedInstance.feedPosts[index].bigPosterImageURL = self.getBigPosterImageURL(json["artworkUrl100"].stringValue)
       }
+      
+      
+      
       
       mainTask.setResult(nil)
       return nil
     })
     
     return mainTask.task
-    
-    return BFTask()
-    
     }
     
-    
-    func getMovieInfoByTitleAtCountry(movieTitle: String, country: String, completionHandler: (responseJSON: JSON) -> Void) {
+    func getMovieInfoByTitleAtCountry(movieTitle: String, country: String) -> BFTask {
       let task = BFTaskCompletionSource()
       ITunesApi.find(Entity.Movie).by(movieTitle).at(country).request({ (responseString: String?, error: NSError?) -> Void in
         if
@@ -203,15 +197,19 @@ import Async
           let responseString = responseString,
           let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
             let json = JSON(data: dataFromString)
-            completionHandler(responseJSON: json["results"])
+            do {
+           try  task.setResult(json["results"].rawData())
+            }
+            catch {
+              
+            }
         } else {
           task.setError(error)
           print(error!.localizedDescription)
         }
       })
+      return task.task
     }
-    
-    
     
     
     func getMovieInfoByITunesID(iTunesID: Int) -> BFTask {
@@ -220,8 +218,16 @@ import Async
         if
           //        error == nil,
           let responseString = responseString, let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            let json = JSON(data: dataFromString)
-            task.setResult(json["results"].object)
+           let json = JSON(data: dataFromString)
+            
+            do {
+             try task.setResult(json["results"][0].rawData())
+            }
+            catch {
+              
+            }
+            
+          //  task.setResult(json["results"].arrayObject)
         } else {
           // process error
         }
@@ -242,9 +248,15 @@ import Async
     return str
   }
     
-  func getBigPosterImageURL(defaultPosterImageURL: String) -> String {
+  func getStandardPosterImageURL(defaultPosterImageURL: String) -> String {
     var str = defaultPosterImageURL
     str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
+    return str
+  }
+    
+  func getBigPosterImageURL(defaultPosterImageURL: String) -> String {
+    var str = defaultPosterImageURL
+    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "600x600-85")
     return str
   }
     
@@ -292,6 +304,7 @@ import Async
           returnColors.append(backgroundUiColor)
           return returnColors
         }
+        
       } else {
         returnColors.append(UIColor.whiteColor())
         returnColors.append(uiColor)
@@ -300,15 +313,8 @@ import Async
       
       
       
-        
-     
+      
     }
-    
-    
-    
-
-  
-    
     
     
     
