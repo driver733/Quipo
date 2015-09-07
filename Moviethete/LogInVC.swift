@@ -409,12 +409,14 @@ class LogInVC: UIViewController {
                   (task: BFTask!) -> AnyObject! in
                   if task.error == nil {
                     // successfully linked user
+                    self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                   } else {
                     switch task.error.code {
                     case 202:
                       let userID = FBSDKProfile.currentProfile().userID
                       user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
                       PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken())
+                      self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                     default: break
                     }
                   }
@@ -422,28 +424,14 @@ class LogInVC: UIViewController {
                 })
                 
               }
+              self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
             }
             
             return nil
           })
           
               
-          let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "email"])
-            graphRequest.startWithCompletionHandler({
-                (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
-                if error == nil {
-                    let json = JSON(result)
-                    print(json)
-                    if let fbID = json["data"][0]["id"].string {
-                        // friends who have installed the Moviethete
-                        print("////// \(fbID)  /////////")
-                    }
-                    self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                    
-                } else {
-                    // process error
-                }
-            })
+          
           
 
         } else {
@@ -521,7 +509,7 @@ extension LogInVC: UITableViewDataSource, UITableViewDelegate {
     if tableView == signUpTableView {
       switch indexPath.row {
       case 0:
-        cell.label.text = "     Email"
+        cell.label.text = "Email"
         cell.label.font  = UIFont(name: "Nanum Pen", size: cell.label.font.pointSize)
         cell.textfield.tag = 1
         validator.registerField(cell.textfield, rules: [RequiredRule(), EmailRule()])

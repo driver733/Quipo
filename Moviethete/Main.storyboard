@@ -113,7 +113,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Sign in" id="kLy-6o-kE5"/>
                     <connections>
-                        <segue destination="49e-Tb-3d3" kind="show" identifier="didLogIn" id="1E9-e4-Wdt"/>
+                        <segue destination="49e-Tb-3d3" kind="presentation" identifier="didLogIn" modalTransitionStyle="crossDissolve" id="1E9-e4-Wdt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cLR-qo-X5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -185,7 +185,7 @@
         <!--ProfileVC-->
         <scene sceneID="mcf-4o-juI">
             <objects>
-                <viewController id="1hR-th-dWC" customClass="ProfileVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="1hR-th-dWC" customClass="ProfileVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="LOb-uL-nzo">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -208,11 +208,11 @@
         <!--Profile Settings-->
         <scene sceneID="nio-HG-cTN">
             <objects>
-                <viewController id="0dA-48-2dU" customClass="ProfileSettings" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="LVh-g4-5F9">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="0dA-48-2dU" customClass="ProfileSettings" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="LVh-g4-5F9">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <connections>
                             <outlet property="dataSource" destination="0dA-48-2dU" id="KVu-l2-ffT"/>
                             <outlet property="delegate" destination="0dA-48-2dU" id="gOR-oo-QOY"/>
@@ -221,17 +221,39 @@
                     <connections>
                         <outlet property="tableView" destination="LVh-g4-5F9" id="ddR-id-Fv8"/>
                         <segue destination="B2c-Fd-K08" kind="unwind" identifier="didLogOut" unwindAction="didLogOut:" id="daW-LZ-6Ak"/>
+                        <segue destination="sYt-qs-ETM" kind="show" identifier="didSelectSettingsCell" id="AWH-sU-OiQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xav-YW-mmV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="10624" y="571"/>
         </scene>
+        <!--Detailed SettingsVC-->
+        <scene sceneID="AuG-gk-BXY">
+            <objects>
+                <viewController id="sYt-qs-ETM" customClass="DetailedSettingsVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="J1n-uc-zag">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="sYt-qs-ETM" id="HBa-I1-zop"/>
+                            <outlet property="delegate" destination="sYt-qs-ETM" id="Efd-er-h9O"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="tableView" destination="J1n-uc-zag" id="8dC-dZ-gZv"/>
+                        <outlet property="view" destination="J1n-uc-zag" id="X3R-zB-AKd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8SA-hI-Arp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="11443" y="571"/>
+        </scene>
         <!--Item-->
         <scene sceneID="3j9-rB-D2R">
             <objects>
                 <navigationController extendedLayoutIncludesOpaqueBars="YES" id="3Zi-0B-cU4" sceneMemberID="viewController">
-                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBarItem key="tabBarItem" title="Item" id="geK-gd-nGd"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="epc-Qz-Dx6">

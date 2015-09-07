@@ -13,7 +13,9 @@ class ProfileSettingsCell: UITableViewCell {
 
     
     
-    @IBOutlet weak var tempLabel: UILabel!
+  
+  @IBOutlet weak var setting: UILabel!
+
    
     override func awakeFromNib() {
         super.awakeFromNib()

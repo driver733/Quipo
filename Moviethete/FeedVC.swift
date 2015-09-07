@@ -82,9 +82,10 @@ class FeedVC: UIViewController {
     
     
     
-    
-    
-    
+    UserSingelton.sharedInstance.loadFacebookFriends { () -> Void in
+      
+    }
+   
     
     
   }
@@ -178,10 +179,12 @@ class FeedVC: UIViewController {
             cell.profileImage.sd_setImageWithURL(
               NSURL(string: Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)].profileImageURL!),
               placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
-              options: SDWebImageOptions.RefreshCached, completed:{(
-                image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+              options: SDWebImageOptions.RefreshCached,
+              completed:{
+                (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
                 cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
-            })
+              }
+            )
           }
         } else {
           let cell: ContentCell = self.tableView.cellForRowAtIndexPath(indexPath) as! ContentCell

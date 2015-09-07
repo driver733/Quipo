@@ -10,7 +10,8 @@ import UIKit
 
 class ProfileSettingsFollowFriendsCell: UITableViewCell {
     
-    @IBOutlet weak var socialNetworkIcon: UIImageView!
+   
+  @IBOutlet weak var icon: UIImageView!
     @IBOutlet weak var label: UILabel!
     
 
