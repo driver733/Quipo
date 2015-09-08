@@ -82,6 +82,14 @@ class FeedVC: UIViewController {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
     UserSingelton.sharedInstance.loadFacebookFriends { () -> Void in
       
     }

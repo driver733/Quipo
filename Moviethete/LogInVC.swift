@@ -402,8 +402,10 @@ class LogInVC: UIViewController {
                 let smallProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
                 let bigProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(600, 600))
                 user.username = "\(FBSDKProfile.currentProfile().firstName.lowercaseString)_\(FBSDKProfile.currentProfile().lastName.lowercaseString)"
-                user.setObject("https://graph.facebook.com/\(smallProfileImage)", forKey: "smallProfileImage")
-                user.setObject("https://graph.facebook.com/\(bigProfileImage)", forKey: "bigProfileImage")
+                user["smallProfileImage"] = "https://graph.facebook.com/\(smallProfileImage)"
+                user["bigProfileImage"] = "https://graph.facebook.com/\(bigProfileImage)"
+                user["FBID"] = FBSDKProfile.currentProfile().userID
+                user["authID"] = "FB" + FBSDKProfile.currentProfile().userID
                 
                 PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken()).continueWithBlock({
                   (task: BFTask!) -> AnyObject! in
