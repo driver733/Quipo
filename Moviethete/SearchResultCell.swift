@@ -15,6 +15,7 @@ class SearchResultCell: UITableViewCell {
     @IBOutlet weak var localizedMovieTitle: UILabel!
     @IBOutlet weak var movieTitle: UILabel!
     @IBOutlet weak var posterImage: UIImageView!
+  
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -25,5 +26,9 @@ class SearchResultCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+  
+  override func prepareForReuse() {
+    posterImage.image = nil
+  }
     
 }

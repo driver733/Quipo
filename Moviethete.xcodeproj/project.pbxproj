@@ -44,6 +44,7 @@
 		8F7FF4C31B73F2AB001317E2 /* NanumPenScript-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7FF4A01B73F2AB001317E2 /* NanumPenScript-Regular.ttf */; };
 		8F7FF4C61B73F2AB001317E2 /* WebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7FF4A41B73F2AB001317E2 /* WebViewVC.swift */; };
 		8F8151551B894517001545E9 /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F9998B81B86B32E00BFEFAC /* ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8F85040A1B9EB42B003F4DC8 /* FollowFriends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8504091B9EB42B003F4DC8 /* FollowFriends.swift */; settings = {ASSET_TAGS = (); }; };
 		8F88CA6F1B9A7A6600210D40 /* UserReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F88CA6D1B9A7A6600210D40 /* UserReviewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		8F88CA701B9A7A6600210D40 /* UserReviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F88CA6E1B9A7A6600210D40 /* UserReviewCell.xib */; settings = {ASSET_TAGS = (); }; };
 		8F893EFC1B99217E005D8305 /* AddMovieReviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F893EFB1B99217E005D8305 /* AddMovieReviewVC.swift */; settings = {ASSET_TAGS = (); }; };
@@ -51,6 +52,8 @@
 		8F893F031B993E0F005D8305 /* TitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F893F021B993E0F005D8305 /* TitleCell.swift */; settings = {ASSET_TAGS = (); }; };
 		8F893F061B993F8C005D8305 /* ReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F893F041B993F8C005D8305 /* ReviewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		8F893F071B993F8C005D8305 /* ReviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F893F051B993F8C005D8305 /* ReviewCell.xib */; settings = {ASSET_TAGS = (); }; };
+		8F8FAD0E1B9FFF43001B8735 /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; };
+		8F8FAD0F1B9FFF43001B8735 /* ITunesSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8F9A0D511B994E660060A7B6 /* StarRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9A0D4F1B994E660060A7B6 /* StarRating.swift */; settings = {ASSET_TAGS = (); }; };
 		8F9A0D521B994E660060A7B6 /* StarRating.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F9A0D501B994E660060A7B6 /* StarRating.xib */; settings = {ASSET_TAGS = (); }; };
 		8F9DC3E71B96313B00F30616 /* DetailedPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9DC3E51B96313B00F30616 /* DetailedPostVC.swift */; settings = {ASSET_TAGS = (); }; };
@@ -81,6 +84,20 @@
 			remoteInfo = Moviethete;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8F8FAD101B9FFF43001B8735 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8F8FAD0F1B9FFF43001B8735 /* ITunesSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2AE186941922961479F9BCB9 /* Pods-Moviethete.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.debug.xcconfig"; sourceTree = "<group>"; };
@@ -127,6 +144,7 @@
 		8F7FF49F1B73F2AB001317E2 /* LikesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LikesVC.swift; sourceTree = "<group>"; };
 		8F7FF4A01B73F2AB001317E2 /* NanumPenScript-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NanumPenScript-Regular.ttf"; sourceTree = "<group>"; };
 		8F7FF4A41B73F2AB001317E2 /* WebViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewVC.swift; sourceTree = "<group>"; };
+		8F8504091B9EB42B003F4DC8 /* FollowFriends.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowFriends.swift; sourceTree = "<group>"; };
 		8F88CA6D1B9A7A6600210D40 /* UserReviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserReviewCell.swift; sourceTree = "<group>"; };
 		8F88CA6E1B9A7A6600210D40 /* UserReviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserReviewCell.xib; sourceTree = "<group>"; };
 		8F893EFB1B99217E005D8305 /* AddMovieReviewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMovieReviewVC.swift; sourceTree = "<group>"; };
@@ -156,6 +174,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F8FAD0E1B9FFF43001B8735 /* ITunesSwift.framework in Frameworks */,
 				8F8151551B894517001545E9 /* ITunesSwift.framework in Frameworks */,
 				EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */,
 			);
@@ -348,6 +367,7 @@
 			children = (
 				8F70DA0D1B9D3E590065E791 /* User.swift */,
 				8F70DA0F1B9D412B0065E791 /* UserSingleton.swift */,
+				8F8504091B9EB42B003F4DC8 /* FollowFriends.swift */,
 				8F7FF4971B73F2AB001317E2 /* Post.swift */,
 				8F2C49AB1B99EFFF00535079 /* UserReview.swift */,
 			);
@@ -400,6 +420,7 @@
 				130D33E29F56BF307D79DC1F /* Embed Pods Frameworks */,
 				7C1AED9618BCA0587ADD5506 /* Copy Pods Resources */,
 				8F4F97C41B7418E5006CA7C9 /* ShellScript */,
+				8F8FAD101B9FFF43001B8735 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -629,6 +650,7 @@
 				8F7FF4AA1B73F2AB001317E2 /* ProfileSettings.swift in Sources */,
 				8F7FF4C21B73F2AB001317E2 /* LikesVC.swift in Sources */,
 				8FB671881B93C9760016C152 /* UIColorExtension.swift in Sources */,
+				8F85040A1B9EB42B003F4DC8 /* FollowFriends.swift in Sources */,
 				8F893F061B993F8C005D8305 /* ReviewCell.swift in Sources */,
 				8FA4DC061B74B39400AB84AA /* LogInVC.swift in Sources */,
 				8F7FF4B41B73F2AB001317E2 /* ProfileFollowerCell.swift in Sources */,

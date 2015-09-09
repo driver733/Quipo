@@ -41,6 +41,12 @@ class ProfileSettings: UIViewController {
       
       
       tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+      
+      
+      
+
+      
+      
         // Do any additional setup after loading the view.
     }
 
@@ -53,13 +59,18 @@ class ProfileSettings: UIViewController {
   
   
   func logOut() {
-    PFUser.logOut()
+    
+
+    
+    PFUser.logOutInBackground()   // causes freeze sometimes ONLY IN SIMULATOR - WORKDS FINE ON 8.4 DEVICE
+    
     InstagramEngine.sharedEngine().logout()
     VKSdk.forceLogout()
     FBSDKLoginManager().logOut()
     Twitter.sharedInstance().logOut()
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+   
     UIView.transitionWithView(appDelegate.window!,
       duration: 0.2,
       options: UIViewAnimationOptions.TransitionCrossDissolve,
@@ -76,14 +87,8 @@ class ProfileSettings: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
       if let vc = segue.destinationViewController as? DetailedSettingsVC {
-        vc.contentTypeTag = (tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!)?.tag)!
-                
-        
+        vc.cellIndexPath = (tableView.indexPathForSelectedRow)!
         }
-        
-        
-        
-        
     }
 
 }
@@ -199,25 +204,12 @@ extension ProfileSettings: UITableViewDataSource {
     
       
     case 0:   // follow friends
+      
       let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsFollowFriendsCell", forIndexPath: indexPath) as! ProfileSettingsFollowFriendsCell
-      
-      switch indexPath.row {
-        
-        case 0:  // facebook
-
-          if FBSDKAccessToken.currentAccessToken() != nil {
-            cell.icon.image = UIImage(named: "facebook")
-            if UserSingelton.sharedInstance.facebookFriends.count != 0 {
-              cell.label.text = String(UserSingelton.sharedInstance.facebookFriends.count) + " Facebook friends"
-            }
-            return cell
-          
-          
-        }
-      default: break
-      }
-      
-        
+      cell.icon.image = UIImage(named: UserSingelton.sharedInstance.followFriendsData[indexPath.row].localIconName)
+      cell.label.text = UserSingelton.sharedInstance.followFriendsData[indexPath.row].description
+      return cell
+       
       case 1:
         
         switch indexPath.row {
@@ -350,13 +342,7 @@ extension ProfileSettings: UITableViewDataSource {
     switch section {
       
     case 0:
-      if FBSDKAccessToken.currentAccessToken() != nil {
-        numberOfRows++
-      }
-      if VKSdk.isLoggedIn() {
-        numberOfRows++
-      }
-      break
+      return UserSingelton.sharedInstance.followFriendsData.count
       
     case 1:
       return 3

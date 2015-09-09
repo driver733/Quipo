@@ -128,7 +128,17 @@ class LogInVC: UIViewController {
   }
   
   
-  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
+    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
+    
+    UserSingelton.sharedInstance.vkontakteFriends.removeAll(keepCapacity: false)
+    UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
+    
+    
+    
+    UserSingelton.sharedInstance.loadFollowFriendsData()
+  }
   
   func signUpTableViewUserInteraction(condition: Bool){
     for var section = 0; section < signUpTableView.numberOfSections; ++section {
@@ -194,7 +204,6 @@ class LogInVC: UIViewController {
                 if user != nil {
                   self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                 } else {
-                  print(username, password)
                   switch error!.code {
                   case 101:
                     alert.title = "Incorrect Email or Password"
@@ -261,7 +270,11 @@ class LogInVC: UIViewController {
       
       
     }
-    
+  
+  
+  
+  
+
     
   
     @IBAction func buttonTwitterLogin(sender: AnyObject) {
@@ -354,7 +367,7 @@ class LogInVC: UIViewController {
                             
                             let users = media as NSArray?
                             for user in users! {
-                                print((user as! InstagramUser).fullName)
+                               // print((user as! InstagramUser).fullName)
                                 
                             }
 
@@ -378,10 +391,11 @@ class LogInVC: UIViewController {
         let fbLoginManager = FBSDKLoginManager()
         fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
         fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"], handler: {
-            (result: FBSDKLoginManagerLoginResult!, error:NSError!) -> Void in
+            (result: FBSDKLoginManagerLoginResult!, error: NSError!) -> Void in
             if error == nil && result.token != nil {
                 // logged in
             } else {
+              print(error.localizedDescription)
                 // process error
             }
         })
@@ -391,12 +405,12 @@ class LogInVC: UIViewController {
     
     
     func didReceiveFacebookProfile(notif:NSNotification){
-      
-        if FBSDKAccessToken.currentAccessToken() != nil {               //did FB log in or log out?
+      if PFUser.currentUser() == nil {
+        if FBSDKAccessToken.currentAccessToken() != nil {               // did FB log in or log out?
           
           PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken()).continueWithBlock({
             (task: BFTask!) -> AnyObject! in
-            if let user = task.result as? PFUser {
+            if let user = task.result as? PFUser { 
               if user.isNew {
                 
                 let smallProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
@@ -431,19 +445,16 @@ class LogInVC: UIViewController {
             
             return nil
           })
-          
-              
-          
-          
-
         } else {
             print("Uh oh. There was an error logging in.")
         }
-    
       
+      }
+    
+      }
     
 
-    }
+  
     
     @IBAction func loginWithVkontakte(sender: AnyObject) {
         VKSdk.initializeWithDelegate(self, andAppId: "4991711")
@@ -681,9 +692,10 @@ extension LogInVC: VKSdkDelegate {
                 let user = PFUser()
                 user.username = "\(firstName)_\(lastName)".lowercaseString
                 user.password = ""
-                user.setObject("VK\(userID)", forKey: "authID")
-                user.setObject(smallPhoto, forKey: "smallProfileImage")
-                user.setObject(bigPhoto, forKey: "bigProfileImage")
+                user["authID"] = "VK\(userID)"
+                user["VKID"] = "\(userID)"
+                user["smallProfileImage"] = smallPhoto
+                user["bigProfileImage"] = bigPhoto
                 user.signUpInBackground().continueWithBlock({
                   (task: BFTask!) -> AnyObject! in
                   if task.error == nil {

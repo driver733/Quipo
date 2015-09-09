@@ -16,6 +16,7 @@ import FBSDKShareKit
 import Parse
 import SDWebImage
 import ITunesSwift
+import VK_ios_sdk
 
 extension UIViewController {
   
@@ -77,23 +78,16 @@ class FeedVC: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView?.addSubview(refreshControl)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    UserSingelton.sharedInstance.loadFacebookFriends { () -> Void in
-      
-    }
    
+    
+    
+
+    
+    
+    
+    // move to singelton - via nsNotification
+    UserSingelton.sharedInstance.loadFollowFriendsData()
+    
     
     
   }
@@ -178,6 +172,7 @@ class FeedVC: UIViewController {
   
   
   func loadImagesForOnscreenRows(){
+    
     if (Post.sharedInstance.feedPosts.count > 0){
       let visiblePaths = tableView.indexPathsForVisibleRows!
       for indexPath in visiblePaths {

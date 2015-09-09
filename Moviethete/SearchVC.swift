@@ -92,13 +92,7 @@ class SearchVC: UITableViewController {
     
     
   }
-  
-  
-  
-  
-  
-  
-  
+
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if
@@ -114,9 +108,6 @@ class SearchVC: UITableViewController {
         vc.textColor = colors[0]
     }
   }
-  
-
-  
   
 
   override func viewWillAppear(animated: Bool) {
@@ -210,10 +201,32 @@ class SearchVC: UITableViewController {
     
     isSearchBarHidden = searchBarHidden
   }
+  
+  
+  
+  func loadImagesForOnscreenRows(){
+    
+    if (searchResults.count > 0){
+      let visiblePaths = tableView.indexPathsForVisibleRows!
+      for indexPath in visiblePaths {
+        let foundMovie = searchResults[indexPath.row]
+          let cell: SearchResultCell = self.tableView.cellForRowAtIndexPath(indexPath) as! SearchResultCell
+          if searchResults.count > indexPath.row {
+            cell.posterImage.sd_setImageWithURL(
+              NSURL(string: foundMovie.standardPosterImageURL!),
+              placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size)
+            )
+          }
+      }
+    }
+  }
 
   
   
   
+  
+  
+// MARK: - UITableViewDataSource
 
    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if (self.searchController.active) {
@@ -223,6 +236,9 @@ class SearchVC: UITableViewController {
     }
     return searchResults.count
   }
+  
+  
+  
   
    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = self.tableView.dequeueReusableCellWithIdentifier("SearchResultCell") as! SearchResultCell
@@ -234,28 +250,27 @@ class SearchVC: UITableViewController {
     cell.releaseDate.text = foundMovie.movieReleaseDate
     
   
-//  if (tableView.dragging || tableView.decelerating) {
-//    
-//    SDWebImageManager.sharedManager().cachedImageExistsForURL(NSURL(string: foundMovie.standardPosterImageURL!), completion: {
-//      (exists: Bool) -> Void in
-//      if exists {
-//        cell.posterImage.sd_setImageWithURL(
-//          NSURL(string: foundMovie.standardPosterImageURL!),
-//          placeholderImage: self.getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
-//          options: SDWebImageOptions.AvoidAutoSetImage,
-//          completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-//            if error == nil && image != nil {
-//              cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: .Scale).image
-//            }
-//          }
-//        )
-//
-//      }
-//    })
-//    
-//    return cell
-//    
-//  } else {
+  if (tableView.dragging || tableView.decelerating) {
+    
+    SDWebImageManager.sharedManager().cachedImageExistsForURL(NSURL(string: foundMovie.standardPosterImageURL!), completion: {
+      (exists: Bool) -> Void in
+      if exists {
+        cell.posterImage.sd_setImageWithURL(
+          NSURL(string: foundMovie.standardPosterImageURL!),
+          placeholderImage: self.getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
+          options: SDWebImageOptions.AvoidAutoSetImage,
+          completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+            if error == nil && image != nil {
+              cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: .Scale).image
+            }
+          }
+        )
+      }
+    })
+    
+    return cell
+    
+  } else {
     cell.posterImage.sd_setImageWithURL(
     NSURL(string: foundMovie.standardPosterImageURL!),
     placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
@@ -266,10 +281,13 @@ class SearchVC: UITableViewController {
       }
     }
     )
-//    }
+    }
     
     return cell
   }
+  
+  
+// MARK: - UITableViewDelegate
   
   
    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -283,6 +301,8 @@ class SearchVC: UITableViewController {
     cell.separatorInset.left = cell.posterImage.frame.origin.x + 10
   }
   
+  
+// MARK: - UIScrollViewDelegate
   
    override func scrollViewDidScrollToTop(scrollView: UIScrollView) {
     setTabBarHidden(false)
@@ -301,14 +321,21 @@ class SearchVC: UITableViewController {
   }
   
   
-  
-  override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-  //  setTabBarHidden(false)
+  override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    if (!decelerate){
+      loadImagesForOnscreenRows()
+    }
   }
   
+  override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    loadImagesForOnscreenRows()
+  }
   
-  
+
 }
+
+
+
 
 
 // MARK: - UISearchControllerDelegate
@@ -368,11 +395,6 @@ extension SearchVC: UISearchResultsUpdating {
 }
 
 
-extension SearchVC : UITabBarControllerDelegate {
-  func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
-    print(tabBarController.selectedIndex)
-  }
-}
 
 
 

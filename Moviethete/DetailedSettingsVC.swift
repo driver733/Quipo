@@ -26,7 +26,7 @@ class DetailedSettingsVC: UIViewController {
 
   @IBOutlet var tableView: UITableView!
   
-  var contentTypeTag = Int()
+  var cellIndexPath = NSIndexPath()
   
   
   
@@ -42,6 +42,8 @@ class DetailedSettingsVC: UIViewController {
       tableView.estimatedRowHeight = 44.0;
       
       
+      
+     
 
         // Do any additional setup after loading the view.
     }
@@ -50,20 +52,20 @@ class DetailedSettingsVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
   
-
+  
 }
+
+
 
 extension DetailedSettingsVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
-    switch contentTypeTag {
-    case 0:
       let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
-      let user = UserSingelton.sharedInstance.facebookFriends[indexPath.row]
+      let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row]
+      
       cell.userName.text = user.username
       cell.profileImage.sd_setImageWithURL(
         NSURL(string: user.profileImageURL!),
@@ -77,16 +79,17 @@ extension DetailedSettingsVC: UITableViewDataSource {
       
       return cell
       
-      
-    default: break
-    }
-    
-    return UITableViewCell()
   }
   
+  
+  
+  
+  
+  
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    return UserSingelton.sharedInstance.allFriends[cellIndexPath.row].count
   }
+  
   
   
 }
@@ -98,16 +101,12 @@ extension DetailedSettingsVC: UITableViewDataSource {
 
 extension DetailedSettingsVC: UITableViewDelegate {
   
-  
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if cell.isKindOfClass(ProfileFollowerCell) {
       let cell = cell as! ProfileFollowerCell
       cell.separatorInset.left = cell.userName.frame.origin.x
     }
   }
-  
-  
-  
   
 }
 

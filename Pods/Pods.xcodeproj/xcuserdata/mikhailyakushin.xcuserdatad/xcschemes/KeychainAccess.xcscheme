@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '044E45DCA3368919A6524AFC'
+               BlueprintIdentifier = '5B4096B4EC8BAC110312FA0E'
                BlueprintName = 'KeychainAccess'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'KeychainAccess.framework'>

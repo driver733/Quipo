@@ -52,17 +52,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate
         GIDSignIn.sharedInstance().delegate = self
         
         PFTwitterUtils.initializeWithConsumerKey("IeJhyNYLW5bgaZtrQTJ9Rq7Vb",  consumerSecret:"Ze2eFiBSVHA1dIOM8bu2gsK2cBO9Maw4nmqVzbJUv9B82G9vaw")
-        
+      
+      
+        VKSdk.initializeWithDelegate(self, andAppId: "4991711")
+      
         if (PFUser.currentUser() != nil) {
           self.window?.rootViewController? = (self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))!
         }
       
       
-    //   self.window?.rootViewController?.tabBarController!.delegate = self
-    //  ((self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))! as! UITabBarController).delegate = self
+      //   self.window?.rootViewController?.tabBarController!.delegate = self
+      //  ((self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))! as! UITabBarController).delegate = self
       
-  //    UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
- //     UIBarButtonItem.appearance().tintColor = UIColor.whiteColor()
+      //    UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+      //     UIBarButtonItem.appearance().tintColor = UIColor.whiteColor()
+      
+      
+      
+      
       
       
       
@@ -133,7 +140,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate
 
 
 
-
+extension AppDelegate : VKSdkDelegate {
+  
+  
+  func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
+    
+  }
+  
+  
+  func vkSdkIsBasicAuthorization() -> Bool {
+    return false
+  }
+  
+  func vkSdkTokenHasExpired(expiredToken: VKAccessToken!) {
+    
+  }
+  
+  func vkSdkUserDeniedAccess(authorizationError: VKError!) {
+    
+  }
+  
+  func vkSdkShouldPresentViewController(controller: UIViewController!) {
+//    self.presentViewController(controller, animated: true, completion: nil)
+  }
+  
+  func vkSdkNeedCaptchaEnter(captchaError: VKError!) {
+    let vc = VKCaptchaViewController.captchaControllerWithError(captchaError)
+//    self.presentViewController(vc, animated: true, completion: nil)
+  }
+  
+  
+}
 
 
 
