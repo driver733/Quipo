@@ -109,7 +109,7 @@ class FeedVC: UIViewController {
         return nil
       } else {
         // process error
-        print(task.error.localizedDescription)
+
         return nil
       }
     }

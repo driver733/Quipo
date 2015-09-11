@@ -63,11 +63,13 @@ class ProfileSettings: UIViewController {
 
     
     PFUser.logOutInBackground()   // causes freeze sometimes ONLY IN SIMULATOR - WORKDS FINE ON 8.4 DEVICE
-    
     InstagramEngine.sharedEngine().logout()
     VKSdk.forceLogout()
     FBSDKLoginManager().logOut()
     Twitter.sharedInstance().logOut()
+    
+    UserSingelton.sharedInstance.instagramKeychain["instagram"] = nil
+    
     
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
    
@@ -194,19 +196,15 @@ extension ProfileSettings: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension ProfileSettings: UITableViewDataSource {
   
- 
-  
-  
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
     switch indexPath.section {
-    
       
     case 0:   // follow friends
       
       let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsFollowFriendsCell", forIndexPath: indexPath) as! ProfileSettingsFollowFriendsCell
-      cell.icon.image = UIImage(named: UserSingelton.sharedInstance.followFriendsData[indexPath.row].localIconName)
+      cell.icon.image = UIImage(named: UserSingelton.sharedInstance.followFriendsData[indexPath.row].localIconName!)
       cell.label.text = UserSingelton.sharedInstance.followFriendsData[indexPath.row].description
       return cell
        

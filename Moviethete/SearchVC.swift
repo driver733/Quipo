@@ -10,7 +10,6 @@ import UIKit
 import ITunesSwift
 import SwiftyJSON
 import SDWebImage
-import Ji
 import Alamofire
 import Async
 import Bolts

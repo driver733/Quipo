@@ -222,11 +222,30 @@
                         <outlet property="tableView" destination="LVh-g4-5F9" id="ddR-id-Fv8"/>
                         <segue destination="B2c-Fd-K08" kind="unwind" identifier="didLogOut" unwindAction="didLogOut:" id="daW-LZ-6Ak"/>
                         <segue destination="sYt-qs-ETM" kind="show" identifier="didSelectSettingsCell" id="AWH-sU-OiQ"/>
+                        <segue destination="aJ6-99-fUZ" kind="show" id="hOk-W4-JT2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xav-YW-mmV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="10624" y="571"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="WEz-gp-z9R">
+            <objects>
+                <viewController id="aJ6-99-fUZ" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="RRT-Md-3Hf">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="aJ6-99-fUZ" id="lb4-k1-C1Y"/>
+                            <outlet property="delegate" destination="aJ6-99-fUZ" id="eYs-SN-NAh"/>
+                        </connections>
+                    </tableView>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yg2-N9-8ea" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="11369" y="163"/>
         </scene>
         <!--Detailed SettingsVC-->
         <scene sceneID="AuG-gk-BXY">
@@ -248,7 +267,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8SA-hI-Arp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="11443" y="571"/>
+            <point key="canvasLocation" x="11369" y="896"/>
         </scene>
         <!--Item-->
         <scene sceneID="3j9-rB-D2R">

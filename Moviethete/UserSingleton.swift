@@ -22,6 +22,7 @@ import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
 import Bolts
+import KeychainAccess
 
 public struct UserSingelton {
   
@@ -29,43 +30,70 @@ public struct UserSingelton {
   
   var allFriends = [[User]]()
   var followFriendsData = [FollowFriends]()
-  
+  var instagramKeychain = Keychain(server: "https://api.instagram.com/oauth/authorize", protocolType: .HTTPS)
   var facebookFriends = [User]()
   var vkontakteFriends = [User]()
-
-  
-
+  var instagramFriends = [User]()
   
   init() {}
-  
 
   mutating func loadFollowFriendsData() -> BFTask {
     let mainTask = BFTaskCompletionSource()
-    
-  //  UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)      // I dont understand why clearing these array does not work her :(
     UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
-    
-//    UserSingelton.sharedInstance.vkontakteFriends.removeAll(keepCapacity: false)
-//    UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
-
-    let tasks = BFTask(forCompletionOfAllTasks: [loadVkontakteFriends(), loadFacebookFriends()])
+    var ff = FollowFriends.sharedInstance
+    let tasks = BFTask(forCompletionOfAllTasks: [loadVkontakteFriends(), loadFacebookFriends(), loadInstagramFriends(), ff.loadLinkedAccountsData()])
     tasks.continueWithBlock { (task: BFTask!) -> AnyObject! in
       UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
-      
-      self.loadFollowFriendsCells().continueWithBlock({ (task: BFTask!) -> AnyObject! in
+      UserSingelton.sharedInstance.loadFollowFriendsCells().continueWithBlock({ (task: BFTask!) -> AnyObject! in
         mainTask.setResult(nil)
         return nil
      })
       return nil
     }
     
-    
-    
     return mainTask.task
-    
   }
   
   
+  mutating func loadInstagramFriends() -> BFTask {
+    let mainTask = BFTaskCompletionSource()
+    let instmEngine = InstagramEngine.sharedEngine()
+    let instmKeychain = UserSingelton.sharedInstance.instagramKeychain
+    if instmKeychain["instagram"] != nil {
+    instmEngine.accessToken = instmKeychain["instagram"]
+    instmEngine.getSelfUserDetailsWithSuccess({ (currentUser: InstagramUser!) -> Void in
+      instmEngine.getUsersFollowedByUser(currentUser.Id, withSuccess: {(
+        media: [AnyObject]!, pageInfo:InstagramPaginationInfo!) -> Void in
+        if let users = media as? [InstagramUser] {
+          var userIDs = [String]()
+          for user in users {
+            userIDs.append(user.Id)
+          }
+          let query = PFUser.query()
+          query?.whereKey("INSTMID", containedIn: userIDs)
+          query?.whereKey("INSTMID", notEqualTo: currentUser.Id)
+          query?.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
+            let foundUsers = results as! [PFUser]
+            UserSingelton.sharedInstance.instagramFriends.removeAll(keepCapacity: false)
+            for user in foundUsers {
+              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String)
+              UserSingelton.sharedInstance.instagramFriends.append(follower)
+            }
+            if UserSingelton.sharedInstance.instagramFriends.count > 0 {
+              UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.instagramFriends)
+            }
+            mainTask.setResult(nil)
+          })
+        }
+        }, failure: { (error: NSError!, errorCode: Int) -> Void in
+      })
+      }) { (error: NSError!, errorCode: Int) -> Void in
+    }
+    } else {
+      mainTask.setResult(nil)
+    }
+    return mainTask.task
+  }
   
   
   
@@ -108,23 +136,15 @@ public struct UserSingelton {
           }
           return nil
         })
-        
-        
-          
-      
-     
-      
     } else {
       mainTask.setResult(nil)
     }
      return mainTask.task
   }
   
+
   
-  
-  
-  
-  private func getVKUserID() -> BFTask {
+  func getVKUserID() -> BFTask {
     let task = BFTaskCompletionSource()
     let vkReq = VKApi.users().get()
     vkReq.executeWithResultBlock({ (response: VKResponse!) -> Void in
@@ -136,12 +156,27 @@ public struct UserSingelton {
       }) { (error: NSError!) -> Void in
         
     }
-    
     return task.task
-    
   }
   
   
+  
+  func getVKUsername() -> BFTask {
+    let task = BFTaskCompletionSource()
+    let vkReq = VKApi.users().get()
+    vkReq.executeWithResultBlock({ (response: VKResponse!) -> Void in
+      let json = JSON(response.json)
+      if let firstName = json[0]["first_name"].string, let lastName = json[0]["last_name"].string {
+        let username: String = firstName + " " + lastName
+        task.setResult(username)
+      }
+      
+      }) { (error: NSError!) -> Void in
+        
+    }
+    return task.task
+  }
+
   
   
   
@@ -172,6 +207,19 @@ public struct UserSingelton {
       }
     }
     
+    
+    if InstagramEngine.sharedEngine().accessToken != nil {
+      if UserSingelton.sharedInstance.instagramFriends.count != 0 {
+        let instagramFriends = FollowFriends(
+          theLocalIconName: "instagram",
+          theNumberOfFriends: UserSingelton.sharedInstance.instagramFriends.count,
+          theServiceName: "Instagram"
+        )
+        UserSingelton.sharedInstance.followFriendsData.append(instagramFriends)
+      }
+    }
+
+    
     mainTask.setResult(nil)
     
     return mainTask.task
@@ -180,28 +228,21 @@ public struct UserSingelton {
   
   
   
-  
-  
-  
-  
   mutating func loadFacebookFriends() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     
     if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() != nil {
-  
-  
-   let graphRequest: FBSDKGraphRequest =  FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "friends"], HTTPMethod: "GET")
+      
+    let graphRequest: FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "friends"], HTTPMethod: "GET")
      
       graphRequest.startWithCompletionHandler({
         (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
-        
         
         if error == nil {
   
           let json = JSON(result)
           var fbList = [String]()
           for (_, subJson) in json["data"] {
-            print(subJson["id"].stringValue)
             fbList.append(subJson["id"].stringValue)
           }
           let query = PFUser.query()
@@ -214,16 +255,13 @@ public struct UserSingelton {
               let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String)
               UserSingelton.sharedInstance.facebookFriends.append(follower)
             }
-            
             if UserSingelton.sharedInstance.facebookFriends.count > 0 {
                UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.facebookFriends)
             }
             mainTask.setResult(nil)
           })
-            
           }
         else {
-         print(error.localizedDescription)
         }
       })
       
@@ -232,7 +270,6 @@ public struct UserSingelton {
     }
     
     return mainTask.task
- 
   }
 
   

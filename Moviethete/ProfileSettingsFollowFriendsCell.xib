@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8187.4" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9046" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8151.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -18,6 +18,7 @@
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NSx-UD-Sj4">
                         <rect key="frame" x="8" y="8" width="30" height="30"/>
+                        <animations/>
                         <constraints>
                             <constraint firstAttribute="height" constant="30" id="Nht-wE-dZJ"/>
                             <constraint firstAttribute="width" secondItem="NSx-UD-Sj4" secondAttribute="height" multiplier="1:1" id="aAI-W1-NLC"/>
@@ -26,14 +27,26 @@
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Facebook Friends" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwg-os-oRY">
                         <rect key="frame" x="55" y="11" width="207" height="21"/>
+                        <animations/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iTM-tn-fed">
+                        <rect key="frame" x="297" y="22" width="0.0" height="0.0"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
+                <animations/>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="bwg-os-oRY" secondAttribute="trailing" constant="50" id="9KZ-SI-H1C"/>
+                    <constraint firstItem="iTM-tn-fed" firstAttribute="centerY" secondItem="bwg-os-oRY" secondAttribute="centerY" constant="-15" id="HEl-4k-WwH"/>
+                    <constraint firstItem="iTM-tn-fed" firstAttribute="centerY" secondItem="bwg-os-oRY" secondAttribute="centerY" id="JxA-19-3db"/>
                     <constraint firstAttribute="bottomMargin" secondItem="bwg-os-oRY" secondAttribute="bottom" constant="3" id="RHY-IX-A5B"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="iTM-tn-fed" secondAttribute="trailing" constant="15" id="TQh-ma-JoL"/>
                     <constraint firstItem="NSx-UD-Sj4" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="UbQ-P1-TaU"/>
                     <constraint firstItem="bwg-os-oRY" firstAttribute="leading" secondItem="NSx-UD-Sj4" secondAttribute="trailing" constant="17" id="ZlO-hZ-FVf"/>
                     <constraint firstItem="bwg-os-oRY" firstAttribute="centerY" secondItem="NSx-UD-Sj4" secondAttribute="centerY" constant="-1.5" id="ba2-uv-7tm"/>
@@ -45,14 +58,17 @@
                     <mask key="constraints">
                         <exclude reference="RHY-IX-A5B"/>
                         <exclude reference="fWY-94-15U"/>
+                        <exclude reference="HEl-4k-WwH"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>
+            <animations/>
             <connections>
+                <outlet property="account" destination="iTM-tn-fed" id="f5t-1a-jkd"/>
                 <outlet property="icon" destination="NSx-UD-Sj4" id="OZk-VV-ymf"/>
                 <outlet property="label" destination="bwg-os-oRY" id="vys-dD-K0z"/>
             </connections>
-            <point key="canvasLocation" x="263" y="262"/>
+            <point key="canvasLocation" x="65" y="285"/>
         </tableViewCell>
     </objects>
 </document>

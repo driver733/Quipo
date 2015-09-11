@@ -125,19 +125,22 @@ class LogInVC: UIViewController {
       
         FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
+      
+      
+      
   }
   
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
-    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
-    
-    UserSingelton.sharedInstance.vkontakteFriends.removeAll(keepCapacity: false)
-    UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
-    
-    
-    
-    UserSingelton.sharedInstance.loadFollowFriendsData()
+//    UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
+//    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
+//    
+//    UserSingelton.sharedInstance.vkontakteFriends.removeAll(keepCapacity: false)
+//    UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
+//    
+//    
+//    
+//    UserSingelton.sharedInstance.loadFollowFriendsData()
   }
   
   func signUpTableViewUserInteraction(condition: Bool){
@@ -283,7 +286,7 @@ class LogInVC: UIViewController {
             if (session != nil) {
                 self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
             } else {
-                print("error: \(error.localizedDescription)");
+            
             }
         }
 
@@ -310,10 +313,11 @@ class LogInVC: UIViewController {
                 scope: "likes+comments",
                 state:"INSTAGRAM",
                 success: {
-                    credential, response, parameters in
+                  credential, response, parameters in
                     
                     let engine = InstagramEngine.sharedEngine()
                     engine.accessToken = credential.oauth_token
+                    UserSingelton.sharedInstance.instagramKeychain["instagram"] = credential.oauth_token
                     
                     engine.getSelfUserDetailsWithSuccess({
                       (user: InstagramUser!) -> Void in
@@ -340,16 +344,17 @@ class LogInVC: UIViewController {
                           let user = PFUser()
                           user.username = userName
                           user.password = ""
-                          user.setObject("INSTM\(userID)", forKey: "authID")
-                          user.setObject("\(smallPhoto)", forKey: "smallProfileImage")
-                          user.setObject("\(bigPhoto)", forKey: "bigProfileImage")
+                          user["authID"] = "INSTM\(userID)"
+                          user["INSTMID"] = userID
+                          user["smallProfileImage"] = "\(smallPhoto)"
+                          user["bigProfileImage"] = "\(bigPhoto)"
                           
                           user.signUpInBackground().continueWithBlock({
                             (task: BFTask!) -> AnyObject! in
                             if task.error == nil {
                               self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                             } else {
-                              switch task.error {
+                              switch task.error.code {
                               case 202:   // parse: "username already taken"
                                 self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
                               default: break
@@ -362,26 +367,14 @@ class LogInVC: UIViewController {
                         return nil
                       })
                      
-                        engine.getUsersFollowedByUser(userID, withSuccess: {(
-                            media: [AnyObject]!, pageInfo:InstagramPaginationInfo!) -> Void in
-                            
-                            let users = media as NSArray?
-                            for user in users! {
-                               // print((user as! InstagramUser).fullName)
-                                
-                            }
-
-                            }, failure: { (error:NSError!, errorCode: Int) -> Void in
-                                
-                        })
-                        
+                                                
                         }, failure: { (error: NSError!, errorCode: Int) -> Void in
                             
                     })
                 },
                 
                 failure: {(error:NSError!) -> Void in
-                    print(error.localizedDescription)
+                  
             })
         }
     
@@ -395,7 +388,8 @@ class LogInVC: UIViewController {
             if error == nil && result.token != nil {
                 // logged in
             } else {
-              print(error.localizedDescription)
+              
+           
                 // process error
             }
         })
@@ -713,13 +707,12 @@ extension LogInVC: VKSdkDelegate {
               }
               
               return nil
-              
-              
+    
             })
         }
         },  errorBlock: {
           (error: NSError!) -> Void in
-          print(error.localizedDescription)
+         
           })
     }
   }
@@ -764,7 +757,7 @@ extension LogInVC: GIDSignInUIDelegate {
   func signIn(signIn: GIDSignIn!, dismissViewController viewController: UIViewController!) {
     viewController.dismissViewControllerAnimated(true, completion: nil)
     if signIn.currentUser != nil {
-      print(signIn.currentUser.profile.name)
+    
     }
     // performSegueWithIdentifier("did_log_in", sender: nil)
   }

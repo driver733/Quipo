@@ -30,6 +30,25 @@ class MovietheteUITests: XCTestCase {
 
       
       
+      let app = XCUIApplication()
+      app.scrollViews.otherElements.containingType(.StaticText, identifier:"Sign In    and start sharing your thoughts").childrenMatchingType(.Button).elementBoundByIndex(3).tap()
+      app.textFields["Email or Phone"].tap()
+      app.textFields["Email or Phone"].typeText("driver733@me.com")
+      app.secureTextFields["Facebook Password"].tap()
+      app.secureTextFields["Facebook Password"].typeText("18Sasobu\r")
+      app.buttons["OK"].tap()
+      app.tabBars.childrenMatchingType(.Button).matchingIdentifier("Item").elementBoundByIndex(0).tap()
+      app.navigationBars["Moviethete.ProfileVC"].buttons["Settings"].tap()
+      
+      let tablesQuery = app.tables
+      tablesQuery.staticTexts["2 facebook friends"].tap()
+      
+      let backButton = app.navigationBars["Moviethete.DetailedSettingsVC"].childrenMatchingType(.Button).matchingIdentifier("Back").elementBoundByIndex(0)
+      backButton.tap()
+  //    app.childrenMatchingType(.Window).elementBoundByIndex(0).childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Table).element.swipeUp()
+      tablesQuery.staticTexts["Linked Accounts"].tap()
+      backButton.tap()
+      
       
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
