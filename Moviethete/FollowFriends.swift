@@ -60,7 +60,7 @@ struct FollowFriends {
     FollowFriends.sharedInstance.linkedAccounts.removeAll(keepCapacity: false)
     
     var fb = FollowFriends(theLocalIconName: "facebook", theServiceName: "Facebook", theUsername: "")
-    if FBSDKAccessToken.currentAccessToken() != nil {
+    if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() != nil {
       fb.username = FBSDKProfile.currentProfile().name
     }
     FollowFriends.sharedInstance.linkedAccounts.append(fb)

@@ -39,8 +39,8 @@ class DetailedSettingsVC: UIViewController {
       tableView.registerNib(UINib(nibName: "ProfileSettingsFollowFriendsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsFollowFriendsCell")
       tableView.delegate = self
       tableView.dataSource = self
-      tableView.rowHeight = UITableViewAutomaticDimension;
-      tableView.estimatedRowHeight = 44.0;
+      tableView.rowHeight = UITableViewAutomaticDimension
+      tableView.estimatedRowHeight = 44.0
     
 
       
@@ -56,7 +56,7 @@ class DetailedSettingsVC: UIViewController {
 }
 
 
-
+// MARK: - UITableViewDataSource
 extension DetailedSettingsVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -95,7 +95,7 @@ extension DetailedSettingsVC: UITableViewDataSource {
     case 2: // Settings
       
       switch cellIndexPath.row {
-      case 0:  // linked accounts
+      case 0:  // Linked accounts
         
         let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsFollowFriendsCell", forIndexPath: indexPath) as! ProfileSettingsFollowFriendsCell
         let linkedAccount = FollowFriends.sharedInstance.linkedAccounts[indexPath.row]
@@ -165,8 +165,22 @@ extension DetailedSettingsVC: UITableViewDataSource {
 
 
 
-
+// MARK: - UITableViewDelegate
 extension DetailedSettingsVC: UITableViewDelegate {
+  
+  
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    switch indexPath.row {
+    case 0:
+      if FBSDKAccessToken.currentAccessToken() == nil {
+        UserSingelton.sharedInstance.loginWithFacebook()
+        
+      }
+    default: break
+    }
+    tableView.deselectRowAtIndexPath(indexPath, animated: false)
+  }
   
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if cell.isKindOfClass(ProfileFollowerCell) {

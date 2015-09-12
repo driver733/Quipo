@@ -12,9 +12,7 @@ import Async
 
 class DetailedPostVC: UIViewController {
 
-  
   @IBOutlet var tableView: UITableView!
-  
   
   var passedPosterImage: UIImage? = nil
   var passedMovieInfo = Dictionary<String, String>()
@@ -53,7 +51,6 @@ class DetailedPostVC: UIViewController {
       },
       completion: nil)    
   }
-  
   
   
   override func didReceiveMemoryWarning() {

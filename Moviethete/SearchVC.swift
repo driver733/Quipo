@@ -60,16 +60,13 @@ class SearchVC: UITableViewController {
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 44.0
     
-   
     // Add search bar
     self.navigationController?.navigationBar.addSubview(searchController.searchBar)
    
-    
     // Fix for black table view after tab bar switch
     self.definesPresentationContext = true
     
     self.navigationController?.definesPresentationContext = true
-
     
     self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
     self.navigationItem.title = ""
@@ -79,19 +76,14 @@ class SearchVC: UITableViewController {
     
     self.navigationController?.navigationBar.translucent = false
     
-    
     self.tabBarController?.tabBar.translucent = false
-
-    
 
     // remove UINavigationBar`s bottom border
     self.navigationController?.navigationBar.shadowImage = UIImage()
     self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: UIBarMetrics.Default)
- 
-    
-    
   }
 
+  
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if
@@ -149,7 +141,6 @@ class SearchVC: UITableViewController {
 
   
   
-  
   func keyboardDidHide(notif: NSNotification) {
     tempStr = searchController.searchBar.text!
   }
@@ -179,7 +170,6 @@ class SearchVC: UITableViewController {
     
     isTabBarHidden = tabBarHidden
   }
-  
   
   
   
@@ -222,9 +212,6 @@ class SearchVC: UITableViewController {
 
   
   
-  
-  
-  
 // MARK: - UITableViewDataSource
 
    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -237,8 +224,6 @@ class SearchVC: UITableViewController {
   }
   
   
-  
-  
    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = self.tableView.dequeueReusableCellWithIdentifier("SearchResultCell") as! SearchResultCell
     
@@ -248,24 +233,23 @@ class SearchVC: UITableViewController {
     cell.genre.text = foundMovie.movieGenre
     cell.releaseDate.text = foundMovie.movieReleaseDate
     
-  
-  if (tableView.dragging || tableView.decelerating) {
+    if (tableView.dragging || tableView.decelerating) {
     
-    SDWebImageManager.sharedManager().cachedImageExistsForURL(NSURL(string: foundMovie.standardPosterImageURL!), completion: {
-      (exists: Bool) -> Void in
-      if exists {
-        cell.posterImage.sd_setImageWithURL(
-          NSURL(string: foundMovie.standardPosterImageURL!),
-          placeholderImage: self.getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
-          options: SDWebImageOptions.AvoidAutoSetImage,
-          completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-            if error == nil && image != nil {
-              cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: .Scale).image
+      SDWebImageManager.sharedManager().cachedImageExistsForURL(NSURL(string: foundMovie.standardPosterImageURL!), completion: {
+        (exists: Bool) -> Void in
+        if exists {
+          cell.posterImage.sd_setImageWithURL(
+            NSURL(string: foundMovie.standardPosterImageURL!),
+            placeholderImage: self.getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
+            options: SDWebImageOptions.AvoidAutoSetImage,
+            completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+              if error == nil && image != nil {
+                cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: .Scale).image
+              }
             }
-          }
-        )
-      }
-    })
+          )
+        }
+      })
     
     return cell
     
@@ -363,7 +347,6 @@ extension SearchVC: UISearchResultsUpdating {
       searchResults.removeAll(keepCapacity: false)
       let userSearchInput = searchController.searchBar.text!
       if userSearchInput.characters.count > 1 {
-        
         
         Post.sharedInstance.getMovieInfoByTitleAtCountry(userSearchInput, country: "US").continueWithBlock({
           (task: BFTask!) -> AnyObject! in

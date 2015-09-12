@@ -294,159 +294,28 @@ class LogInVC: UIViewController {
     
     
     @IBAction func loginWithInstagram(sender: AnyObject) {
-        
-        let instagramConsumerKey = "1c2e2066145342c3a841bdbdca8e53ae"
-        let instagramConsumerSecret = "db9f79ad45b04fc09e8222645cb713b2"
-        let instagramAuthorizeURL = "https://api.instagram.com/oauth/authorize"
-        
-        let auth = OAuth2Swift(
-            consumerKey:    instagramConsumerKey,
-            consumerSecret: instagramConsumerSecret,
-            authorizeUrl:   instagramAuthorizeURL,
-            responseType:   "token"
-        )
-        
-        auth.authorize_url_handler = WebVC()
-        
-            auth.authorizeWithCallbackURL(
-                NSURL(string: "oauth-swift://oauth-callback/instagram")!,
-                scope: "likes+comments",
-                state:"INSTAGRAM",
-                success: {
-                  credential, response, parameters in
-                    
-                    let engine = InstagramEngine.sharedEngine()
-                    engine.accessToken = credential.oauth_token
-                    UserSingelton.sharedInstance.instagramKeychain["instagram"] = credential.oauth_token
-                    
-                    engine.getSelfUserDetailsWithSuccess({
-                      (user: InstagramUser!) -> Void in
-                        let userName =   user.username
-                        let userID =     user.Id
-                        let smallPhoto = user.profilePictureURL
-                        let bigPhoto =   user.profilePictureURL
-                      
-                      self.getUsernameifRegistered("INSTM\(userID)").continueWithBlock({
-                        (task: BFTask!) -> AnyObject! in
-                        if task.error == nil, let username = task.result as? String {
-                          
-                          PFUser.logInWithUsernameInBackground(username, password: "").continueWithBlock({
-                            (task: BFTask!) -> AnyObject! in
-                            if task.error == nil {
-                              self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                            } else {
-                              // process error
-                            }
-                            return nil
-                          })
-                          
-                        } else {
-                          let user = PFUser()
-                          user.username = userName
-                          user.password = ""
-                          user["authID"] = "INSTM\(userID)"
-                          user["INSTMID"] = userID
-                          user["smallProfileImage"] = "\(smallPhoto)"
-                          user["bigProfileImage"] = "\(bigPhoto)"
-                          
-                          user.signUpInBackground().continueWithBlock({
-                            (task: BFTask!) -> AnyObject! in
-                            if task.error == nil {
-                              self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                            } else {
-                              switch task.error.code {
-                              case 202:   // parse: "username already taken"
-                                self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
-                              default: break
-                              }
-                            }
-                            return nil
-                          })
-                          
-                        }
-                        return nil
-                      })
-                     
-                                                
-                        }, failure: { (error: NSError!, errorCode: Int) -> Void in
-                            
-                    })
-                },
-                
-                failure: {(error:NSError!) -> Void in
-                  
-            })
-        }
+      UserSingelton.sharedInstance.loginWithInstagram().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+        return nil
+      }
+    }
     
   
     
     @IBAction func loginWithFacebook(sender: AnyObject) {
-        let fbLoginManager = FBSDKLoginManager()
-        fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
-        fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"], handler: {
-            (result: FBSDKLoginManagerLoginResult!, error: NSError!) -> Void in
-            if error == nil && result.token != nil {
-                // logged in
-            } else {
-              
-           
-                // process error
-            }
-        })
+      UserSingelton.sharedInstance.loginWithFacebook()
     }
     
     
     
     
-    func didReceiveFacebookProfile(notif:NSNotification){
-      if PFUser.currentUser() == nil {
-        if FBSDKAccessToken.currentAccessToken() != nil {               // did FB log in or log out?
-          
-          PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken()).continueWithBlock({
-            (task: BFTask!) -> AnyObject! in
-            if let user = task.result as? PFUser { 
-              if user.isNew {
-                
-                let smallProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
-                let bigProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(600, 600))
-                user.username = "\(FBSDKProfile.currentProfile().firstName.lowercaseString)_\(FBSDKProfile.currentProfile().lastName.lowercaseString)"
-                user["smallProfileImage"] = "https://graph.facebook.com/\(smallProfileImage)"
-                user["bigProfileImage"] = "https://graph.facebook.com/\(bigProfileImage)"
-                user["FBID"] = FBSDKProfile.currentProfile().userID
-                user["authID"] = "FB" + FBSDKProfile.currentProfile().userID
-                
-                PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken()).continueWithBlock({
-                  (task: BFTask!) -> AnyObject! in
-                  if task.error == nil {
-                    // successfully linked user
-                    self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                  } else {
-                    switch task.error.code {
-                    case 202:
-                      let userID = FBSDKProfile.currentProfile().userID
-                      user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
-                      PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken())
-                      self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                    default: break
-                    }
-                  }
-                  return nil
-                })
-                
-              }
-              self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-            }
-            
-            return nil
-          })
-        } else {
-            print("Uh oh. There was an error logging in.")
-        }
-      
+  func didReceiveFacebookProfile(notif: NSNotification){
+      UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+        return nil
       }
-    
-      }
-    
+  }
+  
 
   
     
@@ -457,39 +326,34 @@ class LogInVC: UIViewController {
     
 
   
-  
-  
 
   
-  
-  
-  
-  // MARK: - Utility
-    func getUsernameifRegistered(ID: String) -> BFTask {
-      let task = BFTaskCompletionSource()
-        let query = PFUser.query()
-        query?.whereKey("authID", equalTo: ID)
-        query?.getFirstObjectInBackgroundWithBlock({
-            (foundUser: PFObject?, error: NSError?) -> Void in
-            if error == nil, let user = foundUser as? PFUser {
-              task.setResult(user.username!)
-            }
-            else {
-              task.setResult(nil)
-            }
-        })
-        return task.task
-    }
-    
-    
-    func extendUsernameWithUserIDAndRegister(userID: String, user: PFUser){
-        user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
-        user.signUpInBackgroundWithBlock({ (result: Bool, error: NSError?) -> Void in
-            if error == nil {
-                self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-            }
-        })
-    }
+//  // MARK: - Utility
+//    func getUsernameifRegistered(ID: String) -> BFTask {
+//      let task = BFTaskCompletionSource()
+//        let query = PFUser.query()
+//        query?.whereKey("authID", equalTo: ID)
+//        query?.getFirstObjectInBackgroundWithBlock({
+//            (foundUser: PFObject?, error: NSError?) -> Void in
+//            if error == nil, let user = foundUser as? PFUser {
+//              task.setResult(user.username!)
+//            }
+//            else {
+//              task.setResult(nil)
+//            }
+//        })
+//        return task.task
+//    }
+//    
+//    
+//    func extendUsernameWithUserIDAndRegister(userID: String, user: PFUser){
+//        user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
+//        user.signUpInBackgroundWithBlock({ (result: Bool, error: NSError?) -> Void in
+//            if error == nil {
+//                self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+//            }
+//        })
+//    }
   
  
 
@@ -654,66 +518,9 @@ extension LogInVC: ValidationDelegate {
 extension LogInVC: VKSdkDelegate {
   
   func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
-    
-   if VKSdk.isLoggedIn() {
-      let vkReq = VKApi.users().get(["fields" : "photo_100, photo_200_orig"])
-      vkReq.executeWithResultBlock({
-        (response: VKResponse!) -> Void in
-        let json = JSON(response.json)
-        if let
-          firstName =  json[0]["first_name"].string,
-          lastName =   json[0]["last_name"].string,
-          userID =     json[0]["id"].number,
-          smallPhoto = json[0]["photo_100"].string,
-          bigPhoto   = json[0]["photo_200_orig"].string {
-          
-            self.getUsernameifRegistered("VK\(userID)").continueWithBlock({
-              (task: BFTask!) -> AnyObject! in
-              if task.error == nil, let username = task.result as? String {
-                
-                  PFUser.logInWithUsernameInBackground(username, password: "").continueWithBlock({
-                    (task: BFTask!) -> AnyObject! in
-                    if task.error == nil {
-                      self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                    } else {
-                      // process error
-                    }
-                    return nil
-                  })
-                
-              } else {
-
-                let user = PFUser()
-                user.username = "\(firstName)_\(lastName)".lowercaseString
-                user.password = ""
-                user["authID"] = "VK\(userID)"
-                user["VKID"] = "\(userID)"
-                user["smallProfileImage"] = smallPhoto
-                user["bigProfileImage"] = bigPhoto
-                user.signUpInBackground().continueWithBlock({
-                  (task: BFTask!) -> AnyObject! in
-                  if task.error == nil {
-                    self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-                  } else {
-                    switch task.error {
-                    case 202:   // parse: "username already taken"
-                      self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
-                    default: break
-                    }
-                  }
-                  return nil
-                })
-                
-              }
-              
-              return nil
-    
-            })
-        }
-        },  errorBlock: {
-          (error: NSError!) -> Void in
-         
-          })
+    UserSingelton.sharedInstance.didReceiveNewVKToken().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+      return nil
     }
   }
 
