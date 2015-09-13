@@ -124,7 +124,7 @@ class LogInVC: UIViewController {
         signUpTriangle.hidden = true
       
         FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: self)
       
       
       
@@ -232,12 +232,9 @@ class LogInVC: UIViewController {
     
     
     func SignUp(){
-      
-      
         let user = PFUser()
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        
         if !(signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! Cell).textfield.text!.isEmpty {
             user.username = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! Cell).textfield.text
         }
@@ -245,51 +242,37 @@ class LogInVC: UIViewController {
             let arr: Array = ((signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text?.componentsSeparatedByString("@"))!
          user.username = arr[0]
         }
-
-        
         user.password = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! Cell).textfield.text
         user.email = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text
-        
-        // other fields can be set just like with PFObject
-      
-      user.signUpInBackground().continueWithBlock {
-        (task: BFTask!) -> AnyObject! in
-        if task.error == nil {
-          self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-        } else {
-          switch task.error.code {
-          case 202:
-            alert.title = "Username already taken"   // "Or email is already taken. Have trouble logging in? " -> Needs to take into account email too.
-            alert.message = "This username is already taken. Please use a different one."
-            self.presentViewController(alert, animated: true, completion: nil)
-          default: break
-          }
+        user.signUpInBackground().continueWithBlock {
+          (task: BFTask!) -> AnyObject! in
+          if task.error == nil {
+            self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+          } else {
+            switch task.error.code {
+            case 202:
+              alert.title = "Username already taken"   // "Or email is already taken. Have trouble logging in? " -> Needs to take into account email too.
+              alert.message = "This username is already taken. Please use a different one."
+              self.presentViewController(alert, animated: true, completion: nil)
+            default: break
+            }
 
+          }
+          return nil
         }
-        return nil
-      }
-      
-      
-      
-      
     }
   
   
-  
-  
-
     
   
     @IBAction func buttonTwitterLogin(sender: AnyObject) {
-      
         Twitter.sharedInstance().logInWithCompletion { session, error in
             if (session != nil) {
                 self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
             } else {
-            
+          
             }
         }
-
     }
     
     
@@ -303,7 +286,18 @@ class LogInVC: UIViewController {
   
     
     @IBAction func loginWithFacebook(sender: AnyObject) {
-      UserSingelton.sharedInstance.loginWithFacebook()
+      let fbLoginManager = FBSDKLoginManager()
+      fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
+      fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"],
+        fromViewController: self,
+        handler: {
+          (result: FBSDKLoginManagerLoginResult!, error: NSError!) -> Void in
+          if error == nil && result.token != nil {
+            // logged in
+          } else {
+            // process error
+          }
+      })
     }
     
     
@@ -327,33 +321,6 @@ class LogInVC: UIViewController {
 
   
 
-  
-//  // MARK: - Utility
-//    func getUsernameifRegistered(ID: String) -> BFTask {
-//      let task = BFTaskCompletionSource()
-//        let query = PFUser.query()
-//        query?.whereKey("authID", equalTo: ID)
-//        query?.getFirstObjectInBackgroundWithBlock({
-//            (foundUser: PFObject?, error: NSError?) -> Void in
-//            if error == nil, let user = foundUser as? PFUser {
-//              task.setResult(user.username!)
-//            }
-//            else {
-//              task.setResult(nil)
-//            }
-//        })
-//        return task.task
-//    }
-//    
-//    
-//    func extendUsernameWithUserIDAndRegister(userID: String, user: PFUser){
-//        user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
-//        user.signUpInBackgroundWithBlock({ (result: Bool, error: NSError?) -> Void in
-//            if error == nil {
-//                self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-//            }
-//        })
-//    }
   
  
 
@@ -454,9 +421,8 @@ extension LogInVC: ValidationDelegate {
   }
   
   
-  
   func validationFailed(errors:[UITextField:ValidationError]) {
-    
+
     let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
     alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
     

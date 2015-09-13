@@ -60,6 +60,7 @@ class ProfileSettings: UIViewController {
   
   func logOut() {
     
+    
 
     
     PFUser.logOutInBackground()   // causes freeze sometimes ONLY IN SIMULATOR - WORKDS FINE ON 8.4 DEVICE
@@ -86,12 +87,18 @@ class ProfileSettings: UIViewController {
   
   
   
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-      if let vc = segue.destinationViewController as? DetailedSettingsVC {
-        vc.cellIndexPath = (tableView.indexPathForSelectedRow)!
-        }
-    }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if let vc = segue.destinationViewController as? DetailedSettingsVC {
+      vc.cellIndexPath = (tableView.indexPathForSelectedRow)!
+      }
+  }
+  
+  
+  override func viewWillAppear(animated: Bool) {
+    tableView.reloadData()
+  }
+  
 
 }
 

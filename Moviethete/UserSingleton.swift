@@ -35,8 +35,7 @@ public struct UserSingelton {
   var vkontakteFriends = [User]()
   var instagramFriends = [User]()
   
-  // FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
-  //  NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
+  
   
   
   mutating func loadFollowFriendsData() -> BFTask {
@@ -55,6 +54,7 @@ public struct UserSingelton {
     
     return mainTask.task
   }
+  
   
   
   mutating func loadInstagramFriends() -> BFTask {
@@ -144,6 +144,50 @@ public struct UserSingelton {
      return mainTask.task
   }
   
+  
+  mutating func loadFacebookFriends() -> BFTask {
+    let mainTask = BFTaskCompletionSource()
+    
+    if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() != nil {
+      
+      let graphRequest: FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "friends"], HTTPMethod: "GET")
+      
+      graphRequest.startWithCompletionHandler({
+        (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
+        
+        if error == nil {
+          
+          let json = JSON(result)
+          var fbList = [String]()
+          for (_, subJson) in json["data"] {
+            fbList.append(subJson["id"].stringValue)
+          }
+          let query = PFUser.query()
+          query?.whereKey("FBID", containedIn: fbList)
+          query?.whereKey("FBID", notEqualTo: FBSDKProfile.currentProfile().userID)
+          query?.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
+            let foundUsers = results as! [PFUser]
+            UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
+            for user in foundUsers {
+              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String)
+              UserSingelton.sharedInstance.facebookFriends.append(follower)
+            }
+            if UserSingelton.sharedInstance.facebookFriends.count > 0 {
+              UserSingelton.sharedInstance.allFriends.insert(UserSingelton.sharedInstance.facebookFriends, atIndex: 0)
+            }
+            mainTask.setResult(nil)
+          })
+        }
+        else {
+        }
+      })
+      
+    } else {
+      mainTask.setResult(nil)
+    }
+    
+    return mainTask.task
+  }
 
   
   func getVKUserID() -> BFTask {
@@ -184,6 +228,8 @@ public struct UserSingelton {
   
   mutating func loadFollowFriendsCells() -> BFTask {
     let mainTask = BFTaskCompletionSource()
+    
+    UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
     
     if FBSDKAccessToken.currentAccessToken() != nil {
       if UserSingelton.sharedInstance.facebookFriends.count != 0 {
@@ -229,66 +275,27 @@ public struct UserSingelton {
   
   
   
-  mutating func loadFacebookFriends() -> BFTask {
-    let mainTask = BFTaskCompletionSource()
-    
-    if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() != nil {
-      
-    let graphRequest: FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "friends"], HTTPMethod: "GET")
-     
-      graphRequest.startWithCompletionHandler({
-        (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
-        
-        if error == nil {
-  
-          let json = JSON(result)
-          var fbList = [String]()
-          for (_, subJson) in json["data"] {
-            fbList.append(subJson["id"].stringValue)
-          }
-          let query = PFUser.query()
-          query?.whereKey("FBID", containedIn: fbList)
-          query?.whereKey("FBID", notEqualTo: FBSDKProfile.currentProfile().userID)
-          query?.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
-            let foundUsers = results as! [PFUser]
-            UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
-            for user in foundUsers {
-              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String)
-              UserSingelton.sharedInstance.facebookFriends.append(follower)
-            }
-            if UserSingelton.sharedInstance.facebookFriends.count > 0 {
-               UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.facebookFriends)
-            }
-            mainTask.setResult(nil)
-          })
-          }
-        else {
-        }
-      })
-      
-    } else {
-      mainTask.setResult(nil)
-    }
-    
-    return mainTask.task
-  }
 
   
   
-   func loginWithFacebook() {
- //   NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
-    
+  
+  func loginWithFacebook(fromViewController: UIViewController) {
     let fbLoginManager = FBSDKLoginManager()
     fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
-    fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"], handler: {
-      (result: FBSDKLoginManagerLoginResult!, error: NSError!) -> Void in
-      if error == nil && result.token != nil {
-        // logged in
-      } else {
-        // process error
-      }
+    fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"],
+      fromViewController: fromViewController,
+      handler: {
+        (result: FBSDKLoginManagerLoginResult!, error: NSError!) -> Void in
+        if error == nil && result.token != nil {
+          // logged in
+        } else {
+          // process error
+        }
     })
+
   }
+
+  
   
   
   func didReceiveFacebookProfile() -> BFTask {
@@ -335,6 +342,26 @@ public struct UserSingelton {
       } else {
         print("Uh oh. There was an error logging in.")
       }
+      
+      
+      
+    } else {
+      
+      PFFacebookUtils.linkUserInBackground(
+        PFUser.currentUser()!,
+        withReadPermissions: ["email", "public_profile", "friends"],
+        block: { (result: Bool, error: NSError?) -> Void in
+            var tasks = [BFTask]()
+            tasks.append(FollowFriends.sharedInstance.loadLinkedAccountsData())
+            tasks.append(UserSingelton.sharedInstance.loadFollowFriendsCells())
+            tasks.append(UserSingelton.sharedInstance.loadFacebookFriends())
+            let theTask = BFTask(forCompletionOfAllTasksWithResults: tasks)
+            theTask.continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+              mainTask.setResult(nil)
+              return nil
+            })
+      }
+      )
     }
     return mainTask.task
   }
@@ -404,7 +431,7 @@ public struct UserSingelton {
                 } else {
                   switch task.error.code {
                   case 202:   // parse: "username already taken"
-                    self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
+                    self.register("\(userID)", AndUser: user)
                   default: break
                   }
                 }
@@ -469,7 +496,7 @@ public struct UserSingelton {
                   } else {
                     switch task.error {
                     case 202:   // parse: "username already taken"
-                      self.extendUsernameWithUserIDAndRegister("\(userID)", user: user)
+                      self.register("\(userID)", AndUser: user)
                     default: break
                     }
                   }
@@ -496,10 +523,6 @@ public struct UserSingelton {
   
   
   
-  
-  
-  
-  
   // MARK: - Utility
   func getUsernameifRegistered(ID: String) -> BFTask {
     let task = BFTaskCompletionSource()
@@ -518,19 +541,23 @@ public struct UserSingelton {
   }
   
   
-  func extendUsernameWithUserIDAndRegister(userID: String, user: PFUser){
+  func register(WithUserID: String, AndUser: PFUser) -> BFTask {
+    let mainTask = BFTaskCompletionSource()
+    let user = AndUser
+    let userID = WithUserID
     user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
     user.signUpInBackgroundWithBlock({ (result: Bool, error: NSError?) -> Void in
       if error == nil {
- //       self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+        mainTask.setResult(nil)
       }
     })
+    return mainTask.task
   }
 
   
   
   
-  
+
   
   
 }

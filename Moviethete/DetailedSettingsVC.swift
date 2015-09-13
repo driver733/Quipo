@@ -31,7 +31,7 @@ class DetailedSettingsVC: UIViewController {
   
   
     override func viewDidLoad() {
-        super.viewDidLoad()
+      super.viewDidLoad()
       
       
       tableView.registerNib(UINib(nibName: "ProfileSettingsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsCell")
@@ -41,8 +41,10 @@ class DetailedSettingsVC: UIViewController {
       tableView.dataSource = self
       tableView.rowHeight = UITableViewAutomaticDimension
       tableView.estimatedRowHeight = 44.0
-    
-
+      
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
+      
+ 
       
     }
 
@@ -50,6 +52,15 @@ class DetailedSettingsVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+  
+  
+  
+  func didReceiveFacebookProfile(notif: NSNotification){
+    UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      self.tableView.reloadData()
+      return nil
+    }
+  }
 
   
   
@@ -174,7 +185,7 @@ extension DetailedSettingsVC: UITableViewDelegate {
     switch indexPath.row {
     case 0:
       if FBSDKAccessToken.currentAccessToken() == nil {
-        UserSingelton.sharedInstance.loginWithFacebook()
+        UserSingelton.sharedInstance.loginWithFacebook(self)
         
       }
     default: break
@@ -190,5 +201,7 @@ extension DetailedSettingsVC: UITableViewDelegate {
   }
   
 }
+
+
 
 

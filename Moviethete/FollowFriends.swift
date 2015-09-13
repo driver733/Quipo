@@ -85,13 +85,15 @@ struct FollowFriends {
       instmEngine.getSelfUserDetailsWithSuccess({ (currentUser: InstagramUser!) -> Void in
       instagram.username = currentUser.username
       FollowFriends.sharedInstance.linkedAccounts.append(instagram)
+        mainTask.setResult(nil)
         }, failure: { (error: NSError!, errorCode: Int) -> Void in
+          mainTask.setResult(nil)
       })
     } else {
       FollowFriends.sharedInstance.linkedAccounts.append(instagram)
       }
     
-       mainTask.setResult(nil)
+    
 
     return mainTask.task
   }
