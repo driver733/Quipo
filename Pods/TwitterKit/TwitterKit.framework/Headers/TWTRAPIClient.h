@@ -15,6 +15,7 @@ FOUNDATION_EXPORT NSString * const TWTRTweetsNotLoadedKey;
 @class TWTRAuthConfig;
 @class TWTRGuestSession;
 @protocol TWTRAuthSession;
+@protocol TWTRSessionStore;
 
 /**
  *  @name Completion Block Types
@@ -82,15 +83,20 @@ typedef void (^TWTRTweetActionCompletion)(TWTRTweet * __twtr_nullable tweet, NSE
 @interface TWTRAPIClient : NSObject
 
 /**
- *  @name Initialization
+ *  The Twitter user ID this client is making API requests on behalf of or
+ *  nil if it is a guest user.
  */
+@property (nonatomic, copy, readonly, twtr_nullable) NSString *userID;
 
-- (instancetype)init __attribute__((unavailable(("Use one of the other `-init...` methods that allow you to provide signing parameters"))));
 
 /**
- *  This method is deprecated since TwitterKit v1.4.0. To get an API client, use the one provided by the `Twitter` class.
+ *  Constructs a `TWTRAPIClient` object to perform authenticated API requests with user authentication.
+ *
+ *  @param userID (optional) ID of the user to make requests on behalf of. If the ID is nil requests will be made using guest authentication.
+ *
+ *  @return Fully initialized API client to make authenticated requests against the Twitter REST API.
  */
-- (instancetype)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret __attribute__((deprecated));
+- (instancetype)initWithUserID:(twtr_nullable NSString *)userID;
 
 /**
  *  @name Making Requests

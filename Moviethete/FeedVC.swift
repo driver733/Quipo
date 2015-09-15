@@ -85,11 +85,10 @@ class FeedVC: UIViewController {
     
     
     
-    // move to singelton - via nsNotification
+    
     UserSingelton.sharedInstance.loadFollowFriendsData()
     
-    
-    
+ 
   }
   
   
@@ -139,7 +138,8 @@ class FeedVC: UIViewController {
   }
 
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {/*
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    /*
     if segue.identifier == DID_SELECT_SEARCH_RESULT_CELL_SEGUE_IDENTIFIER,
       let vc = segue.destinationViewController as? DetailedPostVC {
         if (tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!)?.isKindOfClass(TopCell) != nil) {
@@ -152,7 +152,7 @@ class FeedVC: UIViewController {
         }
     }
     }
-*/
+    */
   }
   
 

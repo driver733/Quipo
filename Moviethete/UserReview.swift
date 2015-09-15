@@ -46,7 +46,13 @@ public struct UserReview {
     parsePost.saveInBackground().continueWithBlock { (task: BFTask!) -> AnyObject! in
       if task.error == nil {
         reviewsRelation?.addObject(parsePost)
-        PFUser.currentUser()!.save()
+        do {
+          try PFUser.currentUser()!.save()
+        }
+        catch {
+          
+        }
+        
         return PFUser.currentUser()?.saveInBackground()
       } else {
         mainTask.setError(task.error)

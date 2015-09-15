@@ -61,6 +61,7 @@
 		8FB671881B93C9760016C152 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB671871B93C9760016C152 /* UIColorExtension.swift */; };
 		8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB871A91B80FB9E00256787 /* SearchResultCell.swift */; };
 		8FB871AC1B80FB9E00256787 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */; };
+		8FBA93C81BA6117300D6F154 /* LinkedAccountsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBA93C71BA6117300D6F154 /* LinkedAccountsVC.swift */; };
 		8FD456D31B85793200945E3E /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD456D21B85793200945E3E /* Toucan.swift */; };
 		8FF20B551B940B540067AFB7 /* UIImageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF20B541B940B540067AFB7 /* UIImageColors.swift */; };
 		EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAECE6804A560D6747EC5E20 /* Pods_Moviethete.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -146,6 +147,7 @@
 		8FB671871B93C9760016C152 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		8FB871A91B80FB9E00256787 /* SearchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultCell.xib; sourceTree = "<group>"; };
+		8FBA93C71BA6117300D6F154 /* LinkedAccountsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedAccountsVC.swift; sourceTree = "<group>"; };
 		8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = ITunesSwift.framework; path = "/Users/mikhailyakushin/Library/Developer/Xcode/DerivedData/Moviethete-btmlsatvnyfpkzaxusstbmuocrtc/Build/Products/Debug-iphoneos/ITunesSwift.framework"; sourceTree = "<absolute>"; };
 		8FD456D21B85793200945E3E /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toucan.swift; sourceTree = "<group>"; };
 		8FD5374A1B927AC300DD355B /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "Pods/../build/Debug-iphoneos/Alamofire.framework"; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 			isa = PBXGroup;
 			children = (
 				8F70DA111B9D5D6A0065E791 /* DetailedSettingsVC.swift */,
+				8FBA93C71BA6117300D6F154 /* LinkedAccountsVC.swift */,
 			);
 			name = DetailedSettings;
 			sourceTree = "<group>";
@@ -630,6 +633,7 @@
 				8F70DA101B9D412B0065E791 /* UserSingleton.swift in Sources */,
 				8F70DA121B9D5D6A0065E791 /* DetailedSettingsVC.swift in Sources */,
 				8F7FF4AA1B73F2AB001317E2 /* ProfileSettings.swift in Sources */,
+				8FBA93C81BA6117300D6F154 /* LinkedAccountsVC.swift in Sources */,
 				8F7FF4C21B73F2AB001317E2 /* LikesVC.swift in Sources */,
 				8FB671881B93C9760016C152 /* UIColorExtension.swift in Sources */,
 				8F85040A1B9EB42B003F4DC8 /* FollowFriends.swift in Sources */,

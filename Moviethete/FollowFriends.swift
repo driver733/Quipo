@@ -54,47 +54,52 @@ struct FollowFriends {
   
   
   
-  mutating func loadLinkedAccountsData() -> BFTask {
+  func loadLinkedAccountsData() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     
     FollowFriends.sharedInstance.linkedAccounts.removeAll(keepCapacity: false)
     
     var fb = FollowFriends(theLocalIconName: "facebook", theServiceName: "Facebook", theUsername: "")
+    
     if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() != nil {
       fb.username = FBSDKProfile.currentProfile().name
     }
     FollowFriends.sharedInstance.linkedAccounts.append(fb)
+    
+    UserSingelton.sharedInstance.instagramgetSelfUserDetailsWithSuccess().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       
-    var vk = FollowFriends(theLocalIconName: "vk", theServiceName: "Vkontakte", theUsername: "")
-    if VKSdk.isLoggedIn() {
-      UserSingelton.sharedInstance.getVKUsername().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-         vk.username = task.result as? String
-        FollowFriends.sharedInstance.linkedAccounts.append(vk)
+      let subTask = BFTaskCompletionSource()
+      
+      var instagram = FollowFriends(theLocalIconName: "instagram", theServiceName: "Instagram", theUsername: "")
+      
+      let instagramKeychain = UserSingelton.sharedInstance.instagramKeychain
+      if instagramKeychain["instagram"] != nil {
+        let currentUser = task.result as! InstagramUser
+        instagram.username = currentUser.username
+        FollowFriends.sharedInstance.linkedAccounts.insert(instagram, atIndex: 1)
+        } else {
+        FollowFriends.sharedInstance.linkedAccounts.insert(instagram, atIndex: 1)
+      }
+      
+      subTask.setResult(nil)
+      
+      return UserSingelton.sharedInstance.getVKUsername()
+      }.continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      
+        var vk = FollowFriends(theLocalIconName: "vk", theServiceName: "Vkontakte", theUsername: "")
+        
+        if VKSdk.isLoggedIn() {
+          vk.username = task.result as? String
+          FollowFriends.sharedInstance.linkedAccounts.append(vk)
+        } else {
+          FollowFriends.sharedInstance.linkedAccounts.append(vk)
+        }
+        
+        mainTask.setResult(nil)
+        
         return nil
-      })
-    } else {
-      FollowFriends.sharedInstance.linkedAccounts.append(vk)
     }
     
-      
-    var instagram = FollowFriends(theLocalIconName: "instagram", theServiceName: "Instagram", theUsername: "")
-    let instmEngine = InstagramEngine.sharedEngine()
-    let instagramKeychain = UserSingelton.sharedInstance.instagramKeychain
-    if instagramKeychain["instagram"] != nil {
-      instmEngine.accessToken = instagramKeychain["instagram"]
-      instmEngine.getSelfUserDetailsWithSuccess({ (currentUser: InstagramUser!) -> Void in
-      instagram.username = currentUser.username
-      FollowFriends.sharedInstance.linkedAccounts.append(instagram)
-        mainTask.setResult(nil)
-        }, failure: { (error: NSError!, errorCode: Int) -> Void in
-          mainTask.setResult(nil)
-      })
-    } else {
-      FollowFriends.sharedInstance.linkedAccounts.append(instagram)
-      }
-    
-    
-
     return mainTask.task
   }
   
@@ -102,5 +107,7 @@ struct FollowFriends {
   
   
   
+  
+
   
 }

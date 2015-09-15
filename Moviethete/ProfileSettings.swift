@@ -23,21 +23,21 @@ import Parse
 import ParseFacebookUtilsV4
 
 
-let DID_SELECT_SETTINGS_CELL_SEGUE_IDENTIFIER = "didSelectSettingsCell"
+
+let DID_SELECT_LINKED_ACCOUNTS_SETTINGS_CELL_SEGUE_IDENTIFIER = "linkedAccounts"
+let DID_SELECT_FOLLOW_FRIENDS_SETTINGS_CELL_SEGUE_IDENTIFIER = "followFriends"
 
 class ProfileSettings: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        tableView.registerNib(UINib(nibName: "ProfileSettingsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsCell")
-        tableView.registerNib(UINib(nibName: "ProfileSettingsFollowFriendsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsFollowFriendsCell")
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 44.0
+      super.viewDidLoad()
+      
+      tableView.registerNib(UINib(nibName: "ProfileSettingsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsCell")
+      tableView.registerNib(UINib(nibName: "ProfileSettingsFollowFriendsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsFollowFriendsCell")
+      tableView.rowHeight = UITableViewAutomaticDimension
+      tableView.estimatedRowHeight = 44.0
       
       
       tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
@@ -55,16 +55,21 @@ class ProfileSettings: UIViewController {
         // Dispose of any resources that can be recreated.
     }
   
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if let vc = segue.destinationViewController as? DetailedSettingsVC {
+      vc.cellIndexPath = tableView.indexPathForSelectedRow!
+    }
+  }
   
   
   
   func logOut() {
     
     
-
+    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
     
     PFUser.logOutInBackground()   // causes freeze sometimes ONLY IN SIMULATOR - WORKDS FINE ON 8.4 DEVICE
-    InstagramEngine.sharedEngine().logout()
+    InstagramEngine.sharedEngine().logout()  // this might cause freeze
     VKSdk.forceLogout()
     FBSDKLoginManager().logOut()
     Twitter.sharedInstance().logOut()
@@ -88,11 +93,7 @@ class ProfileSettings: UIViewController {
   
   
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if let vc = segue.destinationViewController as? DetailedSettingsVC {
-      vc.cellIndexPath = (tableView.indexPathForSelectedRow)!
-      }
-  }
+
   
   
   override func viewWillAppear(animated: Bool) {
@@ -177,6 +178,19 @@ extension ProfileSettings: UITableViewDelegate {
     
     switch indexPath.section {
       
+    case 0:
+      performSegueWithIdentifier(DID_SELECT_FOLLOW_FRIENDS_SETTINGS_CELL_SEGUE_IDENTIFIER, sender: nil)
+      
+      
+    case 2:
+      switch indexPath.row {
+      case 0:
+        performSegueWithIdentifier(DID_SELECT_LINKED_ACCOUNTS_SETTINGS_CELL_SEGUE_IDENTIFIER, sender: nil)
+        
+      default: break
+      }
+      
+      
     case 5:
       switch indexPath.row {
       case 0:
@@ -188,7 +202,7 @@ extension ProfileSettings: UITableViewDelegate {
       
       
     default:
-      performSegueWithIdentifier(DID_SELECT_SETTINGS_CELL_SEGUE_IDENTIFIER, sender: nil)
+      break
   }
   
     tableView.deselectRowAtIndexPath(indexPath, animated: false)
@@ -342,7 +356,6 @@ extension ProfileSettings: UITableViewDataSource {
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    var numberOfRows = 0
     
     switch section {
       
@@ -372,7 +385,7 @@ extension ProfileSettings: UITableViewDataSource {
     
     
     
-    return numberOfRows
+  return 1
   }
   
   

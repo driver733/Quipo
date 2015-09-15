@@ -124,25 +124,14 @@ class LogInVC: UIViewController {
         signUpTriangle.hidden = true
       
         FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: self)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
       
       
       
   }
   
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//    UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
-//    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
-//    
-//    UserSingelton.sharedInstance.vkontakteFriends.removeAll(keepCapacity: false)
-//    UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
-//    
-//    
-//    
-//    UserSingelton.sharedInstance.loadFollowFriendsData()
-  }
-  
+
   func signUpTableViewUserInteraction(condition: Bool){
     for var section = 0; section < signUpTableView.numberOfSections; ++section {
       for var row = 0; row < signUpTableView.numberOfRowsInSection(section); ++row {
@@ -287,7 +276,6 @@ class LogInVC: UIViewController {
     
     @IBAction func loginWithFacebook(sender: AnyObject) {
       let fbLoginManager = FBSDKLoginManager()
-      fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
       fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"],
         fromViewController: self,
         handler: {
@@ -295,6 +283,7 @@ class LogInVC: UIViewController {
           if error == nil && result.token != nil {
             // logged in
           } else {
+        
             // process error
           }
       })

@@ -18,8 +18,8 @@ class WebVC: OAuthWebViewController, UIWebViewDelegate {
         webView.delegate = self
         self.navigationController?.addChildViewController(self)
         self.view.addSubview(webView)
-        
-        //     _ = UIApplication.sharedApplication().statusBarFrame.size.height
+      
+      
         let insets = UIEdgeInsets(top: kNavBarHeight, left: 0, bottom: 0, right: 0)
         let p = CGPointMake(0, -kNavBarHeight)
 

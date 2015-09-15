@@ -20,8 +20,16 @@ public class OAuthWebViewController: OAuthViewController, OAuthSwiftURLHandlerTy
 
     public func handle(url: NSURL){
         #if os(iOS)
-            UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(
-                self, animated: true, completion: nil)
+          
+          var topController = UIApplication.sharedApplication().keyWindow?.rootViewController
+          
+          while ((topController?.presentedViewController) != nil) {
+            topController = topController?.presentedViewController
+          }
+
+         //   UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(self, animated: true, completion: nil)
+          topController?.presentViewController(self, animated: true, completion: nil)
+          
         #elseif os(OSX)
             if let p = self.parentViewController { // default behaviour if this controller affected as child controller
                 p.presentViewControllerAsModalWindow(self)

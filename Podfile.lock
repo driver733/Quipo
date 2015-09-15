@@ -28,9 +28,9 @@ PODS:
   - Bolts/AppLinks (1.2.2):
     - Bolts/Tasks
   - Bolts/Tasks (1.2.2)
-  - Fabric (1.5.0):
-    - Fabric/Base (= 1.5.0)
-  - Fabric/Base (1.5.0)
+  - Fabric (1.5.1):
+    - Fabric/Base (= 1.5.1)
+  - Fabric/Base (1.5.1)
   - FBSDKCoreKit (4.6.0):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc (= 4.6.0)
@@ -75,18 +75,18 @@ PODS:
     - AFNetworking (~> 2.0)
   - KeychainAccess (1.2.1)
   - OAStackView (0.1.0)
-  - OAuthSwift (0.3.6)
-  - Parse (1.8.2):
-    - Bolts/Tasks (>= 1.2.1)
-  - ParseFacebookUtilsV4 (1.8.2):
-    - Bolts/Tasks (>= 1.2.1)
+  - OAuthSwift (0.3.7)
+  - Parse (1.8.3):
+    - Bolts/Tasks (>= 1.2.2)
+  - ParseFacebookUtilsV4 (1.8.3):
+    - Bolts/Tasks (>= 1.2.2)
     - FBSDKCoreKit (~> 4.0)
     - FBSDKLoginKit (~> 4.0)
-    - Parse (~> 1.8.2)
-  - ParseTwitterUtils (1.8.2):
-    - Bolts/Tasks (>= 1.2.1)
-    - Parse (~> 1.8.2)
-  - ParseUI (1.1.5):
+    - Parse (~> 1.8.3)
+  - ParseTwitterUtils (1.8.3):
+    - Bolts/Tasks (>= 1.2.2)
+    - Parse (~> 1.8.3)
+  - ParseUI (1.1.6):
     - Bolts/Tasks (~> 1.2)
     - Parse (~> 1.8)
   - SDWebImage (3.7.3):
@@ -96,9 +96,9 @@ PODS:
   - SwiftyJSON (2.2.1)
   - TLYShyNavBar (0.9.12)
   - TPKeyboardAvoiding (1.2.9)
-  - TwitterCore (1.9.0)
-  - TwitterKit (1.9.0)
-  - VK-ios-sdk (1.2.0)
+  - TwitterCore (1.10.1)
+  - TwitterKit (1.10.1)
+  - VK-ios-sdk (1.2.2)
 
 DEPENDENCIES:
   - Alamofire
@@ -156,7 +156,7 @@ CHECKOUT OPTIONS:
     :commit: d1799b703b6b58e2d6ad7becb3cde620a20fcce2
     :git: https://github.com/kishikawakatsumi/KeychainAccess.git
   OAuthSwift:
-    :commit: db8c44142674103a1fb904c9a654ac3978163e14
+    :commit: 784ee3db91560f8ce504a66a0fef49cbbff0a64f
     :git: https://github.com/rpowelll/OAuthSwift.git
   SwiftValidator:
     :commit: ca6509687eb869b542544757956cdd84b9585a5e
@@ -170,7 +170,7 @@ SPEC CHECKSUMS:
   Alamofire: 2f13548b29d25a58ecd91c9225fb51493e2b782b
   Async: edb15b1e34181d7c9873ce6b5d6eabc1c99e638b
   Bolts: 20a2bd788273360cb1e31530dc19b8544eef2544
-  Fabric: 374a4a0bbefa219ed201cbc84f2f42e4029302a6
+  Fabric: 03c3b3fe77e11a2bc31421b989a9c7adaa4779a5
   FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
   FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
   FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86
@@ -186,18 +186,18 @@ SPEC CHECKSUMS:
   InstagramKit: 2dc81dd8a9b534bbf918fbf8c4bc11eef11040a3
   KeychainAccess: 2ffa8b1b7130263bb7fe90b359d778696fc2d8ce
   OAStackView: 76e64242351e2746374b9161a03021cbc19341ff
-  OAuthSwift: 3517e94380923085dfa7f23421bc3d4a61ce48c0
-  Parse: 188601c6cd91fae55906badd283b513104a3a8c9
-  ParseFacebookUtilsV4: 6e7415146935e1238ebabbee7e5d32d148027b2d
-  ParseTwitterUtils: af5c073b0750519b9efb33c3069a161cdeafe433
-  ParseUI: 2c53621ed028ee793f5ab92a551b099689265525
+  OAuthSwift: d5a96a1a92329e3b4bb63b682c3e4e89a8698dc8
+  Parse: 4b251ac63b76d12b334a32579cc3b174446f0c39
+  ParseFacebookUtilsV4: 603b78d4122642f3cdff5eee5b7b90e8d81b1e0c
+  ParseTwitterUtils: 4df4b7f5cb903809221c8e013683d9a9e6536951
+  ParseUI: 8a22e448c03f825203d8c379c80523517f68baa3
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SwiftValidator: 79936ea870f1dba8a0824763375375bb209fe30d
   SwiftyJSON: ae2d0a3d68025d136602a33c4ee215091ced3e33
   TLYShyNavBar: c39c12e01861ab87cc6d0d51867845c87d05f39d
   TPKeyboardAvoiding: ff1ee4e5a5a0c119b965552af8f183868ea20207
-  TwitterCore: 98ed97a6047c4ef109522840337e815683ead7e5
-  TwitterKit: 1492792649dee11c2087498f7993f529bdb6c870
-  VK-ios-sdk: 809c4cdb5706545bcc235d385b23d87b24391980
+  TwitterCore: 632e809318be9ea2b6f38cc21611033367681adc
+  TwitterKit: b3f09aaef09ae9339f02a48f6c0adb1b09156079
+  VK-ios-sdk: f4b7df0d4e277e06d60fef6dc472be4260eeda6d
 
 COCOAPODS: 0.39.0.beta.4
