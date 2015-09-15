@@ -66,9 +66,7 @@ struct FollowFriends {
     }
     FollowFriends.sharedInstance.linkedAccounts.append(fb)
     
-    UserSingelton.sharedInstance.instagramgetSelfUserDetailsWithSuccess().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      
-      let subTask = BFTaskCompletionSource()
+    UserSingelton.sharedInstance.instagramGetSelfUserDetailsWithSuccess().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       
       var instagram = FollowFriends(theLocalIconName: "instagram", theServiceName: "Instagram", theUsername: "")
       
@@ -76,12 +74,10 @@ struct FollowFriends {
       if instagramKeychain["instagram"] != nil {
         let currentUser = task.result as! InstagramUser
         instagram.username = currentUser.username
-        FollowFriends.sharedInstance.linkedAccounts.insert(instagram, atIndex: 1)
+        FollowFriends.sharedInstance.linkedAccounts.append(instagram)
         } else {
-        FollowFriends.sharedInstance.linkedAccounts.insert(instagram, atIndex: 1)
+        FollowFriends.sharedInstance.linkedAccounts.append(instagram)
       }
-      
-      subTask.setResult(nil)
       
       return UserSingelton.sharedInstance.getVKUsername()
       }.continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in

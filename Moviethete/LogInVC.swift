@@ -88,6 +88,10 @@ class LogInVC: UIViewController {
     
     
 
+  
+  override func viewWillAppear(animated: Bool) {
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
+  }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -124,10 +128,17 @@ class LogInVC: UIViewController {
         signUpTriangle.hidden = true
       
         FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
+        
       
       
       
+  }
+  
+  
+  
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    NSNotificationCenter.defaultCenter().removeObserver(self)
   }
   
   

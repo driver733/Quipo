@@ -38,39 +38,20 @@ public struct UserSingelton {
   
   
   
-  func reloadAllFriends () {
-    
-    let singleton = UserSingelton.sharedInstance
-    var userAllFriends = UserSingelton.sharedInstance.allFriends
-    
-    userAllFriends.removeAll(keepCapacity: false)
-    
-    if singleton.facebookFriends.count > 0 {
-      userAllFriends.append(singleton.facebookFriends)
-    }
-    
-    if singleton.instagramFriends.count > 0 {
-      userAllFriends.append(singleton.instagramFriends)
-    }
-    
-    if singleton.vkontakteFriends.count > 0 {
-      userAllFriends.append(singleton.vkontakteFriends)
-    }
-  
-  }
+
   
   
   private func updateData() -> BFTask {
-    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
-    UserSingelton.sharedInstance.reloadAllFriends()
     
-    return BFTask(forCompletionOfAllTasks: [UserSingelton.sharedInstance.loadFollowFriendsData(), UserSingelton.sharedInstance.loadFollowFriendsCells()])
+    UserSingelton.sharedInstance.loadFollowFriendsCells()
+    return FollowFriends.sharedInstance.loadLinkedAccountsData()
   }
   
   
   func logoutFromFacebook() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     FBSDKLoginManager().logOut()
+    UserSingelton.sharedInstance.sortAllFriends()
     
     UserSingelton.sharedInstance.updateData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       mainTask.setResult(nil)
@@ -83,7 +64,7 @@ public struct UserSingelton {
   func logoutFromVkontakte() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     VKSdk.forceLogout()
-    
+    UserSingelton.sharedInstance.sortAllFriends()
     UserSingelton.sharedInstance.updateData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       mainTask.setResult(nil)
       return nil
@@ -97,6 +78,7 @@ public struct UserSingelton {
     
     InstagramEngine.sharedEngine().logout()
     UserSingelton.sharedInstance.instagramKeychain["instagram"] = nil
+    UserSingelton.sharedInstance.sortAllFriends()
     
     UserSingelton.sharedInstance.updateData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       mainTask.setResult(nil)
@@ -111,20 +93,15 @@ public struct UserSingelton {
     let mainTask = BFTaskCompletionSource()
     UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
     let tasks = BFTask(forCompletionOfAllTasks: [loadVkontakteFriends(), loadFacebookFriends(), loadInstagramFriends()])
-    
     tasks.continueWithBlock { (task: BFTask!) -> AnyObject! in
-      
       UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
-      let newTasks = BFTask(forCompletionOfAllTasks: [FollowFriends.sharedInstance.loadLinkedAccountsData(), self.loadFollowFriendsCells()])
-      
-      newTasks.continueWithBlock({ (task: BFTask!) -> AnyObject! in
-        
+      UserSingelton.sharedInstance.sortAllFriends()
+      self.loadFollowFriendsCells()
+      return FollowFriends.sharedInstance.loadLinkedAccountsData()
+      }.continueWithBlock({ (task: BFTask!) -> AnyObject! in
         mainTask.setResult(nil)
         return nil
-        
-     })
-      return nil
-    }
+      })
     
     return mainTask.task
   }
@@ -248,7 +225,7 @@ public struct UserSingelton {
               UserSingelton.sharedInstance.facebookFriends.append(follower)
             }
             if UserSingelton.sharedInstance.facebookFriends.count > 0 {
-              UserSingelton.sharedInstance.allFriends.insert(UserSingelton.sharedInstance.facebookFriends, atIndex: 0)
+              UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.facebookFriends)
             }
             mainTask.setResult(nil)
           })
@@ -304,8 +281,7 @@ public struct UserSingelton {
   
   
   
-  mutating func loadFollowFriendsCells() -> BFTask {
-    let mainTask = BFTaskCompletionSource()
+  mutating func loadFollowFriendsCells() {
     
     UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
     
@@ -345,9 +321,7 @@ public struct UserSingelton {
     }
 
     
-    mainTask.setResult(nil)
     
-    return mainTask.task
   }
   
   
@@ -378,8 +352,8 @@ public struct UserSingelton {
   mutating func didReceiveFacebookProfile() -> BFTask {
     
     let mainTask = BFTaskCompletionSource()
-    if PFUser.currentUser() == nil {
-      if FBSDKAccessToken.currentAccessToken() != nil {               // did FB log in or log out?
+    if PFUser.currentUser() == nil {                      // Link FB or log in through it?
+      if FBSDKAccessToken.currentAccessToken() != nil {               // Did FB log in or log out?
         
         PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken()).continueWithBlock({
           (task: BFTask!) -> AnyObject! in
@@ -422,24 +396,16 @@ public struct UserSingelton {
       
       
       
-    } else {
+    } else if FBSDKAccessToken.currentAccessToken() != nil {  // Linking or unlinking FB?
       
-      PFFacebookUtils.linkUserInBackground(
-        PFUser.currentUser()!,
-        withReadPermissions: ["email", "public_profile", "user_friends"],
-        block: { (result: Bool, error: NSError?) -> Void in
           loadFacebookFriends().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
             UserSingelton.sharedInstance.sortAllFriends()
-            var tasks = [BFTask]()
-            tasks.append(FollowFriends.sharedInstance.loadLinkedAccountsData())
-            tasks.append(UserSingelton.sharedInstance.loadFollowFriendsCells())
-            return BFTask(forCompletionOfAllTasks: tasks)
+            UserSingelton.sharedInstance.loadFollowFriendsCells()
+            return FollowFriends.sharedInstance.loadLinkedAccountsData()
           }).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
             mainTask.setResult(nil)
             return nil
           })
-      }
-      )
     }
     return mainTask.task
   }
@@ -542,10 +508,8 @@ public struct UserSingelton {
             
                 self.loadInstagramFriends().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
                   UserSingelton.sharedInstance.sortAllFriends()
-                  var tasks = [BFTask]()
-                  tasks.append(FollowFriends.sharedInstance.loadLinkedAccountsData())
-                  tasks.append(UserSingelton.sharedInstance.loadFollowFriendsCells())
-                  return BFTask(forCompletionOfAllTasks: tasks)
+                  UserSingelton.sharedInstance.loadFollowFriendsCells()
+                  return FollowFriends.sharedInstance.loadLinkedAccountsData()
                 }).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
                   print(UserSingelton.sharedInstance.allFriends)
                   mainTask.setResult(nil)
@@ -643,10 +607,8 @@ public struct UserSingelton {
           
           self.loadVkontakteFriends().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
             UserSingelton.sharedInstance.sortAllFriends()
-            var tasks = [BFTask]()
-            tasks.append(FollowFriends.sharedInstance.loadLinkedAccountsData())   // check!
-            tasks.append(UserSingelton.sharedInstance.loadFollowFriendsCells())
-            return BFTask(forCompletionOfAllTasks: tasks)
+            UserSingelton.sharedInstance.loadFollowFriendsCells()
+            return FollowFriends.sharedInstance.loadLinkedAccountsData()
           }).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
             mainTask.setResult(nil)
             return nil
@@ -708,7 +670,7 @@ public struct UserSingelton {
   }
 
   
-  func instagramgetSelfUserDetailsWithSuccess() -> BFTask {
+  func instagramGetSelfUserDetailsWithSuccess() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     InstagramEngine.sharedEngine().getSelfUserDetailsWithSuccess({ (currentUser: InstagramUser!) -> Void in
       mainTask.setResult(currentUser)
@@ -725,20 +687,20 @@ public struct UserSingelton {
     UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: true)
     
     if FBSDKAccessToken.currentAccessToken() != nil {
-      if UserSingelton.sharedInstance.facebookFriends.count != 0 {
+      if UserSingelton.sharedInstance.facebookFriends.count > 0 {
         UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.facebookFriends)
       }
     }
     
     if InstagramEngine.sharedEngine().accessToken != nil {
-      if UserSingelton.sharedInstance.instagramFriends.count != 0 {
+      if UserSingelton.sharedInstance.instagramFriends.count > 0 {
         UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.instagramFriends)
       }
     }
     
     
     if VKSdk.isLoggedIn() {
-      if UserSingelton.sharedInstance.vkontakteFriends.count != 0 {
+      if UserSingelton.sharedInstance.vkontakteFriends.count > 0 {
         UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.vkontakteFriends)
       }
     }

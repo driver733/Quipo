@@ -66,6 +66,7 @@ class ProfileSettings: UIViewController {
   func logOut() {
     
     
+    
     UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
     
     PFUser.logOutInBackground()   // causes freeze sometimes ONLY IN SIMULATOR - WORKDS FINE ON 8.4 DEVICE

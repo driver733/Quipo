@@ -27,7 +27,6 @@ class LinkedAccountsVC: UIViewController {
   
   @IBOutlet var tableView: UITableView!
   
-  
   override func viewDidLoad() {
     super.viewDidLoad()
   
@@ -35,6 +34,7 @@ class LinkedAccountsVC: UIViewController {
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 44.0
     
+    FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
   }
   
@@ -47,14 +47,14 @@ class LinkedAccountsVC: UIViewController {
   
   
   
-  func didReceiveFacebookProfile(notif: NSNotification){
+  func didReceiveFacebookProfile(notif: NSNotification) {
     UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       self.tableView.reloadData()
-      self.tableView.reloadRowsAtIndexPaths(self.tableView.indexPathsForVisibleRows!, withRowAnimation: .None)
-      return nil
+      return task
+      }.continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        return nil
     }
-    
-    
+  
   }
   
   

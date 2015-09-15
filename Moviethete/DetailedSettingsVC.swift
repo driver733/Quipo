@@ -76,7 +76,9 @@ extension DetailedSettingsVC: UITableViewDataSource {
         options: SDWebImageOptions.RefreshCached,
         completed:{
           (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-          cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+            if image != nil {
+              cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+            }
         }
       )
       
