@@ -147,22 +147,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Moviethete/UserSingleton.swift"
-            timestampString = "464034108.816788"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "678"
-            endingLineNumber = "678"
-            landmarkName = "instagramGetSelfUserDetailsWithSuccess()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Moviethete/LogInVC.swift"
             timestampString = "464013213.290179"
             startingColumnNumber = "9223372036854775807"
@@ -170,38 +154,6 @@
             startingLineNumber = "93"
             endingLineNumber = "93"
             landmarkName = "viewWillAppear(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Moviethete/LogInVC.swift"
-            timestampString = "464016089.497253"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "307"
-            endingLineNumber = "307"
-            landmarkName = "didReceiveFacebookProfile(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Moviethete/LinkedAccountsVC.swift"
-            timestampString = "464032300.782809"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "didReceiveFacebookProfile(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -234,6 +186,70 @@
             startingLineNumber = "84"
             endingLineNumber = "84"
             landmarkName = "loadLinkedAccountsData()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moviethete/LinkedAccountsVC.swift"
+            timestampString = "464057188.585707"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "didReceiveFacebookProfile(_:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Moviethete.LinkedAccountsVC.didReceiveFacebookProfile (Moviethete.LinkedAccountsVC)(ObjectiveC.NSNotification) -&gt; ()"
+                  moduleName = "Moviethete"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikhailyakushin/Documents/xcode/Moviethete/Moviethete/LinkedAccountsVC.swift"
+                  timestampString = "464067593.592878"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "51"
+                  endingLineNumber = "51"
+                  offsetFromSymbolStart = "20">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Moviethete.LinkedAccountsVC.(didReceiveFacebookProfile (Moviethete.LinkedAccountsVC) -&gt; (ObjectiveC.NSNotification) -&gt; ()).(closure #1)"
+                  moduleName = "Moviethete"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikhailyakushin/Documents/xcode/Moviethete/Moviethete/LinkedAccountsVC.swift"
+                  timestampString = "464067593.59396"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "52"
+                  endingLineNumber = "52"
+                  offsetFromSymbolStart = "28">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moviethete/LinkedAccountsVC.swift"
+            timestampString = "464057209.823717"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "didReceiveFacebookProfile(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

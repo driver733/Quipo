@@ -48,13 +48,10 @@ class LinkedAccountsVC: UIViewController {
   
   
   func didReceiveFacebookProfile(notif: NSNotification) {
-    UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+    UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithBlock { (task: BFTask!) -> AnyObject! in
       self.tableView.reloadData()
-      return task
-      }.continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-        return nil
-    }
-  
+      return nil
+      }  
   }
   
   
