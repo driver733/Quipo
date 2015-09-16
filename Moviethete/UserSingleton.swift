@@ -483,7 +483,7 @@ mutating func didReceiveNewVKToken() -> BFTask {
     
     if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() != nil {
       
-      let graphRequest: FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "friends"], HTTPMethod: "GET")
+      let graphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "friends"], HTTPMethod: "GET")
       
       graphRequest.startWithCompletionHandler({
         (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
@@ -682,9 +682,7 @@ func getVKUsername() -> BFTask {
     let tasks = BFTask(forCompletionOfAllTasks: [loadVkontakteFriends(), loadFacebookFriends(), loadInstagramFriends()])
     tasks.continueWithBlock { (task: BFTask!) -> AnyObject! in
       UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
-      UserSingelton.sharedInstance.sortAllFriends()
-      self.loadFollowFriendsCells()
-      return FollowFriends.sharedInstance.loadLinkedAccountsData()
+      return UserSingelton.sharedInstance.updateData()
       }.continueWithBlock({ (task: BFTask!) -> AnyObject! in
         mainTask.setResult(nil)
         return nil
