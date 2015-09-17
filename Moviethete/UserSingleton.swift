@@ -128,8 +128,6 @@ mutating func didReceiveFacebookProfile() -> BFTask {
 mutating func loginWithInstagram() -> BFTask {
   let mainTask = BFTaskCompletionSource()
   
-  
-  
   let instagramConsumerKey = "1c2e2066145342c3a841bdbdca8e53ae"
   let instagramConsumerSecret = "db9f79ad45b04fc09e8222645cb713b2"
   let instagramAuthorizeURL = "https://api.instagram.com/oauth/authorize"
@@ -142,18 +140,13 @@ mutating func loginWithInstagram() -> BFTask {
   )
   
   auth.authorize_url_handler = WebVC()
-  
-  
-  
-  
+
   auth.authorizeWithCallbackURL(
     NSURL(string: "oauth-swift://oauth-callback/instagram")!,
     scope: "likes+comments",
     state:"INSTAGRAM",
     success: {
       credential, response, parameters in
-      
-      
       
       let engine = InstagramEngine.sharedEngine()
       engine.accessToken = credential.oauth_token
@@ -163,7 +156,6 @@ mutating func loginWithInstagram() -> BFTask {
         (user: InstagramUser!) -> Void in
         
         if PFUser.currentUser() == nil {
-          
           
           let userName =   user.username
           let userID =     user.Id
@@ -185,6 +177,7 @@ mutating func loginWithInstagram() -> BFTask {
               })
               
             } else {
+              
               let user = PFUser()
               user.username = userName
               user.password = ""
@@ -685,6 +678,7 @@ func getVKUsername() -> BFTask {
       return UserSingelton.sharedInstance.updateData()
       }.continueWithBlock({ (task: BFTask!) -> AnyObject! in
         mainTask.setResult(nil)
+        NSNotificationCenter.defaultCenter().postNotificationName("didFinishLoadingLinkedAccountsData", object: nil)
         return nil
       })
     

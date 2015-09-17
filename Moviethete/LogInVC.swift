@@ -21,24 +21,28 @@ import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
 
-
-
 let DID_LOG_IN_SEGUE_IDENTIFIER = "didLogIn"
-
-
 
 class LogInVC: UIViewController {
    
-    @IBOutlet weak var signInTableView: UITableView!
-    @IBOutlet weak var signUpTableView: UITableView!
-    @IBOutlet weak var signInOrUp: UIButton!
-    @IBOutlet weak var orLabel: UILabel!
-    @IBOutlet weak var signInButton: UIButton!
-    @IBOutlet weak var signUpButton: UIButton!
-    @IBOutlet weak var shareThoughtsLabel: UILabel!
-    @IBOutlet weak var signUpTriangle: UIView!
-    @IBOutlet weak var signInTriangle: UIView!
-    
+  @IBOutlet weak var signInTableView: UITableView!
+  @IBOutlet weak var signUpTableView: UITableView!
+  @IBOutlet weak var signInOrUp: UIButton!
+  @IBOutlet weak var orLabel: UILabel!
+  @IBOutlet weak var signInButton: UIButton!
+  @IBOutlet weak var signUpButton: UIButton!
+  @IBOutlet weak var shareThoughtsLabel: UILabel!
+  @IBOutlet weak var signUpTriangle: UIView!
+  @IBOutlet weak var signInTriangle: UIView!
+  
+  
+  var loginActivityIndicator: UIActivityIndicatorView!
+  let loginActivityIndicatorBackgroundView = UIView()
+  let validator = Validator()
+  var tempArr: [Int] = [Int]()
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+  var textArray: NSMutableArray! = NSMutableArray()
+  
   
     
     @IBAction func loginWithGoogle(sender: AnyObject) {
@@ -80,12 +84,9 @@ class LogInVC: UIViewController {
         validator.validate(self)
     }
     
-    
-    let validator = Validator()
-    var tempArr: [Int] = [Int]()
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    var textArray: NSMutableArray! = NSMutableArray()
-    
+  
+  
+  
     
 
   
@@ -94,55 +95,71 @@ class LogInVC: UIViewController {
   }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        FontBlaster.blast()
-        NSBundle.mainBundle().loadNibNamed("LogIn", owner: self, options: nil)
-        self.navigationController?.navigationBarHidden = true
-        self.hidesBottomBarWhenPushed = true
-        
-        signInTableView.registerNib(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
-        signInTableView.delegate = self
-        signInTableView.dataSource = self
-        signInTableView.rowHeight = UITableViewAutomaticDimension;
-        signInTableView.estimatedRowHeight = 44.0;
-        
-        signUpTableView.registerNib(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
-        signUpTableView.delegate = self
-        signUpTableView.dataSource = self
-        signUpTableView.rowHeight = UITableViewAutomaticDimension;
-        signUpTableView.estimatedRowHeight = 44.0;
-        signUpTableView.hidden = true
-    
-        orLabel.font = UIFont(name: "Nanum Pen", size: orLabel.font.pointSize)
-        signInButton.titleLabel?.font = UIFont(name: "Nanum Pen", size: signInButton.titleLabel!.font.pointSize)
-        signUpButton.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
+      super.viewDidLoad()
+      FontBlaster.blast()
+      NSBundle.mainBundle().loadNibNamed("LogIn", owner: self, options: nil)
+      self.navigationController?.navigationBarHidden = true
+      self.hidesBottomBarWhenPushed = true
+      
+      signInTableView.registerNib(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
+      signInTableView.rowHeight = UITableViewAutomaticDimension;
+      signInTableView.estimatedRowHeight = 44.0;
+      
+      signUpTableView.registerNib(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
+      signUpTableView.rowHeight = UITableViewAutomaticDimension;
+      signUpTableView.estimatedRowHeight = 44.0;
+      signUpTableView.hidden = true
   
-        signInOrUp.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
-        
-        shareThoughtsLabel.text = "Sign In \n  and start sharing your thoughts"
-        shareThoughtsLabel.font = UIFont(name: "Nanum Pen", size: shareThoughtsLabel.font.pointSize)
-        shareThoughtsLabel.numberOfLines = 0
+      orLabel.font = UIFont(name: "Nanum Pen", size: orLabel.font.pointSize)
+      signInButton.titleLabel?.font = UIFont(name: "Nanum Pen", size: signInButton.titleLabel!.font.pointSize)
+      signUpButton.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
+
+      signInOrUp.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
       
-        signInTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
-        signUpTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
-        signUpTriangle.hidden = true
+      shareThoughtsLabel.text = "Sign In \n  and start sharing your thoughts"
+      shareThoughtsLabel.font = UIFont(name: "Nanum Pen", size: shareThoughtsLabel.font.pointSize)
+      shareThoughtsLabel.numberOfLines = 0
+    
+      signInTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
+      signUpTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
+      signUpTriangle.hidden = true
+    
+      FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
       
-        FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
-        
-      
-      
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "instagramLoginWebViewWillDisappear:", name: "instagramLoginWebViewWillDisappear", object: nil)
       
   }
   
   
+  func instagramLoginWebViewWillDisappear(notif: NSNotification) {
+    startLoginActivityIndicator()
+  }
   
+  
+  func startLoginActivityIndicator() {
+    loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
+    loginActivityIndicatorBackgroundView.frame = self.view.frame
+    loginActivityIndicatorBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+    loginActivityIndicatorBackgroundView.center = self.view.center
+    loginActivityIndicator.center = self.view.center
+    loginActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+    loginActivityIndicatorBackgroundView.addSubview(loginActivityIndicator)
+    self.view.addSubview(loginActivityIndicatorBackgroundView)
+    loginActivityIndicator.startAnimating()
+  }
+  
+  func stopLoginActivityIndicator() {
+    if loginActivityIndicator != nil {
+      loginActivityIndicator.stopAnimating()
+      loginActivityIndicator.removeFromSuperview()
+      loginActivityIndicatorBackgroundView.removeFromSuperview()
+    }
+  }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     NSNotificationCenter.defaultCenter().removeObserver(self)
   }
   
-  
-
   func signUpTableViewUserInteraction(condition: Bool){
     for var section = 0; section < signUpTableView.numberOfSections; ++section {
       for var row = 0; row < signUpTableView.numberOfRowsInSection(section); ++row {
@@ -152,8 +169,6 @@ class LogInVC: UIViewController {
       }
     }
   }
-  
-  
   
   func signInTableViewUserInteraction(condition: Bool) {
     for var section = 0; section < signInTableView.numberOfSections; ++section {
@@ -165,18 +180,14 @@ class LogInVC: UIViewController {
     }
   }
   
+  override func didReceiveMemoryWarning() {
+      super.didReceiveMemoryWarning()
+      // Dispose of any resources that can be recreated.
+  }
   
-  
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-  
-  
-  
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }
+  override func prefersStatusBarHidden() -> Bool {
+      return true
+  }
     
   
     func signIn(){
@@ -278,6 +289,7 @@ class LogInVC: UIViewController {
     
     @IBAction func loginWithInstagram(sender: AnyObject) {
       UserSingelton.sharedInstance.loginWithInstagram().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        self.stopLoginActivityIndicator()
         self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
         return nil
       }
@@ -304,13 +316,13 @@ class LogInVC: UIViewController {
     
     
   func didReceiveFacebookProfile(notif: NSNotification){
-      UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-        self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-        return nil
+    startLoginActivityIndicator()
+    UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      self.stopLoginActivityIndicator()
+      self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+      return nil
       }
   }
-  
-
   
     
     @IBAction func loginWithVkontakte(sender: AnyObject) {
@@ -319,10 +331,6 @@ class LogInVC: UIViewController {
     }
     
 
-  
-
-  
- 
 
 }
 
@@ -484,7 +492,9 @@ extension LogInVC: ValidationDelegate {
 extension LogInVC: VKSdkDelegate {
   
   func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
+    self.startLoginActivityIndicator()
     UserSingelton.sharedInstance.didReceiveNewVKToken().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      self.stopLoginActivityIndicator()
       self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
       return nil
     }

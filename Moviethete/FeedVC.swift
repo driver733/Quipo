@@ -75,20 +75,17 @@ class FeedVC: UIViewController {
     PFUser.currentUser()!.save()
     */
     
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.attributedTitle = NSAttributedString(string: "Last updated at:")
         refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView?.addSubview(refreshControl)
    
     
     
-
-    
-    
-    
-    
     UserSingelton.sharedInstance.loadFollowFriendsData()
     
- 
+    
+    
+    
   }
   
   

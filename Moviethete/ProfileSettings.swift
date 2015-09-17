@@ -29,7 +29,10 @@ let DID_SELECT_FOLLOW_FRIENDS_SETTINGS_CELL_SEGUE_IDENTIFIER = "followFriends"
 
 class ProfileSettings: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var tableView: UITableView!
+  
+  var loginActivityIndicator: UIActivityIndicatorView!
+  let loginActivityIndicatorBackgroundView = UIView()
     
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -42,13 +45,45 @@ class ProfileSettings: UIViewController {
       
       tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
       
-      
-      
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingLinkedAccountsData:", name: "didFinishLoadingLinkedAccountsData", object: nil)
 
       
-      
-        // Do any additional setup after loading the view.
     }
+  
+  
+  override func viewWillAppear(animated: Bool) {
+    if FollowFriends.sharedInstance.linkedAccounts.isEmpty {
+      startLoginActivityIndicator()
+    }
+    tableView.reloadData()
+  }
+  
+  
+  func didFinishLoadingLinkedAccountsData(notif: NSNotification) {
+    stopLoginActivityIndicator()
+    tableView.reloadData()
+  }
+  
+  func startLoginActivityIndicator() {
+    loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
+    loginActivityIndicatorBackgroundView.frame = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y - 20, self.view.bounds.width, self.view.bounds.height)
+    loginActivityIndicatorBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+    loginActivityIndicator.center = self.view.center
+    loginActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+    loginActivityIndicatorBackgroundView.addSubview(loginActivityIndicator)
+    self.view.addSubview(loginActivityIndicatorBackgroundView)
+    loginActivityIndicator.startAnimating()
+    tableView.userInteractionEnabled = false
+  }
+  
+  func stopLoginActivityIndicator() {
+    if loginActivityIndicator != nil {
+      loginActivityIndicator.stopAnimating()
+      loginActivityIndicator.removeFromSuperview()
+      loginActivityIndicatorBackgroundView.removeFromSuperview()
+      tableView.userInteractionEnabled = true
+    }
+  }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -89,17 +124,7 @@ class ProfileSettings: UIViewController {
       completion: nil)
   }
   
-  
-  
-  
-  
-  
 
-  
-  
-  override func viewWillAppear(animated: Bool) {
-    tableView.reloadData()
-  }
   
 
 }

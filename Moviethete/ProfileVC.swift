@@ -31,10 +31,12 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     
    
-    @IBOutlet weak var tableView: UITableView!
-    
-      var textArray: NSMutableArray! = NSMutableArray()
-      var str = ""
+  @IBOutlet weak var tableView: UITableView!
+  
+  var textArray: NSMutableArray! = NSMutableArray()
+  var str = ""
+  var loginActivityIndicator: UIActivityIndicatorView!
+  let loginActivityIndicatorBackgroundView = UIView()
     
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -96,15 +98,26 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
        
     }
     
-    
-    
-    
-  //   UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipe:)];
-    
-   
-    
-    
- 
+  func startLoginActivityIndicator() {
+    loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
+    let loadingIndicatorBackgroundView =  UIView(frame: self.view.frame)
+    loadingIndicatorBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+    loadingIndicatorBackgroundView.center = self.view.center
+    loadingIndicatorBackgroundView.layer.cornerRadius = 10
+    loginActivityIndicator.center = self.view.center
+    loginActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+    self.view.addSubview(loadingIndicatorBackgroundView)
+    self.view.addSubview(loginActivityIndicator)
+    loginActivityIndicator.startAnimating()
+  }
+  
+  func stopLoginActivityIndicator() {
+    if loginActivityIndicator != nil {
+      loginActivityIndicator.stopAnimating()
+      loginActivityIndicator.removeFromSuperview()
+    }
+  }
+  
     
     
         func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

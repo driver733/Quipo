@@ -27,6 +27,9 @@ class LinkedAccountsVC: UIViewController {
   
   @IBOutlet var tableView: UITableView!
   
+  var loginActivityIndicator: UIActivityIndicatorView!
+  let loginActivityIndicatorBackgroundView = UIView()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
   
@@ -36,8 +39,12 @@ class LinkedAccountsVC: UIViewController {
     
     FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "instagramLoginWebViewWillDisappear:", name: "instagramLoginWebViewWillDisappear", object: nil)
+   
   }
   
+  
+
   
   
   override func didReceiveMemoryWarning() {
@@ -45,14 +52,44 @@ class LinkedAccountsVC: UIViewController {
     // Dispose of any resources that can be recreated.
   }
   
+
   
+  func instagramLoginWebViewWillDisappear(notif: NSNotification) {
+    startLoginActivityIndicator()
+  }
   
   func didReceiveFacebookProfile(notif: NSNotification) {
+    startLoginActivityIndicator()
     UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithBlock { (task: BFTask!) -> AnyObject! in
       self.tableView.reloadData()
+      self.stopLoginActivityIndicator()
       return nil
       }  
   }
+  
+  
+  func startLoginActivityIndicator() {
+    loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
+    loginActivityIndicatorBackgroundView.frame = self.view.frame
+    loginActivityIndicatorBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+    loginActivityIndicatorBackgroundView.center = self.view.center
+    loginActivityIndicator.center = self.view.center
+    loginActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+    loginActivityIndicatorBackgroundView.addSubview(loginActivityIndicator)
+    self.view.addSubview(loginActivityIndicatorBackgroundView)
+    loginActivityIndicator.startAnimating()
+    tableView.userInteractionEnabled = false
+  }
+  
+  func stopLoginActivityIndicator() {
+    if loginActivityIndicator != nil {
+      loginActivityIndicator.stopAnimating()
+      loginActivityIndicator.removeFromSuperview()
+      loginActivityIndicatorBackgroundView.removeFromSuperview()
+      tableView.userInteractionEnabled = true
+    }
+  }
+
   
   
   
@@ -102,8 +139,10 @@ extension LinkedAccountsVC: UITableViewDelegate {
       } else {
         let alertController = UIAlertController(title: "Log Out", message: "Logout from Facebook", preferredStyle: UIAlertControllerStyle.Alert)
         let logOutAction = UIAlertAction(title: "Log Out", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) -> Void in
+          self.startLoginActivityIndicator()
           UserSingelton.sharedInstance.logoutFromFacebook().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
             tableView.reloadData()
+            self.stopLoginActivityIndicator()
             return nil
           })
         })
@@ -117,13 +156,17 @@ extension LinkedAccountsVC: UITableViewDelegate {
       if InstagramEngine.sharedEngine().accessToken == nil {
         UserSingelton.sharedInstance.loginWithInstagram().continueWithSuccessBlock({ (task:BFTask!) -> AnyObject! in
           self.tableView.reloadData()
+          self.stopLoginActivityIndicator()
+          
           return nil
         })
       } else {
         let alertController = UIAlertController(title: "Log Out", message: "Logout from Instagram?", preferredStyle: UIAlertControllerStyle.Alert)
         let logOutAction = UIAlertAction(title: "Log Out", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) -> Void in
+          self.startLoginActivityIndicator()
           UserSingelton.sharedInstance.logoutFromInstagram().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
             tableView.reloadData()
+            self.stopLoginActivityIndicator()
             return nil
           })
           
@@ -141,8 +184,10 @@ extension LinkedAccountsVC: UITableViewDelegate {
       } else {
         let alertController = UIAlertController(title: "Log Out", message: "Logout from VKontakte?", preferredStyle: UIAlertControllerStyle.Alert)
         let logOutAction = UIAlertAction(title: "Log Out", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) -> Void in
+          self.startLoginActivityIndicator()
           UserSingelton.sharedInstance.logoutFromVkontakte().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
             tableView.reloadData()
+            self.stopLoginActivityIndicator()
             return nil
           })
         })
@@ -179,8 +224,10 @@ extension LinkedAccountsVC: UITableViewDelegate {
 extension LinkedAccountsVC: VKSdkDelegate {
   
   func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
+    startLoginActivityIndicator()
     UserSingelton.sharedInstance.didReceiveNewVKToken().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       self.tableView.reloadData()
+      self.stopLoginActivityIndicator()
       return nil
     }
   }

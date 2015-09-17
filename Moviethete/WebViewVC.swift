@@ -1,13 +1,16 @@
 
 
 import UIKit
+import InstagramKit
 import OAuthSwift
+import KeychainAccess
 
 class WebVC: OAuthWebViewController, UIWebViewDelegate {
     
     let kNavBarHeight = CGFloat(64)
     let webViewScrollIsDragging = Bool()
     let webViewScrollIsDecelerating = Bool()
+  var isLoginCancelled = false
 
     var targetURL: NSURL = NSURL()
     let webView: UIWebView = UIWebView()
@@ -46,8 +49,9 @@ class WebVC: OAuthWebViewController, UIWebViewDelegate {
         UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.None)
     }
     
-     func cancel_btn_clicked(){
-        dismissWebViewController()
+     func cancel_btn_clicked() {
+      isLoginCancelled = true
+      dismissWebViewController()
     }
     
     
@@ -66,10 +70,22 @@ class WebVC: OAuthWebViewController, UIWebViewDelegate {
         let req = NSURLRequest(URL: targetURL)
         webView.loadRequest(req)
     }
+  
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if let url = request.URL where (url.scheme == "oauth-swift"){
             self.dismissWebViewController()
         }
         return true
     }
+  
+  override func viewDidDisappear(animated: Bool) {
+    if !isLoginCancelled {
+      NSNotificationCenter.defaultCenter().postNotificationName("instagramLoginWebViewWillDisappear", object: nil)
+      isLoginCancelled = false
+    }
+  }
+  
+  
+  
+  
 }
