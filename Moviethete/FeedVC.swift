@@ -126,24 +126,24 @@ class FeedVC: UIViewController {
   
   
   func refresh(sender: AnyObject?) {
-    
-    Post.sharedInstance.feedPosts.removeAll() // temporary
-    
-    Post.sharedInstance.loadFeedPosts().continueWithBlock {
-      (task: BFTask!) -> AnyObject! in
-      if task.error == nil {
-        if self.refreshControl.refreshing {
-          self.refreshControl.endRefreshing()
-        }
-        self.tableView.reloadData()
-        return nil
-      } else {
-        // process error
 
-        return nil
-      }
+  Post.sharedInstance.feedPosts.removeAll() // temporary
+
+  Post.sharedInstance.loadFeedPosts().continueWithBlock {
+  (task: BFTask!) -> AnyObject! in
+  if task.error == nil {
+    if self.refreshControl.refreshing {
+      self.refreshControl.endRefreshing()
     }
-    
+    self.tableView.reloadData()
+    return nil
+  } else {
+    // process error
+
+    return nil
+  }
+  }
+  
     
   }
   

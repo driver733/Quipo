@@ -27,14 +27,7 @@ class DetailedSettingsVC: UIViewController {
   
   
   
-  func checkButtonTapped(sender: UIButton) -> NSIndexPath {
-    let buttonPosition = sender.convertPoint(CGPointZero, toView: self.tableView)
-    let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
-    if indexPath != nil {
-      return indexPath!
-    }
-    return NSIndexPath()
-  }
+ 
   
 
   @IBOutlet var tableView: UITableView!
@@ -64,10 +57,24 @@ class DetailedSettingsVC: UIViewController {
     }
   
   
+  
+  func checkButtonTapped(sender: UIButton) -> NSIndexPath {
+    let buttonPosition = sender.convertPoint(CGPointZero, toView: self.tableView)
+    let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
+    if indexPath != nil {
+      return indexPath!
+    }
+    return NSIndexPath()
+  }
+  
+  
   func didTapFollowButton(sender: UIButton) {
     let indexPath = checkButtonTapped(sender)
     let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row].pfUser!
     UserSingelton.sharedInstance.followUser(user)
+    let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
+    cell.followButton.setTitle("following", forState: .Normal)
+    cell.followButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
   }
 
   
@@ -86,22 +93,27 @@ extension DetailedSettingsVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
-      let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
-      let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row]
-      
-      cell.userName.text = user.username
-      cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
-      cell.profileImage.sd_setImageWithURL(
-        NSURL(string: user.profileImageURL!),
-        placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
-        options: SDWebImageOptions.RefreshCached,
-        completed:{
-          (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-            if image != nil {
-              cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
-            }
-        }
-      )
+    let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
+    let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row]
+    
+    
+    cell.userName.text = user.username
+    cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
+    if user.isFollowed == true {
+      cell.followButton.setTitle("following", forState: .Normal)
+      cell.followButton.setTitleColor(.greenColor(), forState: .Normal)
+    }
+    cell.profileImage.sd_setImageWithURL(
+      NSURL(string: user.profileImageURL!),
+      placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+      options: SDWebImageOptions.RefreshCached,
+      completed:{
+        (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+          if image != nil {
+            cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+          }
+      }
+    )
       
       return cell
     
