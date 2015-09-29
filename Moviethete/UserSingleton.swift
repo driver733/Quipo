@@ -42,6 +42,21 @@ public struct UserSingelton {
   
   
   
+  
+  
+  func followUser(pfUser: PFUser) -> BFTask {
+    let mainTask = BFTaskCompletionSource()
+    let follow = PFObject(className: "Follow")
+    follow["from"] = PFUser.currentUser()!
+    follow["to"] = pfUser
+    follow.saveInBackgroundWithBlock { (result: Bool, error: NSError?) -> Void in
+      mainTask.setResult(nil)
+    }
+    return mainTask.task
+  }
+  
+  
+  
 // MARK: - Linked accounts Log In
 
 
@@ -404,7 +419,7 @@ mutating func didReceiveNewVKToken() -> BFTask {
             let foundUsers = results as! [PFUser]
             UserSingelton.sharedInstance.instagramFriends.removeAll(keepCapacity: false)
             for user in foundUsers {
-              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String)
+              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String, thePfUser: user)
               UserSingelton.sharedInstance.instagramFriends.append(follower)
             }
             if UserSingelton.sharedInstance.instagramFriends.count > 0 {
@@ -450,7 +465,7 @@ mutating func didReceiveNewVKToken() -> BFTask {
                 let foundUsers = results as! [PFUser]
                 UserSingelton.sharedInstance.vkontakteFriends.removeAll(keepCapacity: false)
                 for user in foundUsers {
-                  let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String)
+                  let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String, thePfUser: user)
                   UserSingelton.sharedInstance.vkontakteFriends.append(follower)
                 }
                 if UserSingelton.sharedInstance.vkontakteFriends.count > 0 {
@@ -496,7 +511,7 @@ mutating func didReceiveNewVKToken() -> BFTask {
             let foundUsers = results as! [PFUser]
             UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
             for user in foundUsers {
-              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String)
+              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String, thePfUser: user)
               UserSingelton.sharedInstance.facebookFriends.append(follower)
             }
             if UserSingelton.sharedInstance.facebookFriends.count > 0 {

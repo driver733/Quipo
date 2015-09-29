@@ -53,35 +53,69 @@ class FeedVC: UIViewController {
     
     
     
-    /*
-    var post = PFObject(className: "Post")
-    let query = PFQuery(className: "Post")
-    query.limit = 1
-    let result = query.findObjects() as! [PFObject]
-    for o in result {
-      post = o
-    }
+    
+//    var post = PFObject(className: "Post")
+//    let query = PFQuery(className: "Post")
+//    query.limit = 1
+//    do {
+//   let result = try query.findObjects()
+//    for o in result {
+//      post = o
+//    }
+//    }
+//    catch {
+//      
+//    }
+//    
+//    
+//    let newPost = PFObject(className: "Post")
+//    newPost["createdBy"] = PFUser.currentUser()
+//    newPost["posterImageURL"] = "http://is3.mzstatic.com/image/pf/us/r30/Features/cd/d3/17/dj.nsuplxar.600x600-100.jpg"
+//    do {
+//    try newPost.save()
+//    }
+//    catch {
+//      
+//    }
+//    
+//   let relation = PFUser.currentUser()!.relationForKey("posts")
+//    relation.addObject(newPost)
+//    do {
+//   try PFUser.currentUser()!.save()
+//    }
+//    catch {
+//      
+//    }
     
     
     
-    let newPost = PFObject(className: "Post")
-    newPost["createdBy"] = PFUser.currentUser()
-    newPost["posterImageURL"] = "http://is3.mzstatic.com/image/pf/us/r30/Features/cd/d3/17/dj.nsuplxar.600x600-100.jpg"
-    newPost.save()
     
     
-   let relation = PFUser.currentUser()!.relationForKey("feed")
-    relation.addObject(newPost)
-    PFUser.currentUser()!.save()
-    */
     
-        refreshControl.attributedTitle = NSAttributedString(string: "Last updated at:")
-        refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
-        tableView?.addSubview(refreshControl)
+//    let query = PFUser.query()
+//    query?.whereKey("username", equalTo: "michael_yakushin455")
+//    query?.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
+//      let users = results as! [PFUser]
+//      let user = users[0] 
+//      let newFollow = PFObject(className: "Follow")
+//      newFollow.setObject(user, forKey: "to")
+//      newFollow.setObject(PFUser.currentUser()!, forKey: "from")
+//      newFollow.saveInBackgroundWithBlock({ (result: Bool, error: NSError?) -> Void in
+//        print(result)
+//      })
+//    })
+//    
+//    
+    
+    
+  
+      refreshControl.attributedTitle = NSAttributedString(string: "Last updated at:")
+      refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+      tableView?.addSubview(refreshControl)
    
     
     
-    UserSingelton.sharedInstance.loadFollowFriendsData()
+      UserSingelton.sharedInstance.loadFollowFriendsData()
     
     
     
@@ -91,7 +125,7 @@ class FeedVC: UIViewController {
   
   
   
-  func refresh(sender:AnyObject?) {
+  func refresh(sender: AnyObject?) {
     
     Post.sharedInstance.feedPosts.removeAll() // temporary
     

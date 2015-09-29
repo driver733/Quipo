@@ -19,8 +19,7 @@ import ParseFacebookUtilsV4
 import ParseTwitterUtils
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate
-{
+class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
     var window: UIWindow?
     

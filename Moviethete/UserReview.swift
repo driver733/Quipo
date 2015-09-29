@@ -43,15 +43,17 @@ public struct UserReview {
     let parsePost = PFObject(className: "Post")
     parsePost["userReview"] = [rating, reviewTitle, review]
     parsePost["trackID"] = post.trackID!
+    parsePost["createdBy"] = PFUser.currentUser()!
     parsePost.saveInBackground().continueWithBlock { (task: BFTask!) -> AnyObject! in
       if task.error == nil {
         reviewsRelation?.addObject(parsePost)
-        do {
-          try PFUser.currentUser()!.save()
-        }
-        catch {
-          
-        }
+        
+//        do {
+//          try PFUser.currentUser()!.save()
+//        }
+//        catch {
+//          
+//        }
         
         return PFUser.currentUser()?.saveInBackground()
       } else {
@@ -60,7 +62,13 @@ public struct UserReview {
       }
     }.continueWithBlock { (task: BFTask!) -> AnyObject! in
       if task.error == nil {
-        mainTask.setResult(nil)
+        PFCloud.callFunctionInBackground("appendNewUserPostToFollowersFeeds",
+          withParameters: ["currentUserObjectId" : (PFUser.currentUser()?.objectId)!],
+          block: { (result: AnyObject?, error: NSError?) -> Void in
+            if error == nil {
+              mainTask.setResult(nil)
+            }
+        })
         return nil
       } else {
         mainTask.setError(task.error)
@@ -69,8 +77,7 @@ public struct UserReview {
   }
 
     return mainTask.task
-    
-    // add the uploaded post to followers` feeds - use a cloud function for it
+
     
   }
   

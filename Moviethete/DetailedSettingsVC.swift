@@ -23,6 +23,19 @@ import ParseFacebookUtilsV4
 import SDWebImage
 
 class DetailedSettingsVC: UIViewController {
+  
+  
+  
+  
+  func checkButtonTapped(sender: UIButton) -> NSIndexPath {
+    let buttonPosition = sender.convertPoint(CGPointZero, toView: self.tableView)
+    let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
+    if indexPath != nil {
+      return indexPath!
+    }
+    return NSIndexPath()
+  }
+  
 
   @IBOutlet var tableView: UITableView!
   
@@ -51,6 +64,13 @@ class DetailedSettingsVC: UIViewController {
     }
   
   
+  func didTapFollowButton(sender: UIButton) {
+    let indexPath = checkButtonTapped(sender)
+    let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row].pfUser!
+    UserSingelton.sharedInstance.followUser(user)
+  }
+
+  
   
   
   
@@ -70,6 +90,7 @@ extension DetailedSettingsVC: UITableViewDataSource {
       let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row]
       
       cell.userName.text = user.username
+      cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
       cell.profileImage.sd_setImageWithURL(
         NSURL(string: user.profileImageURL!),
         placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
@@ -105,7 +126,6 @@ extension DetailedSettingsVC: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 extension DetailedSettingsVC: UITableViewDelegate {
-  
   
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

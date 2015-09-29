@@ -29,12 +29,13 @@ struct User {
   
   var username: String?
   var profileImageURL: String?
+  var pfUser: PFUser?
   
   
-  
-  init(theUsername: String, theProfileImageURL: String) {
+  init(theUsername: String, theProfileImageURL: String, thePfUser: PFUser) {
     username = theUsername
     profileImageURL = theProfileImageURL
+    pfUser = thePfUser
   }
   
 

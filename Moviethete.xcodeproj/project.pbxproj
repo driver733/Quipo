@@ -59,11 +59,11 @@
 		8FA4DC061B74B39400AB84AA /* LogInVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA4DC051B74B39400AB84AA /* LogInVC.swift */; };
 		8FA4DC081B74B3A300AB84AA /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA4DC071B74B3A300AB84AA /* FeedVC.swift */; };
 		8FB671881B93C9760016C152 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB671871B93C9760016C152 /* UIColorExtension.swift */; };
-		8FB72BC81BA7E97E0071A98C /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; };
-		8FB72BC91BA7E97E0071A98C /* ITunesSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB871A91B80FB9E00256787 /* SearchResultCell.swift */; };
 		8FB871AC1B80FB9E00256787 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */; };
 		8FBA93C81BA6117300D6F154 /* LinkedAccountsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBA93C71BA6117300D6F154 /* LinkedAccountsVC.swift */; };
+		8FCC79A91BBA064E002E03DA /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; };
+		8FCC79AA1BBA064E002E03DA /* ITunesSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC5B8EA1B7E3EC90066ABAE /* ITunesSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8FD456D31B85793200945E3E /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD456D21B85793200945E3E /* Toucan.swift */; };
 		8FF20B551B940B540067AFB7 /* UIImageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF20B541B940B540067AFB7 /* UIImageColors.swift */; };
 		EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAECE6804A560D6747EC5E20 /* Pods_Moviethete.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -87,13 +87,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		8FB72BCA1BA7E97E0071A98C /* Embed Frameworks */ = {
+		8FCC79AB1BBA064E002E03DA /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8FB72BC91BA7E97E0071A98C /* ITunesSwift.framework in Embed Frameworks */,
+				8FCC79AA1BBA064E002E03DA /* ITunesSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -176,7 +176,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8FB72BC81BA7E97E0071A98C /* ITunesSwift.framework in Frameworks */,
+				8FCC79A91BBA064E002E03DA /* ITunesSwift.framework in Frameworks */,
 				8F7BDCA71BA23FA000D42A2A /* ITunesSwift.framework in Frameworks */,
 				EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */,
 			);
@@ -423,7 +423,7 @@
 				130D33E29F56BF307D79DC1F /* Embed Pods Frameworks */,
 				7C1AED9618BCA0587ADD5506 /* Copy Pods Resources */,
 				8F4F97C41B7418E5006CA7C9 /* ShellScript */,
-				8FB72BCA1BA7E97E0071A98C /* Embed Frameworks */,
+				8FCC79AB1BBA064E002E03DA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

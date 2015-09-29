@@ -149,6 +149,7 @@ import Async
     let user = PFUser.currentUser()!
     let relation = user.relationForKey("feed")
     let query = relation.query()
+    query?.includeKey("createdBy")
     
     query?.addDescendingOrder("createdAt")
     
@@ -164,21 +165,23 @@ import Async
           tempPost.timeSincePosted = self.getTimeSincePostedfromDate(post.createdAt!)
           tempPost.profileImageURL = postAuthor["smallProfileImage"] as? String
           Post.sharedInstance.feedPosts.append(tempPost)
-          tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))
+          tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))    // crashes! 
          }
         
       }
       
       return BFTask(forCompletionOfAllTasksWithResults: tasks)
     }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
-      
-      let results = task.result as! NSArray
+    
+  //    if task.result != nil {
+        let results = task.result as! NSArray    // crashes!
       
       for (index, postData) in results.enumerate() {
         let json = JSON(data: postData as! NSData)
         Post.sharedInstance.feedPosts[index].bigPosterImageURL = self.getBigPosterImageURL(json["artworkUrl100"].stringValue)
       }
       
+ //     }
       
       
       

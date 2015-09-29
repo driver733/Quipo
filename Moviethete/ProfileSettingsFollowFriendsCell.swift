@@ -10,12 +10,10 @@ import UIKit
 
 class ProfileSettingsFollowFriendsCell: UITableViewCell {
     
-   
   @IBOutlet weak var icon: UIImageView!
   @IBOutlet weak var label: UILabel!
   @IBOutlet weak var account: UILabel!
-    
-
+  
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
