@@ -728,11 +728,18 @@ func getVKUsername() -> BFTask {
     let query = PFQuery(className: "Follow")
     query.whereKey("from", equalTo: PFUser.currentUser()!)
     query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
+      print(results)
+      
+      var followersPfUserObjectIDs = [String]()
+      for follow in results! {
+        followersPfUserObjectIDs.append((follow["to"] as! PFUser).objectId!)
+      }
+      
       
       for var i = 0; i < UserSingelton.sharedInstance.allFriends.count; i++ {
         for var j = 0; j < UserSingelton.sharedInstance.allFriends[i].count; j++ {
           
-          if (results?.contains(UserSingelton.sharedInstance.allFriends[i][j].pfUser!))! {
+          if (followersPfUserObjectIDs.contains((UserSingelton.sharedInstance.allFriends[i][j].pfUser?.objectId!)!)) {
             UserSingelton.sharedInstance.allFriends[i][j].isFollowed = true
           } else {
             UserSingelton.sharedInstance.allFriends[i][j].isFollowed = false

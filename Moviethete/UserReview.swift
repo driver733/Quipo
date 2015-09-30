@@ -44,16 +44,10 @@ public struct UserReview {
     parsePost["userReview"] = [rating, reviewTitle, review]
     parsePost["trackID"] = post.trackID!
     parsePost["createdBy"] = PFUser.currentUser()!
+    parsePost["createdByObjectId"] = PFUser.currentUser()!.objectId!
     parsePost.saveInBackground().continueWithBlock { (task: BFTask!) -> AnyObject! in
       if task.error == nil {
         reviewsRelation?.addObject(parsePost)
-        
-//        do {
-//          try PFUser.currentUser()!.save()
-//        }
-//        catch {
-//          
-//        }
         
         return PFUser.currentUser()?.saveInBackground()
       } else {
