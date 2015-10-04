@@ -33,6 +33,7 @@ class ProfileSettings: UIViewController {
   
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
+
     
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -53,10 +54,22 @@ class ProfileSettings: UIViewController {
   
   override func viewWillAppear(animated: Bool) {
     if FollowFriends.sharedInstance.linkedAccounts.isEmpty {
-      startLoginActivityIndicator()
+     
+       startLoginActivityIndicator()
+    
+    } else if (!self.isBeingPresented() || !self.isMovingFromParentViewController())  {
+      // second if => "self" is being shown because of a "back" button.
+      UserSingelton.sharedInstance.unfollowUsers(UserSingelton.sharedInstance.unfollowedUsers).continueWithBlock({ (task: BFTask!) -> AnyObject! in
+        self.stopLoginActivityIndicator()
+        return nil
+      })
     }
+    
     tableView.reloadData()
   }
+  
+  
+  
   
   
   func didFinishLoadingLinkedAccountsData(notif: NSNotification) {

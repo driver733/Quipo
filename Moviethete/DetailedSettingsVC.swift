@@ -23,17 +23,12 @@ import ParseFacebookUtilsV4
 import SDWebImage
 
 class DetailedSettingsVC: UIViewController {
-  
-  
-  
-  
- 
+   
   
 
   @IBOutlet var tableView: UITableView!
   
   var cellIndexPath = NSIndexPath()
-  
   
   
     override func viewDidLoad() {
@@ -69,16 +64,22 @@ class DetailedSettingsVC: UIViewController {
   
   
   func didTapFollowButton(sender: UIButton) {
-    let indexPath = checkButtonTapped(sender)
-    let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row].pfUser!
-    UserSingelton.sharedInstance.followUser(user)
-    let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
-    cell.followButton.setTitle("following", forState: .Normal)
-    cell.followButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
+    
+      let indexPath = checkButtonTapped(sender)
+      let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row].pfUser!
+      let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
+    if sender.titleLabel?.text == "+ follow" {
+      UserSingelton.sharedInstance.followUser(user) // contnue with block !
+      cell.followButton.setTitle("following", forState: .Normal)
+      cell.followButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
+    } else {
+      let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row].pfUser!
+      UserSingelton.sharedInstance.unfollowedUsers.append(user.objectId!)
+      cell.followButton.setTitle("+ follow", forState: .Normal)
+      cell.followButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+    }
   }
 
-  
-  
   
   
   }
@@ -95,7 +96,6 @@ extension DetailedSettingsVC: UITableViewDataSource {
     
     let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
     let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row]
-    
     
     cell.userName.text = user.username
     cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)

@@ -35,8 +35,11 @@ public struct UserSingelton {
   var vkontakteFriends = [User]()
   var instagramFriends = [User]()
   
+  var unfollowedUsers = [String]()
   
   
+  
+  // MARK: - Parse
   
   func followUser(pfUser: PFUser) -> BFTask {
     let mainTask = BFTaskCompletionSource()
@@ -51,8 +54,61 @@ public struct UserSingelton {
   
   
   
-// MARK: - Linked accounts Log In
+  
+  func unfollowUsers(followedUsersObjectIDs: [String]) -> BFTask {
+    let mainTask = BFTaskCompletionSource()
+    PFCloud.callFunctionInBackground("unfollowUser", withParameters:
+  ["currentUserObjectId" :   PFUser.currentUser()!.objectId!,
+   "followedUsersObjectIDs" : UserSingelton.sharedInstance.unfollowedUsers]
+      ).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      return  UserSingelton.sharedInstance.updateData()
+      }.continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      mainTask.setResult(nil)
+        UserSingelton.sharedInstance.unfollowedUsers.removeAll(keepCapacity: false)
+        return nil
+    }
+    return mainTask.task
+  }
+  
+  
+  
+  
+  func checkUserSubscriptions() -> BFTask {
+    let mainTask = BFTaskCompletionSource()
+    let query = PFQuery(className: "Follow")
+    query.whereKey("from", equalTo: PFUser.currentUser()!)
+    query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
+      print(results)
+      
+      var followersPfUserObjectIDs = [String]()
+      for follow in results! {
+        followersPfUserObjectIDs.append((follow["to"] as! PFUser).objectId!)
+      }
+      
+      
+      for var i = 0; i < UserSingelton.sharedInstance.allFriends.count; i++ {
+        for var j = 0; j < UserSingelton.sharedInstance.allFriends[i].count; j++ {
+          
+          if (followersPfUserObjectIDs.contains((UserSingelton.sharedInstance.allFriends[i][j].pfUser?.objectId!)!)) {
+            UserSingelton.sharedInstance.allFriends[i][j].isFollowed = true
+          } else {
+            UserSingelton.sharedInstance.allFriends[i][j].isFollowed = false
+          }
+          mainTask.setResult(nil)
+        }
+      }
+      
+    }
+    return mainTask.task
+  }
+  
 
+  
+  
+  
+  
+  
+// MARK: - Linked accounts Log In
 
 func loginWithFacebook(fromViewController: UIViewController) {
   let fbLoginManager = FBSDKLoginManager()
@@ -722,35 +778,6 @@ func getVKUsername() -> BFTask {
   }
   
   
-  
-  func checkUserSubscriptions() -> BFTask {
-    let mainTask = BFTaskCompletionSource()
-    let query = PFQuery(className: "Follow")
-    query.whereKey("from", equalTo: PFUser.currentUser()!)
-    query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
-      print(results)
-      
-      var followersPfUserObjectIDs = [String]()
-      for follow in results! {
-        followersPfUserObjectIDs.append((follow["to"] as! PFUser).objectId!)
-      }
-      
-      
-      for var i = 0; i < UserSingelton.sharedInstance.allFriends.count; i++ {
-        for var j = 0; j < UserSingelton.sharedInstance.allFriends[i].count; j++ {
-          
-          if (followersPfUserObjectIDs.contains((UserSingelton.sharedInstance.allFriends[i][j].pfUser?.objectId!)!)) {
-            UserSingelton.sharedInstance.allFriends[i][j].isFollowed = true
-          } else {
-            UserSingelton.sharedInstance.allFriends[i][j].isFollowed = false
-          }
-          mainTask.setResult(nil)
-        }
-      }
-
-    }
-    return mainTask.task
-  }
   
   
   private func updateData() -> BFTask {
