@@ -14,12 +14,18 @@ public struct UserReview {
   
   static var sharedInstance = UserReview()
   
-  var starRating: Int?
+  
+  var pfObject: PFObject?
+  
+  var pfUser: PFUser?
   /// The star rating representation. Takes Int values from 1 to 5.
-  var title: String?
+  var starRating: Int?
   /// The title of the review
+  var title: String?
+   /// The review of the movie
   var review: String?
-  /// The review of the movie
+ 
+  var timeSincePosted: String?
   
   
   init(){}
@@ -31,6 +37,15 @@ public struct UserReview {
     review = theReview
   }
   
+  
+  init(theStarRating: Int, theTitle: String, theReview: String, thePfObject: PFObject, thePfUser: PFUser?, theTimeSincePosted: String) {
+    starRating = theStarRating
+    title = theTitle
+    review = theReview
+    pfObject = thePfObject
+    pfUser = thePfUser
+    timeSincePosted = theTimeSincePosted
+  }
   
   
   

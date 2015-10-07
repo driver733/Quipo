@@ -29,6 +29,7 @@ extension UIViewController {
       UIGraphicsEndImageContext()
       return image
   }
+  
 }
 
 
@@ -160,23 +161,28 @@ class FeedVC: UIViewController {
       // Dispose of any resources that can be recreated.
   }
   
-  func getMovieInfoByITunesID(iTunesID: Int, completionHandler: ((responseJSON : JSON) -> Void)) {
-    ITunesApi.lookup(iTunesID).request({ (responseString: String?, error: NSError?) -> Void in
-      if error == nil, let responseString = responseString, let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-        return completionHandler(responseJSON: JSON(data: dataFromString))
-      }
-    })
-  }
 
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+    if let vc = segue.destinationViewController as? DetailedPostVC {
+      let post = Post.sharedInstance.feedPosts[getCellPostIndex((tableView.indexPathForSelectedRow?.row)!)]
+      vc.passedPost = post
+      vc.navigationItem.title = post.movieTitle!
+      let colors = Post.sharedInstance.getPrimaryPosterImageColorAndtextColor((tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as! ContentCell).posterImage.image!)
+      vc.passedColor = colors[1]
+      vc.textColor = colors[0]
+      
+    }
+    
+    
     /*
     if segue.identifier == DID_SELECT_SEARCH_RESULT_CELL_SEGUE_IDENTIFIER,
       let vc = segue.destinationViewController as? DetailedPostVC {
         if (tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!)?.isKindOfClass(TopCell) != nil) {
           vc.topCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as? TopCell
           print(tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!))
-          //   vc.contentCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!.indexPathByAddingIndex(1)) as? ContentCell
+             vc.contentCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!.indexPathByAddingIndex(1)) as? ContentCell
         } else {
           vc.contentCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as? ContentCell
           vc.topCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!.indexPathByRemovingLastIndex()) as? TopCell
@@ -202,7 +208,7 @@ class FeedVC: UIViewController {
   
   
   
-  func loadImagesForOnscreenRows(){
+  func loadImagesForOnscreenRows() {
     
     if (Post.sharedInstance.feedPosts.count > 0){
       let visiblePaths = tableView.indexPathsForVisibleRows!

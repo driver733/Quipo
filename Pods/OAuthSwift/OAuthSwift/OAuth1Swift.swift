@@ -5,7 +5,6 @@
 //  Created by Dongri Jin on 6/22/14.
 //  Copyright (c) 2014 Dongri Jin. All rights reserved.
 //
-/*
 
 import Foundation
 
@@ -70,7 +69,7 @@ public class OAuth1Swift: NSObject {
                     parameters["oauth_token"] = token
                 }
                 if (parameters["oauth_token"] != nil && (self.allowMissingOauthVerifier || parameters["oauth_verifier"] != nil)) {
-                    var credential: OAuthSwiftCredential = self.client.credential
+                    //var credential: OAuthSwiftCredential = self.client.credential
                     self.client.credential.oauth_token = parameters["oauth_token"]!
                     if (parameters["oauth_verifier"] != nil) {
                         self.client.credential.oauth_verifier = parameters["oauth_verifier"]!
@@ -95,7 +94,7 @@ public class OAuth1Swift: NSObject {
     // 1. Request token
     public func postOAuthRequestTokenWithCallbackURL(callbackURL: NSURL, success: TokenSuccessHandler, failure: FailureHandler?) {
         var parameters =  Dictionary<String, AnyObject>()
-        if let callbackURLString = callbackURL.absoluteString {
+        if let callbackURLString: String = callbackURL.absoluteString {
             parameters["oauth_callback"] = callbackURLString
         }
         self.client.post(self.request_token_url, parameters: parameters, success: {
@@ -130,6 +129,3 @@ public class OAuth1Swift: NSObject {
     }
 
 }
-
-
-*/

@@ -4,14 +4,14 @@ use_frameworks!
 workspace 'Moviethete'
 
 target 'Moviethete' do
-    pod 'KeychainAccess', :git => 'https://github.com/kishikawakatsumi/KeychainAccess.git', :branch => 'swift-2.0'
+    pod 'KeychainAccess'
     pod 'HCSStarRatingView', '~> 1.4.2'
     pod 'OAStackView'
     pod 'Alamofire'
     pod 'Fabric'
     pod 'TwitterKit'
     pod 'TwitterCore'
-    pod 'Google/SignIn'
+#    pod 'Google/SignIn'
     pod 'Parse', '~> 1.7'
     pod 'ParseUI', '~> 1.1'
     pod 'ParseFacebookUtilsV4', '~> 1.7'
@@ -20,7 +20,6 @@ target 'Moviethete' do
     pod 'FontBlaster', :git => 'https://github.com/AndrewSB/FontBlaster.git'
     pod 'SwiftValidator', :git => 'https://github.com/i-schuetz/SwiftValidator.git'
     pod 'TPKeyboardAvoiding', '~> 1.2'
-    pod 'KeychainAccess', :git => 'https://github.com/kishikawakatsumi/KeychainAccess.git', :branch => 'swift-2.0'
     pod 'InstagramKit', '~> 3.0'
     pod "FBSDKCoreKit"
     pod "FBSDKLoginKit"
@@ -29,7 +28,7 @@ target 'Moviethete' do
     pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git', :branch => 'xcode7'
     pod 'Async', :git => 'https://github.com/duemunk/Async.git', :branch => 'feature/Swift_2.0'
     pod "TLYShyNavBar"
-    pod "OAuthSwift", :git => 'https://github.com/rpowelll/OAuthSwift.git'
+    pod "OAuthSwift", :git => 'https://github.com/dongri/OAuthSwift.git', :branch => 'swift2.0' 
 
 end
 

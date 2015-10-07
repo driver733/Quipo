@@ -17,57 +17,70 @@ import Async
   public struct Post {
     
     private var dateFormat = NSDateFormatter()
-    
-    static var sharedInstance = Post()
     /// Post singleton
+    static var sharedInstance = Post()
+    
     
     
     var pfObject = PFObject(className: "Post")
-    
-    var userName: String?
     /// The username of the user that created the post
-    var timeSincePosted: String?
+    var userName: String?
     /// Time since the creating of the post. "5 minutes ago", "yesterday at 15:45" ...
-    var profileImageURL: String?
+    var timeSincePosted: String?
     /// The URL of the user`s (that created the post) current profile image
+    var profileImageURL: String?
     
     
-    var trackID: Int?
     /// iTunes track ID
+    var trackID: Int?
     
-    var movieTitle: String?
     /// The title of the movie that the post is dedicated to
-    var localizedMovieTitle: String?
+    var movieTitle: String?
     /// The localized title of the movie that the post is dedicated to
-    var movieGenre: String?
+    var localizedMovieTitle: String?
     /// The genre of the movie that the post is dedicated to
-    var movieReleaseDate: String?
+    var movieGenre: String?
     /// The release date of the movie that the post is dedicated to
+    var movieReleaseDate: String?
+    /// The small poster image URL of the movie that the post is dedicated to
     var smallPosterImageURL: String?
     /// The small poster image URL of the movie that the post is dedicated to
     var standardPosterImageURL: String?
-    /// The small poster image URL of the movie that the post is dedicated to
-    var bigPosterImageURL: String?
     /// The big poster image URL of the movie that the post is dedicated to
+    var bigPosterImageURL: String?
+    /// The title of the movie review
+    var reviewTitle:String?
+    /// The text of the movie review
+    var review: String?
+    /// Numerical represention of the rating (for stars)
+    var rating: Int?
+    
+    
+    
+    
+    
+    
     
     var feedPosts: [Post] = [Post]()
     /// The array of current user`s feed posts
+    
+    
+    
+    
   
     init() {}
     /// Post singleton initializer
     
     // User post initializer
-    init(thePFObject: PFObject, theUserName: String, theTimeSincePosted: String, theProfilImageURL: String, theMovieTitle: String, theLocalizedMovieTitle: String, theMovieGenre: String, theMovieReleaseDate: String, theSmallPosterImageURL: String, theBigPosterImageURL: String) {
+    init(thePFObject: PFObject, theUserName: String, theTimeSincePosted: String, theProfilImageURL: String, theTrackID: Int, theRating: Int, theReviewTitle: String, theReview: String) {
       pfObject = thePFObject
       userName = theUserName
       timeSincePosted = theTimeSincePosted
       profileImageURL = theProfilImageURL
-      movieTitle = theMovieTitle
-      localizedMovieTitle = theLocalizedMovieTitle
-      movieGenre = theMovieGenre
-      movieReleaseDate = theMovieReleaseDate
-      smallPosterImageURL = theSmallPosterImageURL
-      bigPosterImageURL = theBigPosterImageURL
+      trackID = theTrackID
+      rating = theRating
+      reviewTitle = theReviewTitle
+      review = theReview
     }
     
     // Search result post initializer
@@ -159,11 +172,19 @@ import Async
         let posts = result as! [PFObject]
         
         for post in posts {
-          var tempPost = Post()
+          let postReview = post["userReview"] as! NSArray
           let postAuthor = post["createdBy"] as! PFUser
-          tempPost.userName = postAuthor.username
-          tempPost.timeSincePosted = self.getTimeSincePostedfromDate(post.createdAt!)
-          tempPost.profileImageURL = postAuthor["smallProfileImage"] as? String
+          
+          var tempPost = Post(
+            thePFObject: post,
+            theUserName: postAuthor.username!,
+            theTimeSincePosted: self.getTimeSincePostedfromDate(post.createdAt!),
+            theProfilImageURL: postAuthor["smallProfileImage"] as! String,
+            theTrackID: post["trackID"] as! Int,
+            theRating: postReview[0] as! Int,
+            theReviewTitle: postReview[1] as! String,
+            theReview: postReview[2] as! String
+          )
           Post.sharedInstance.feedPosts.append(tempPost)
           tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))    // crashes! 
          }
@@ -179,6 +200,8 @@ import Async
       for (index, postData) in results.enumerate() {
         let json = JSON(data: postData as! NSData)
         Post.sharedInstance.feedPosts[index].bigPosterImageURL = self.getBigPosterImageURL(json["artworkUrl100"].stringValue)
+        Post.sharedInstance.feedPosts[index].standardPosterImageURL = self.getStandardPosterImageURL(json["artworkUrl100"].stringValue)
+        Post.sharedInstance.feedPosts[index].movieTitle = json["trackName"].stringValue
       }
       
  //     }
@@ -213,6 +236,53 @@ import Async
       })
       return task.task
     }
+    
+    
+    
+    
+    
+    
+    func loadMovieReviewsForMovie(withTrackID: Int, withoutPostFromFeedWithObjectId: String?, completionHandler: (reviews: [UserReview]?) -> Void) {
+      
+      
+      let trackID = withTrackID
+      let query = PFQuery(className: "Post")
+      if let objectIdFromFeed = withoutPostFromFeedWithObjectId {
+        query.whereKey("objectId", notEqualTo: objectIdFromFeed)
+      }
+      query.whereKey("trackID", equalTo: trackID)
+      
+      query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
+        if (error == nil) {
+          var reviews = [UserReview]()
+          for review in results! {
+            let reviewAuthor = review["createdBy"] as! PFUser
+            let reviewArray = review["userReview"] as! NSArray
+            let tempReview = UserReview(
+              theStarRating: reviewArray[0] as! Int,
+              theTitle: reviewArray[1] as! String,
+              theReview: reviewArray[2] as! String,
+              thePfObject: review,
+              thePfUser: reviewAuthor,
+              theTimeSincePosted: self.getTimeSincePostedfromDate(review.createdAt!)
+            )
+            reviews.append(tempReview)
+          }
+          completionHandler(reviews: reviews)
+        } else {
+        completionHandler(reviews: nil)
+        }
+      }
+      
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     func getMovieInfoByITunesID(iTunesID: Int) -> BFTask {

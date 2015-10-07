@@ -7,16 +7,21 @@
 //
 
 import UIKit
+import HCSStarRatingView
 
 class UserReviewCell: UITableViewCell {
 
+  @IBOutlet weak var rating: HCSStarRatingView!
   @IBOutlet weak var profileImage: UIImageView!
   @IBOutlet weak var userName: UILabel!
+  @IBOutlet weak var reviewTitle: UILabel!
   @IBOutlet weak var review: UITextView!
   @IBOutlet weak var timeSincePosted: UILabel!
+
   
     override func awakeFromNib() {
         super.awakeFromNib()
+        review.textContainer.lineFragmentPadding = 0
         // Initialization code
     }
 

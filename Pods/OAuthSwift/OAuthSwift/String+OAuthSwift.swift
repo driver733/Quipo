@@ -35,7 +35,7 @@ extension String {
         let charactersToBeEscaped = ":/?&=;+!@#$()',*" as CFStringRef
         let charactersToLeaveUnescaped = "[]." as CFStringRef
 
-        var raw: NSString = self
+        let raw: NSString = self
         
         let result = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, raw, charactersToLeaveUnescaped, charactersToBeEscaped, CFStringConvertNSStringEncodingToEncoding(encoding))
 
@@ -116,14 +116,14 @@ extension String {
     //重复字符串
     func `repeat`(times: Int) -> String{
         var result = ""
-        for i in 0..<times {
+        for _ in 0..<times {
             result += self
         }
         return result
     }
     //反转
     func reverse()-> String{
-        var s=self.split("").reverse()
+        let s=Array(self.split("").reverse())
         var x=""
         for y in s{
             x+=y

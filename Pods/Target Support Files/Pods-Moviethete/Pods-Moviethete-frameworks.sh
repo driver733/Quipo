@@ -43,13 +43,13 @@ install_framework()
   code_sign_if_enabled "${destination}/$(basename "$1")"
 
   # Embed linked Swift runtime libraries
-  local swift_runtime_libs
-  swift_runtime_libs=$(xcrun otool -LX "$binary" | grep --color=never @rpath/libswift | sed -E s/@rpath\\/\(.+dylib\).*/\\1/g | uniq -u  && exit ${PIPESTATUS[0]})
-  for lib in $swift_runtime_libs; do
-    echo "rsync -auv \"${SWIFT_STDLIB_PATH}/${lib}\" \"${destination}\""
-    rsync -auv "${SWIFT_STDLIB_PATH}/${lib}" "${destination}"
-    code_sign_if_enabled "${destination}/${lib}"
-  done
+#  local swift_runtime_libs
+#  swift_runtime_libs=$(xcrun otool -LX "$binary" | grep --color=never @rpath/libswift | sed -E s/@rpath\\/\(.+dylib\).*/\\1/g | uniq -u  && exit ${PIPESTATUS[0]})
+#  for lib in $swift_runtime_libs; do
+#    echo "rsync -auv \"${SWIFT_STDLIB_PATH}/${lib}\" \"${destination}\""
+#    rsync -auv "${SWIFT_STDLIB_PATH}/${lib}" "${destination}"
+#    code_sign_if_enabled "${destination}/${lib}"
+#  done
 }
 
 # Signs a framework with the provided identity

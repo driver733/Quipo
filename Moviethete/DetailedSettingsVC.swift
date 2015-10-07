@@ -53,6 +53,22 @@ class DetailedSettingsVC: UIViewController {
   
   
   
+  
+  
+  override func viewWillDisappear(animated: Bool) {
+   
+      // second if => "self" is being shown because of a "back" button.
+      UserSingelton.sharedInstance.updateUserSubscriptions(
+        UserSingelton.sharedInstance.followedUsers,
+        unfollowedUsersObjectIDs: UserSingelton.sharedInstance.unfollowedUsers
+        )
+        .continueWithBlock({ (task: BFTask!) -> AnyObject! in
+          return nil
+        })
+    
+  }
+  
+  
   func checkButtonTapped(sender: UIButton) -> NSIndexPath {
     let buttonPosition = sender.convertPoint(CGPointZero, toView: self.tableView)
     let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
@@ -69,7 +85,7 @@ class DetailedSettingsVC: UIViewController {
       let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row].pfUser!
       let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
     if sender.titleLabel?.text == "+ follow" {
-      UserSingelton.sharedInstance.followUser(user) // contnue with block !
+      UserSingelton.sharedInstance.followedUsers.append(user.objectId!)
       cell.followButton.setTitle("following", forState: .Normal)
       cell.followButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
     } else {

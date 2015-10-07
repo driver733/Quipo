@@ -23,6 +23,7 @@
 #import "PFSession.h"
 #import "PFSubclassing.h"
 #import "PFUser.h"
+#import "PFUserAuthenticationDelegate.h"
 
 FOUNDATION_EXPORT double ParseVersionNumber;
 FOUNDATION_EXPORT const unsigned char ParseVersionString[];

@@ -35,18 +35,36 @@ public struct UserSingelton {
   var vkontakteFriends = [User]()
   var instagramFriends = [User]()
   
+  var followedUsers = [String]()
   var unfollowedUsers = [String]()
   
+  var isFromDetailedVC = false
   
   
   // MARK: - Parse
   
-  func followUser(pfUser: PFUser) -> BFTask {
+
+  
+
+  
+  func updateUserSubscriptions(followedUsersObjectIDs: [String], unfollowedUsersObjectIDs: [String]) -> BFTask {
     let mainTask = BFTaskCompletionSource()
-    let follow = PFObject(className: "Follow")
-    follow["from"] = PFUser.currentUser()!
-    follow["to"] = pfUser
-    follow.saveInBackgroundWithBlock { (result: Bool, error: NSError?) -> Void in
+    if followedUsersObjectIDs.count != 0 || unfollowedUsersObjectIDs.count != 0 {
+      print(UserSingelton.sharedInstance.followedUsers)
+      print(UserSingelton.sharedInstance.unfollowedUsers)
+      PFCloud.callFunctionInBackground("updateUserSubscriptions", withParameters:
+        ["currentUserObjectId" :      (PFUser.currentUser()?.objectId)!,
+         "followedUsersObjectIDs" :   UserSingelton.sharedInstance.followedUsers,
+         "unFollowedUsersObjectIDs" : UserSingelton.sharedInstance.unfollowedUsers]
+        ).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+            return UserSingelton.sharedInstance.updateData()
+        }.continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+            UserSingelton.sharedInstance.followedUsers.removeAll(keepCapacity: false)
+            UserSingelton.sharedInstance.unfollowedUsers.removeAll(keepCapacity: false)
+            mainTask.setResult(nil)
+            return nil
+      }
+    } else {
       mainTask.setResult(nil)
     }
     return mainTask.task
@@ -55,20 +73,9 @@ public struct UserSingelton {
   
   
   
-  func unfollowUsers(followedUsersObjectIDs: [String]) -> BFTask {
-    let mainTask = BFTaskCompletionSource()
-    PFCloud.callFunctionInBackground("unfollowUser", withParameters:
-  ["currentUserObjectId" :   PFUser.currentUser()!.objectId!,
-   "followedUsersObjectIDs" : UserSingelton.sharedInstance.unfollowedUsers]
-      ).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      return  UserSingelton.sharedInstance.updateData()
-      }.continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      mainTask.setResult(nil)
-        UserSingelton.sharedInstance.unfollowedUsers.removeAll(keepCapacity: false)
-        return nil
-    }
-    return mainTask.task
-  }
+  
+  
+  
   
   
   
@@ -78,7 +85,6 @@ public struct UserSingelton {
     let query = PFQuery(className: "Follow")
     query.whereKey("from", equalTo: PFUser.currentUser()!)
     query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
-      print(results)
       
       var followersPfUserObjectIDs = [String]()
       for follow in results! {

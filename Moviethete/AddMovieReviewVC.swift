@@ -36,6 +36,7 @@ class AddMovieReviewVC: UIViewController {
   func postMovieReview() {
     
     let starRatingCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! StarRating
+    
     let reviewTitleCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! TitleCell
     let reviewCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! ReviewCell
     

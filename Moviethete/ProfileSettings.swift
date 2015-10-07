@@ -47,9 +47,15 @@ class ProfileSettings: UIViewController {
       tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingLinkedAccountsData:", name: "didFinishLoadingLinkedAccountsData", object: nil)
-
+      
+    
       
     }
+  
+  
+  
+
+  
   
   
   override func viewWillAppear(animated: Bool) {
@@ -57,12 +63,6 @@ class ProfileSettings: UIViewController {
      
        startLoginActivityIndicator()
     
-    } else if (!self.isBeingPresented() || !self.isMovingFromParentViewController())  {
-      // second if => "self" is being shown because of a "back" button.
-      UserSingelton.sharedInstance.unfollowUsers(UserSingelton.sharedInstance.unfollowedUsers).continueWithBlock({ (task: BFTask!) -> AnyObject! in
-        self.stopLoginActivityIndicator()
-        return nil
-      })
     }
     
     tableView.reloadData()

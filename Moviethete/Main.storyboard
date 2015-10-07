@@ -24,11 +24,34 @@
                     <size key="freeformSize" width="600" height="600"/>
                     <connections>
                         <outlet property="tableView" destination="vG9-L2-BHt" id="4Tx-M6-aPA"/>
+                        <segue destination="Oy5-hL-WJm" kind="show" identifier="showDetailedPost" id="afx-7c-m9v"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4658" y="-228"/>
+            <point key="canvasLocation" x="4716" y="-228"/>
+        </scene>
+        <!--Detailed PostVC-->
+        <scene sceneID="xxT-m3-0My">
+            <objects>
+                <viewController id="Oy5-hL-WJm" customClass="DetailedPostVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="S2y-oe-AAn">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="Oy5-hL-WJm" id="cXP-sA-dRo"/>
+                            <outlet property="delegate" destination="Oy5-hL-WJm" id="3fY-Fm-Vzw"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="tableView" destination="S2y-oe-AAn" id="JxP-Yf-NSS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AqG-wm-6b2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5445" y="-228"/>
         </scene>
         <!--SearchVC-->
         <scene sceneID="p3O-fo-21O">
@@ -57,7 +80,7 @@
         <scene sceneID="aUE-Pt-7ki">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="gTc-r9-R9Z" customClass="DetailedPostVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="FiA-gh-pTL">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="FiA-gh-pTL">
                         <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <animations/>
