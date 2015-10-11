@@ -33,12 +33,29 @@ extension UIViewController {
 }
 
 
+extension UIColor {
+  
+  convenience init(r: CGFloat, g: CGFloat, b: CGFloat)  {
+    self.init(red: r/255, green: g/255, blue: b/255, alpha: 1)
+  }
+  
+   class func placeholderColor() -> UIColor {
+    return UIColor(r: 240, g: 240, b: 240)
+  }
+  
+  
+  
+}
+
+
 class FeedVC: UIViewController {
 
   @IBOutlet var tableView: UITableView!
   
   var refreshControl = UIRefreshControl()
   var dateFormat = NSDateFormatter()
+  
+
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -50,80 +67,38 @@ class FeedVC: UIViewController {
     tableView.estimatedRowHeight = 44.0
     shyNavBarManager.scrollView = self.tableView
     refresh(nil)
-    
-    
-    
-    
-    
-//    var post = PFObject(className: "Post")
-//    let query = PFQuery(className: "Post")
-//    query.limit = 1
-//    do {
-//   let result = try query.findObjects()
-//    for o in result {
-//      post = o
-//    }
-//    }
-//    catch {
-//      
-//    }
-//    
-//    
-//    let newPost = PFObject(className: "Post")
-//    newPost["createdBy"] = PFUser.currentUser()
-//    newPost["posterImageURL"] = "http://is3.mzstatic.com/image/pf/us/r30/Features/cd/d3/17/dj.nsuplxar.600x600-100.jpg"
-//    do {
-//    try newPost.save()
-//    }
-//    catch {
-//      
-//    }
-//    
-//   let relation = PFUser.currentUser()!.relationForKey("posts")
-//    relation.addObject(newPost)
-//    do {
-//   try PFUser.currentUser()!.save()
-//    }
-//    catch {
-//      
-//    }
-    
-    
-    
-    
-    
-    
-//    let query = PFUser.query()
-//    query?.whereKey("username", equalTo: "michael_yakushin455")
-//    query?.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
-//      let users = results as! [PFUser]
-//      let user = users[0] 
-//      let newFollow = PFObject(className: "Follow")
-//      newFollow.setObject(user, forKey: "to")
-//      newFollow.setObject(PFUser.currentUser()!, forKey: "from")
-//      newFollow.saveInBackgroundWithBlock({ (result: Bool, error: NSError?) -> Void in
-//        print(result)
-//      })
-//    })
-//    
-//    
-    
-    
   
-      refreshControl.attributedTitle = NSAttributedString(string: "Last updated at:")
-      refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
-      tableView?.addSubview(refreshControl)
+    refreshControl.attributedTitle = NSAttributedString(string: "Last updated at:")
+    refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+    tableView?.addSubview(refreshControl)
+
+    UserSingelton.sharedInstance.loadFollowFriendsData()
+    
+    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+    
    
-    
-    
-      UserSingelton.sharedInstance.loadFollowFriendsData()
-    
-    
-    
-    
   }
   
   
+  override func viewWillAppear(animated: Bool) {
+    self.title = "Feed"
+    
+    self.transitionCoordinator()?.animateAlongsideTransition({
+      (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+      if self.navigationController!.viewControllers[0].isKindOfClass(SearchVC) {
+        self.navigationController?.navigationBar.subviews[1].hidden = true             // hide search bar if it is present
+      }
+      self.navigationController?.navigationBar.barTintColor = UIColor(r: 96, g: 160, b: 172)
+      self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+      self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+      },
+      completion: { (completionContext: UIViewControllerTransitionCoordinatorContext) -> Void in
+        self.navigationController?.navigationBar.barTintColor = UIColor(r: 96, g: 160, b: 172)
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+    })
+
+  }
   
   
   func refresh(sender: AnyObject?) {
@@ -132,17 +107,18 @@ class FeedVC: UIViewController {
 
   Post.sharedInstance.loadFeedPosts().continueWithBlock {
   (task: BFTask!) -> AnyObject! in
-  if task.error == nil {
-    if self.refreshControl.refreshing {
-      self.refreshControl.endRefreshing()
+    if task.error == nil {
+      Async.main {
+        if self.refreshControl.refreshing {
+          self.refreshControl.endRefreshing()
+        }
+        self.tableView.reloadData()
+      }
+      return nil
+    } else {
+      // process error
+      return nil
     }
-    self.tableView.reloadData()
-    return nil
-  } else {
-    // process error
-
-    return nil
-  }
   }
   
     
@@ -168,10 +144,13 @@ class FeedVC: UIViewController {
     if let vc = segue.destinationViewController as? DetailedPostVC {
       let post = Post.sharedInstance.feedPosts[getCellPostIndex((tableView.indexPathForSelectedRow?.row)!)]
       vc.passedPost = post
-      vc.navigationItem.title = post.movieTitle!
-      let colors = Post.sharedInstance.getPrimaryPosterImageColorAndtextColor((tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as! ContentCell).posterImage.image!)
+      let posterImage = (tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as! ContentCell).posterImage.image!
+      let resizedPosterImage = Toucan(image: posterImage).resize(CGSizeMake(50, 50), fitMode: Toucan.Resize.FitMode.Scale).image
+      let colors = Post.sharedInstance.getPrimaryPosterImageColorAndtextColor(resizedPosterImage)
       vc.passedColor = colors[1]
       vc.textColor = colors[0]
+      
+ 
       
     }
     
@@ -213,12 +192,12 @@ class FeedVC: UIViewController {
     if (Post.sharedInstance.feedPosts.count > 0){
       let visiblePaths = tableView.indexPathsForVisibleRows!
       for indexPath in visiblePaths {
-        if (indexPath.row % 2 == 0){
+        if (indexPath.row % 2 == 0) {
           let cell: TopCell = self.tableView.cellForRowAtIndexPath(indexPath) as! TopCell
           if Post.sharedInstance.feedPosts.count * 2 > indexPath.row {
             cell.profileImage.sd_setImageWithURL(
               NSURL(string: Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)].profileImageURL!),
-              placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+              placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
               options: SDWebImageOptions.RefreshCached,
               completed:{
                 (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
@@ -229,17 +208,17 @@ class FeedVC: UIViewController {
         } else {
           let cell: ContentCell = self.tableView.cellForRowAtIndexPath(indexPath) as! ContentCell
           if Post.sharedInstance.feedPosts.count * 2 > indexPath.row {
-            cell.posterImage.sd_setImageWithURL(
-              NSURL(string: Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)].bigPosterImageURL!),
-              placeholderImage: getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size)
-            )
+            if let bigPosterImage = Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)].bigPosterImageURL {
+              cell.posterImage.sd_setImageWithURL(
+                NSURL(string: bigPosterImage),
+                placeholderImage: getImageWithColor(.placeholderColor(), size: cell.posterImage.bounds.size)
+              )
+            }
           }
         }
       }
     }
   }
-  
-  
   
   
 }
@@ -252,8 +231,10 @@ class FeedVC: UIViewController {
 extension FeedVC: UITableViewDelegate {
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    if indexPath.row % 2 != 0 {                                     // content cell
       performSegueWithIdentifier("showDetailedPost", sender: nil)
       tableView.deselectRowAtIndexPath(indexPath, animated: false)
+    }
   }
   
 }
@@ -265,7 +246,6 @@ extension FeedVC: UITableViewDataSource {
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
    
-    
     
     /*
     if (indexPath.row == 0)
@@ -281,8 +261,7 @@ extension FeedVC: UITableViewDataSource {
     */
     
     
-    
-    if (indexPath.row % 2 == 0){
+    if (indexPath.row % 2 == 0) {
       
       let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
       cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
@@ -291,7 +270,7 @@ extension FeedVC: UITableViewDataSource {
         let post = Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)]
         cell.userName.text = post.userName
         cell.timeSincePosted.text = post.timeSincePosted
-        //    cell.profileImage.image = getImageWithColor(UIColor.lightGrayColor(), size: cell.bounds.size)
+        
         
         // Only load cached images; defer new downloads until scrolling ends
         
@@ -303,18 +282,20 @@ extension FeedVC: UITableViewDataSource {
               if result {
                 cell.profileImage.sd_setImageWithURL(
                   NSURL(string: Post.sharedInstance.feedPosts[self.getCellPostIndex(indexPath.row)].profileImageURL!),
-                  placeholderImage: self.getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+                  placeholderImage: self.getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
                   options: SDWebImageOptions.RefreshCached, completed:{(
                     image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
                     cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
                 })
+              } else {
+                cell.profileImage.image = self.getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size)
               }
           })
           return cell
         } else {
           cell.profileImage.sd_setImageWithURL(
             NSURL(string: Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)].profileImageURL!),
-            placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+            placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
             options: SDWebImageOptions.RefreshCached, completed:{(
               image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
               cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
@@ -322,49 +303,49 @@ extension FeedVC: UITableViewDataSource {
           return cell
         }
       }
+    
+
       return cell
     }
     
-    // Set up the cell representing the app
     
     let cell = tableView.dequeueReusableCellWithIdentifier("ContentCell", forIndexPath: indexPath) as! ContentCell
     
-    
-    
-    
     if Post.sharedInstance.feedPosts.count * 2 > indexPath.row {
-      
+      let post = Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)]
+      cell.rating.value = CGFloat(post.rating!)
+      cell.reviewTitle.text = "- " + post.reviewTitle!
+      cell.reviewText.text = post.review!
+
       if (tableView.dragging || tableView.decelerating) {
         SDWebImageManager.sharedManager().cachedImageExistsForURL(
           NSURL(string: Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)].bigPosterImageURL!),
           completion: { (result: Bool) -> Void in
             if result {
-              cell.posterImage.sd_setImageWithURL(
-                NSURL(string: Post.sharedInstance.feedPosts[self.getCellPostIndex(indexPath.row)].bigPosterImageURL!),
-                placeholderImage: self.getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size)
-              )
+                cell.posterImage.sd_setImageWithURL(
+                  NSURL(string: Post.sharedInstance.feedPosts[self.getCellPostIndex(indexPath.row)].bigPosterImageURL!),
+                  placeholderImage: self.getImageWithColor(.placeholderColor(), size: cell.posterImage.bounds.size)
+                )
+            } else {
+              cell.posterImage.image = self.getImageWithColor(UIColor.placeholderColor(), size: cell.posterImage.bounds.size)
             }
           }
         )
-        
         return cell
         
       } else {
         cell.posterImage.sd_setImageWithURL(
           NSURL(string: Post.sharedInstance.feedPosts[self.getCellPostIndex(indexPath.row)].bigPosterImageURL!),
-          placeholderImage: self.getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size)
+          placeholderImage: self.getImageWithColor(.placeholderColor(), size: cell.posterImage.bounds.size)
         )
+        return cell
       }
     }
-    return cell
     
+ 
+    return cell
   }
 
-  
-  
-  
-  
-  
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -381,7 +362,7 @@ extension FeedVC: UITableViewDataSource {
 extension FeedVC: UIScrollViewDelegate {
   
   func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    if (!decelerate){
+    if (!decelerate) {
       loadImagesForOnscreenRows()
     }
   }

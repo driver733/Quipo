@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8187.4" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8151.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -17,24 +17,28 @@
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sq0-ai-Wid">
                         <rect key="frame" x="73" y="12" width="40" height="20"/>
+                        <animations/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CTq-Mf-4wX">
                         <rect key="frame" x="73" y="35" width="33" height="16"/>
+                        <animations/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="385-dF-SIA">
                         <rect key="frame" x="8" y="8" width="45" height="45"/>
+                        <animations/>
                         <constraints>
                             <constraint firstAttribute="width" constant="45" id="XUH-xx-ATP"/>
                             <constraint firstAttribute="height" constant="45" id="oMa-SO-hYb"/>
                         </constraints>
                     </imageView>
                 </subviews>
+                <animations/>
                 <constraints>
                     <constraint firstItem="385-dF-SIA" firstAttribute="top" secondItem="gev-Bv-bmn" secondAttribute="topMargin" constant="13" id="7it-Jq-fca"/>
                     <constraint firstItem="sq0-ai-Wid" firstAttribute="leading" secondItem="385-dF-SIA" secondAttribute="trailing" constant="20" id="ESg-Yf-nS1"/>
@@ -55,12 +59,13 @@
                     </mask>
                 </variation>
             </tableViewCellContentView>
+            <animations/>
             <connections>
                 <outlet property="profileImage" destination="385-dF-SIA" id="ObX-Lg-hSh"/>
                 <outlet property="timeSincePosted" destination="CTq-Mf-4wX" id="uB6-W3-l4d"/>
                 <outlet property="userName" destination="sq0-ai-Wid" id="Uh0-MK-edL"/>
             </connections>
-            <point key="canvasLocation" x="484" y="418.5"/>
+            <point key="canvasLocation" x="206" y="337.5"/>
         </tableViewCell>
     </objects>
 </document>

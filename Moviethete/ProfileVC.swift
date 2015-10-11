@@ -9,7 +9,7 @@
 import UIKit
 import Fabric
 import TwitterKit
-//import OAuthSwift
+import OAuthSwift
 import SwiftyJSON
 import VK_ios_sdk
 import InstagramKit
@@ -17,8 +17,10 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
-//import FontBlaster
+import FontBlaster
 import TLYShyNavBar
+import Parse
+import SDWebImage
 
 
 
@@ -34,7 +36,7 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
   @IBOutlet weak var tableView: UITableView!
   
   var textArray: NSMutableArray! = NSMutableArray()
-  var str = ""
+  var viewSelected = ""
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
     
@@ -48,54 +50,68 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         */
         
             if indexPath.row == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("ProfileTopCell", forIndexPath: indexPath) as! ProfileTopCell
-            cell.awaitedView.layer.cornerRadius = 8
-            cell.awaitedView.layer.masksToBounds = true
-            cell.followersView.layer.cornerRadius = 8
-            cell.followersView.layer.masksToBounds = true
-            cell.followingView.layer.cornerRadius = 8
-            cell.followingView.layer.masksToBounds = true
-            cell.favouriteView.layer.cornerRadius = 8
-            cell.favouriteView.layer.masksToBounds = true
-            cell.watchedView.layer.cornerRadius = 8
-            cell.watchedView.layer.masksToBounds = true
-            cell.unknownView.layer.cornerRadius = 8
-            cell.unknownView.layer.masksToBounds = true
-            
-            
-            cell.selectionStyle = .None
-            
-            return cell
-       }
-       else {
-        
-            if str == "reviews" {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileUserReviews", forIndexPath: indexPath) as! ProfileUserReviews
-        cell.movieName.text = "Titanic"
-        cell.userReview.text = "Кино"
-        cell.posterImage.sd_setImageWithURL(NSURL(string: "http://www.freemovieposters.net/posters/titanic_1997_6121_poster.jpg"), placeholderImage: getImageWithColor(.grayColor(), size: cell.posterImage.bounds.size))
-        return cell
-
-            } else {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
-        cell.userName.text = "Dachnik"
-                            
-            
-        
-        cell.profileImage.sd_setImageWithURL(NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg"), placeholderImage: getImageWithColor(.grayColor(), size: cell.profileImage.bounds.size))
-                if let cellImage = cell.profileImage.image {
-                    cell.profileImage.image = Toucan(image: cellImage).maskWithEllipse().image
+              let cell = tableView.dequeueReusableCellWithIdentifier("ProfileTopCell", forIndexPath: indexPath) as! ProfileTopCell
+              cell.awaitedView.layer.cornerRadius = 8
+              cell.awaitedView.layer.masksToBounds = true
+              cell.followersView.layer.cornerRadius = 8
+              cell.followersView.layer.masksToBounds = true
+              cell.followingView.layer.cornerRadius = 8
+              cell.followingView.layer.masksToBounds = true
+              cell.favouriteView.layer.cornerRadius = 8
+              cell.favouriteView.layer.masksToBounds = true
+              cell.watchedView.layer.cornerRadius = 8
+              cell.watchedView.layer.masksToBounds = true
+              cell.unknownView.layer.cornerRadius = 8
+              cell.unknownView.layer.masksToBounds = true
+              
+              cell.profileImageView.sd_setImageWithURL(NSURL(string: (PFUser.currentUser())!["bigProfileImage"] as! String), placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImageView.bounds.size), options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+                if let image = image where error == nil {
+                  cell.profileImageView.image = Toucan(image: image).maskWithEllipse().image
                 }
-           return cell
-            }
+              })
+              
+
+              cell.selectionStyle = .None
+            
+              
+              return cell
+       }
+              
+       else {
+              switch viewSelected {
         
-        
-        
+              case "following":
+                
+                let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
+                let user = (UserSingelton.sharedInstance.followedBy)[indexPath.row - 1]
+                
+                cell.userName.text = user.username
+                cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
+                if user.isFollowed! {
+                  cell.followButton.setTitle("following", forState: .Normal)
+                  cell.followButton.setTitleColor(.greenColor(), forState: .Normal)
+                }
+                cell.profileImage.sd_setImageWithURL(
+                  NSURL(string: user.profileImageURL!),
+                  placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+                  options: SDWebImageOptions.RefreshCached,
+                  completed:{
+                    (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+                    if image != nil {
+                      cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+                    }
+                  }
+                )
+
+                
+                return cell
+
+              default:
+                return UITableViewCell()
        }
 
-       
+      }
+      
     }
     
   func startLoginActivityIndicator() {
@@ -120,11 +136,14 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
     
     
-        func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            
-            return 20
+  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+      
+    if viewSelected == "following" {
+      return UserSingelton.sharedInstance.followedBy.count + 1
     }
-    
+    return 1
+  }
+  
     
     
     
@@ -179,7 +198,7 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Settings", style: UIBarButtonItemStyle.Plain, target: self, action: "settings:")
         
-        
+        viewSelected = "following"
        
         
     }
@@ -206,13 +225,11 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             let path = tableView.indexPathForRowAtPoint(location)
             if path!.row == 0 {
                 let newCell: ProfileTopCell = tableView.cellForRowAtIndexPath(path!) as! ProfileTopCell
-                
-                
+              
                 var viewPoint = newCell.awaitedView.convertPoint(location, fromView: tableView)
-                if newCell.awaitedView.pointInside(viewPoint, withEvent: nil){
-                    
-                    
-                    str = "reviews"
+                if newCell.awaitedView.pointInside(viewPoint, withEvent: nil) {
+                  
+                    viewSelected = "reviews"
                     tableView.reloadData()
                     
                 }
@@ -220,7 +237,7 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 viewPoint = newCell.favouriteView.convertPoint(location, fromView: tableView)
                 if newCell.favouriteView.pointInside(viewPoint, withEvent: nil){
                     
-                    str = ""
+                    viewSelected = ""
                     tableView.reloadData()
                 }
                 
@@ -229,11 +246,14 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 }
                 
                 viewPoint = newCell.followingView.convertPoint(location, fromView: tableView)
-                if newCell.followingView.pointInside(viewPoint, withEvent: nil){
+                if newCell.followingView.pointInside(viewPoint, withEvent: nil) {
+                  viewSelected = "following"
+                  tableView.reloadData()
                 }
                 
                 viewPoint = newCell.followersView.convertPoint(location, fromView: tableView)
-                if newCell.followersView.pointInside(viewPoint, withEvent: nil){
+                if newCell.followersView.pointInside(viewPoint, withEvent: nil) {
+                  
                 }
                 
                 viewPoint = newCell.unknownView.convertPoint(location, fromView: tableView)

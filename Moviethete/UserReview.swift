@@ -17,6 +17,8 @@ public struct UserReview {
   
   var pfObject: PFObject?
   
+  var selectedMovieReviews = [UserReview]()
+  
   var pfUser: PFUser?
   /// The star rating representation. Takes Int values from 1 to 5.
   var starRating: Int?

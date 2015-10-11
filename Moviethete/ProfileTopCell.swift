@@ -28,11 +28,7 @@ class ProfileTopCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        awaitedCount.font = UIFont(name: "Nanum Pen", size: awaitedCount.font.pointSize)
-        favouriteCount.font = UIFont(name: "Nanum Pen", size: favouriteCount.font.pointSize)
-        watchedCount.font = UIFont(name: "Nanum Pen", size: watchedCount.font.pointSize)
-        followingCount.font = UIFont(name: "Nanum Pen", size: followingCount.font.pointSize)
-        followersCount.font = UIFont(name: "Nanum Pen", size: followersCount.font.pointSize)
+     
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

@@ -38,12 +38,17 @@ public struct UserSingelton {
   var followedUsers = [String]()
   var unfollowedUsers = [String]()
   
+  
+  var followedBy = [User]()
+  var following = [User]()
+  
+  
   var isFromDetailedVC = false
   
   
   // MARK: - Parse
   
-
+  
   
 
   
@@ -69,10 +74,6 @@ public struct UserSingelton {
     }
     return mainTask.task
   }
-  
-  
-  
-  
   
   
   
@@ -564,16 +565,17 @@ mutating func didReceiveNewVKToken() -> BFTask {
           query?.whereKey("FBID", notEqualTo: FBSDKProfile.currentProfile().userID)
       
           query?.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
-            let foundUsers = results as! [PFUser]
-            UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
-            for user in foundUsers {
-              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String, thePfUser: user)
-              UserSingelton.sharedInstance.facebookFriends.append(follower)
+            if error == nil, let foundUsers = results as? [PFUser] {
+              UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
+              for user in foundUsers {
+                let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String, thePfUser: user)
+                UserSingelton.sharedInstance.facebookFriends.append(follower)
+              }
+              if UserSingelton.sharedInstance.facebookFriends.count > 0 {
+                UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.facebookFriends)
+              }
+              mainTask.setResult(nil)
             }
-            if UserSingelton.sharedInstance.facebookFriends.count > 0 {
-              UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.facebookFriends)
-            }
-            mainTask.setResult(nil)
           })
         }
         else {
@@ -663,6 +665,16 @@ func getVKUsername() -> BFTask {
   
   
   
+  func updateFollowedBy() {
+    UserSingelton.sharedInstance.followedBy.removeAll(keepCapacity: false)
+    for socialNetwork in UserSingelton.sharedInstance.allFriends {
+      for friend in socialNetwork {
+        if friend.isFollowed! {                                   // crash!
+          UserSingelton.sharedInstance.followedBy.append(friend)
+        }
+      }
+    }
+  }
   
   
   func getUsernameifRegistered(ID: String) -> BFTask {
@@ -790,11 +802,13 @@ func getVKUsername() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     UserSingelton.sharedInstance.sortAllFriends()
     UserSingelton.sharedInstance.loadFollowFriendsCells()
+    
     return BFTask(
       forCompletionOfAllTasks: [UserSingelton.sharedInstance.checkUserSubscriptions(), FollowFriends.sharedInstance.loadLinkedAccountsData()]
       ).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      mainTask.setResult(nil)
-      return nil
+        UserSingelton.sharedInstance.updateFollowedBy()
+        mainTask.setResult(nil)
+        return nil
     }
   }
   

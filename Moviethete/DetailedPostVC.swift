@@ -10,11 +10,12 @@ import UIKit
 import SDWebImage
 import Async
 import Bolts
+import Parse
 
 class DetailedPostVC: UIViewController {
 
 
-  @IBOutlet var tableView: UITableView!
+  var tableView = UITableView()
   
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
@@ -26,22 +27,34 @@ class DetailedPostVC: UIViewController {
   var textColor = UIColor()
   var navBarShadowImage = UIImage()
   var navBarBackgroundImage = UIImage()
-  
-  var reviews = [UserReview]()
+
     
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    
+    tableView.dataSource = self
     tableView.registerNib(UINib(nibName: "DetailedPostMainCell", bundle: nil), forCellReuseIdentifier: "detailedPostCell")
-    tableView.registerNib(UINib(nibName: "UserReviewCell", bundle: nil), forCellReuseIdentifier: "userReviewCell")
+    tableView.registerNib(UINib(nibName: "TopCell", bundle: nil), forCellReuseIdentifier: "TopCell")
+    tableView.registerNib(UINib(nibName: "ReviewCell", bundle: nil), forCellReuseIdentifier: "reviewCell")
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 44.0
     
-    self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: "addPost"), animated: true)
+    self.view = tableView
+    
+    self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.lightGrayColor(), size: (CGSizeMake(0.35, 0.35))))
+    
+    
+    
+    self.title = passedPost!.movieTitle!
     
   
-    self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.lightGrayColor(), size: (CGSizeMake(0.35, 0.35))))
+    
+    
   }
   
+
+
   
   func startLoginActivityIndicator() {
     loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
@@ -70,42 +83,87 @@ class DetailedPostVC: UIViewController {
   
   
   override func viewWillAppear(animated: Bool) {
-    self.navigationController?.navigationBar.tintColor = textColor
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : textColor]
+    
     self.transitionCoordinator()?.animateAlongsideTransition({
       (context: UIViewControllerTransitionCoordinatorContext) -> Void in
-      self.navigationController?.navigationBar.subviews[1].hidden = true
-      self.navigationController?.navigationBar.barTintColor = self.passedColor
-      },
-      completion: nil)
-    
-    startLoginActivityIndicator()
-    
-    
-    
-    
-    
-    Post.sharedInstance.loadMovieReviewsForMovie((passedPost?.trackID)!, withoutPostFromFeedWithObjectId: passedPost?.pfObject.objectId) { (reviews) -> Void in
-      if !(reviews!.isEmpty) {
-        self.reviews = reviews!
-        self.putFeedReviewToTheBeginning()
-        self.tableView.reloadData()
+      if self.navigationController!.viewControllers[0].isKindOfClass(SearchVC) {
+        self.navigationController?.navigationBar.subviews[1].hidden = true             // hide search bar if it is present
       }
-      self.stopLoginActivityIndicator()
+      self.navigationController?.navigationBar.barTintColor = self.passedColor
+      self.navigationController?.navigationBar.tintColor = self.textColor
+      self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : self.textColor]
+      },
+      completion: { (completionContext: UIViewControllerTransitionCoordinatorContext) -> Void in
+        self.navigationController?.navigationBar.barTintColor = self.passedColor
+        self.navigationController?.navigationBar.tintColor = self.textColor
+    })
+    
+    
+    
+    //   startLoginActivityIndicator()
+    
+  
+    
+    // do only after posting a review!
+    
+    Post.sharedInstance.loadMovieReviewsForMovie((passedPost?.trackID)!).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      if !UserReview.sharedInstance.selectedMovieReviews.isEmpty {
+        self.putFeedReviewToTheBeginning()
+        self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "addPost"), animated: false)
+        self.tableView.reloadData()
+      } else {
+        self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: "addPost"), animated: false)
+      }
+      //     self.stopLoginActivityIndicator()
+      return nil
     }
+
+    
+   
     
     
   }
   
   
+  
+  
+  func getCellPostIndex(index: Int) -> Int {
+    if index % 2 == 0 {
+      return index / 2
+    } else {
+      return Int(floor(Double(index / 2)))
+    }
+  }
+  
   func putFeedReviewToTheBeginning() {
     if let passedPostObjectId = self.passedPost?.pfObject.objectId {
-      for (index, review) in reviews.enumerate() {
-        if review.pfObject?.objectId == passedPostObjectId {
-          let feedReview = reviews.removeAtIndex(index)
-          reviews.insert(feedReview, atIndex: 0)
+    
+      var feedReviewIndex: Int? = Int()
+      var currentUserReviewIndex: Int? = Int()
+      for (index, review) in UserReview.sharedInstance.selectedMovieReviews.enumerate() {
+        
+        if (review.pfObject?.objectId)! == passedPostObjectId {
+          feedReviewIndex = index
+        } else if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+          currentUserReviewIndex = index
+        }
+        
+      }
+      
+      if let feedReviewIndex = feedReviewIndex {
+        
+        if let currentUserReviewIndex = currentUserReviewIndex {
+          UserReview.sharedInstance.selectedMovieReviews.insert(UserReview.sharedInstance.selectedMovieReviews.removeAtIndex(currentUserReviewIndex), atIndex: 0)
+        }
+        UserReview.sharedInstance.selectedMovieReviews.insert(UserReview.sharedInstance.selectedMovieReviews.removeAtIndex(feedReviewIndex), atIndex: 0)
+        
+      } else {
+        if let currentUserReviewIndex = currentUserReviewIndex {
+          UserReview.sharedInstance.selectedMovieReviews.insert(UserReview.sharedInstance.selectedMovieReviews.removeAtIndex(currentUserReviewIndex), atIndex: 0)
         }
       }
+      
+
     }
   }
   
@@ -119,6 +177,14 @@ class DetailedPostVC: UIViewController {
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if let vc = (segue.destinationViewController as? UINavigationController)?.viewControllers[0] as? AddMovieReviewVC {
       vc.post = passedPost!
+      
+      for review in UserReview.sharedInstance.selectedMovieReviews {
+        if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+          vc.passedReview = review
+        }
+      }
+      
+      
     }
   }
   
@@ -140,23 +206,35 @@ extension DetailedPostVC: UITableViewDataSource {
       return cell
       
     default:
-      if !reviews.isEmpty {
-        let cell = tableView.dequeueReusableCellWithIdentifier("userReviewCell", forIndexPath: indexPath) as! UserReviewCell
-        let review = reviews[indexPath.row - 1]
-        cell.profileImage.sd_setImageWithURL(NSURL(string: (review.pfUser!["smallProfileImage"] as! String)))
-        cell.userName.text = review.pfUser?.username
-        cell.timeSincePosted.text = review.timeSincePosted
-        cell.reviewTitle.text = review.title
-        cell.review.text = review.review
+      if !UserReview.sharedInstance.selectedMovieReviews.isEmpty {
+        let review = UserReview.sharedInstance.selectedMovieReviews[getCellPostIndex(indexPath.row - 1)]
+        if indexPath.row % 2 != 0 {
+          let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
+          cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+          cell.profileImage.sd_setImageWithURL(NSURL(string: (review.pfUser!["smallProfileImage"] as! String)),
+            placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+            options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, erro: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+              cell.profileImage.image = Toucan(image: image).maskWithEllipse().image
+          })
+          cell.userName.text = review.pfUser?.username
+          cell.timeSincePosted.text = review.timeSincePosted
+          return cell
+      }
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("reviewCell", forIndexPath: indexPath) as! ReviewCell
+        cell.reviewTitle.text = "- " + review.title!
+        cell.reviewText.text = review.review!
         cell.rating.value = CGFloat(review.starRating!)
         return cell
+        
       }
+      
       return UITableViewCell()
     }
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return reviews.count + 1
+    return UserReview.sharedInstance.selectedMovieReviews.count * 2 + 1
   }
   
 }

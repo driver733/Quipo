@@ -20,6 +20,7 @@ import SwiftValidator
 import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
+import Async
 
 let DID_LOG_IN_SEGUE_IDENTIFIER = "didLogIn"
 
@@ -317,11 +318,14 @@ class LogInVC: UIViewController {
     
   func didReceiveFacebookProfile(notif: NSNotification){
     startLoginActivityIndicator()
+    NSNotificationCenter.defaultCenter().removeObserver(self, name: FBSDKProfileDidChangeNotification, object: nil)
     UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      self.stopLoginActivityIndicator()
+      Async.main {
+        self.stopLoginActivityIndicator()
+      }
       self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
       return nil
-      }
+    }
   }
   
     
@@ -421,7 +425,7 @@ extension LogInVC: UITableViewDataSource, UITableViewDelegate {
 
 
 
-// MARK: - ValidationDelegate
+// MARK: - Validation Delegate
 extension LogInVC: ValidationDelegate {
   
   

@@ -22,7 +22,7 @@ class SearchVC: UITableViewController {
   
   
   var searchController = UISearchController()
-  var searchResults: [Post] = [Post](){
+  var searchResults: [Post] = [Post]() {
     didSet {self.tableView.reloadData()}
   }
   var tempStr = ""

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="EBS-We-1ep">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="EBS-We-1ep">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
-        <!--Feed-->
+        <!--FeedVC-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
                 <viewController id="9pv-A4-QxB" customClass="FeedVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
@@ -19,7 +19,7 @@
                             <outlet property="delegate" destination="9pv-A4-QxB" id="hfp-rw-v2M"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Feed" id="FC9-Fe-Pfk"/>
+                    <navigationItem key="navigationItem" id="FC9-Fe-Pfk"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="600" height="600"/>
                     <connections>
@@ -35,18 +35,8 @@
         <scene sceneID="xxT-m3-0My">
             <objects>
                 <viewController id="Oy5-hL-WJm" customClass="DetailedPostVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="S2y-oe-AAn">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="Oy5-hL-WJm" id="cXP-sA-dRo"/>
-                            <outlet property="delegate" destination="Oy5-hL-WJm" id="3fY-Fm-Vzw"/>
-                        </connections>
-                    </tableView>
                     <connections>
-                        <outlet property="tableView" destination="S2y-oe-AAn" id="JxP-Yf-NSS"/>
+                        <segue destination="Re1-b1-f17" kind="presentation" identifier="addPost" modalTransitionStyle="coverVertical" id="aw9-pw-yOa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AqG-wm-6b2" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -80,20 +70,9 @@
         <scene sceneID="aUE-Pt-7ki">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="gTc-r9-R9Z" customClass="DetailedPostVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="FiA-gh-pTL">
-                        <rect key="frame" x="0.0" y="64" width="600" height="487"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="gTc-r9-R9Z" id="u5x-00-e8H"/>
-                            <outlet property="delegate" destination="gTc-r9-R9Z" id="TCo-Te-unQ"/>
-                        </connections>
-                    </tableView>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="OIT-w9-7Qo"/>
                     <connections>
-                        <outlet property="tableView" destination="FiA-gh-pTL" id="t0g-JF-Qp0"/>
                         <segue destination="7vL-bG-XXm" kind="presentation" identifier="addPost" modalTransitionStyle="coverVertical" id="7no-dI-IKq"/>
                     </connections>
                 </viewController>
@@ -105,21 +84,7 @@
         <scene sceneID="hCb-Z0-CHh">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="HiB-dd-b3n" customClass="AddMovieReviewVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="zhw-qr-3Lp">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="HiB-dd-b3n" id="AeH-uA-YfW"/>
-                            <outlet property="delegate" destination="HiB-dd-b3n" id="hb0-uE-rgr"/>
-                        </connections>
-                    </tableView>
                     <navigationItem key="navigationItem" title="Share your thoughts" id="QTq-iX-ndq"/>
-                    <connections>
-                        <outlet property="tableView" destination="zhw-qr-3Lp" id="b38-co-Wbd"/>
-                        <outlet property="view" destination="zhw-qr-3Lp" id="eHg-0e-RrV"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KcS-nz-ABH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -283,7 +248,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yg2-N9-8ea" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="11381" y="135"/>
+            <point key="canvasLocation" x="12193" y="135"/>
         </scene>
         <!--Detailed SettingsVC-->
         <scene sceneID="AuG-gk-BXY">
@@ -367,6 +332,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3pc-mC-Cmn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6372" y="769"/>
+        </scene>
+        <!--Share your thoughts-->
+        <scene sceneID="9PW-JD-eKQ">
+            <objects>
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="30K-M9-Fgr" customClass="AddMovieReviewVC" customModule="Moviethete" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" title="Share your thoughts" id="Df1-35-Wdn"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LwX-pT-86Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6986" y="-228"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="tUM-c1-fuN">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Re1-b1-f17" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="75B-yE-58Z">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="30K-M9-Fgr" kind="relationship" relationship="rootViewController" id="Wmp-tl-3tG"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ub4-Vo-6pG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6174" y="-228"/>
         </scene>
     </scenes>
     <resources>

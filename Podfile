@@ -9,6 +9,7 @@ target 'Moviethete' do
     pod 'OAStackView'
     pod 'Alamofire'
     pod 'Fabric'
+    pod 'Crashlytics'
     pod 'TwitterKit'
     pod 'TwitterCore'
 #    pod 'Google/SignIn'

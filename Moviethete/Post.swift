@@ -156,8 +156,8 @@ import Async
     
     
   mutating func loadFeedPosts() -> BFTask {
-    
     let mainTask = BFTaskCompletionSource()
+    
    
     let user = PFUser.currentUser()!
     let relation = user.relationForKey("feed")
@@ -194,7 +194,7 @@ import Async
       return BFTask(forCompletionOfAllTasksWithResults: tasks)
     }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
     
-  //    if task.result != nil {
+
         let results = task.result as! NSArray    // crashes!
       
       for (index, postData) in results.enumerate() {
@@ -204,7 +204,7 @@ import Async
         Post.sharedInstance.feedPosts[index].movieTitle = json["trackName"].stringValue
       }
       
- //     }
+      
       
       
       
@@ -242,14 +242,27 @@ import Async
     
     
     
-    func loadMovieReviewsForMovie(withTrackID: Int, withoutPostFromFeedWithObjectId: String?, completionHandler: (reviews: [UserReview]?) -> Void) {
+    
+    func loadMovieReviewsForMovie(withTrackID: Int) -> BFTask {
+      UserReview.sharedInstance.selectedMovieReviews.removeAll(keepCapacity: false)
       
+      let mainTask = BFTaskCompletionSource()
+      var friendsObjectIDs = [String]()
+      for socialNetwork in UserSingelton.sharedInstance.allFriends {
+        for friend in socialNetwork {
+          if friend.isFollowed == true {
+            friendsObjectIDs.append((friend.pfUser?.objectId)!)
+          }
+        }
+      }
+      
+      friendsObjectIDs.append((PFUser.currentUser()?.objectId)!)
       
       let trackID = withTrackID
       let query = PFQuery(className: "Post")
-      if let objectIdFromFeed = withoutPostFromFeedWithObjectId {
-        query.whereKey("objectId", notEqualTo: objectIdFromFeed)
-      }
+      query.includeKey("createdBy")
+      query.whereKey("createdByObjectId", containedIn: friendsObjectIDs)
+    
       query.whereKey("trackID", equalTo: trackID)
       
       query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
@@ -268,12 +281,13 @@ import Async
             )
             reviews.append(tempReview)
           }
-          completionHandler(reviews: reviews)
+          UserReview.sharedInstance.selectedMovieReviews = reviews
+          mainTask.setResult(nil)
         } else {
-        completionHandler(reviews: nil)
+        mainTask.setError(nil)
         }
       }
-      
+      return mainTask.task
     }
     
     
