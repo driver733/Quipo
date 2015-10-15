@@ -32,7 +32,6 @@ class LogInVC: UIViewController {
   @IBOutlet weak var orLabel: UILabel!
   @IBOutlet weak var signInButton: UIButton!
   @IBOutlet weak var signUpButton: UIButton!
-  @IBOutlet weak var shareThoughtsLabel: UILabel!
   @IBOutlet weak var signUpTriangle: UIView!
   @IBOutlet weak var signInTriangle: UIView!
   
@@ -66,7 +65,7 @@ class LogInVC: UIViewController {
       signUpTriangle.hidden = false
       signInTriangle.hidden = true
       orLabel.text = "or Sign Up with:"
-      shareThoughtsLabel.text = "Sign Up \n and start sharing your thoughts"
+
       
     }
     @IBAction func signInButton(sender: AnyObject) {
@@ -77,7 +76,6 @@ class LogInVC: UIViewController {
       signUpTriangle.hidden = true
       signInTriangle.hidden = false
       orLabel.text = "or Sign In with:"
-      shareThoughtsLabel.text = "Sign In \n and start sharing your thoughts"
     
     }
     
@@ -117,9 +115,9 @@ class LogInVC: UIViewController {
 
       signInOrUp.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
       
-      shareThoughtsLabel.text = "Sign In \n  and start sharing your thoughts"
-      shareThoughtsLabel.font = UIFont(name: "Nanum Pen", size: shareThoughtsLabel.font.pointSize)
-      shareThoughtsLabel.numberOfLines = 0
+   //   shareThoughtsLabel.text = "Sign In \n  and start sharing your thoughts"
+  //    shareThoughtsLabel.font = UIFont(name: "Nanum Pen", size: shareThoughtsLabel.font.pointSize)
+//      shareThoughtsLabel.numberOfLines = 0
     
       signInTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
       signUpTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))

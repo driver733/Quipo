@@ -203,7 +203,7 @@ class SearchVC: UITableViewController {
           if searchResults.count > indexPath.row {
             cell.posterImage.sd_setImageWithURL(
               NSURL(string: foundMovie.standardPosterImageURL!),
-              placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size)
+              placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.posterImage.bounds.size)
             )
           }
       }
@@ -240,7 +240,7 @@ class SearchVC: UITableViewController {
         if exists {
           cell.posterImage.sd_setImageWithURL(
             NSURL(string: foundMovie.standardPosterImageURL!),
-            placeholderImage: self.getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
+            placeholderImage: self.getImageWithColor(UIColor.placeholderColor(), size: cell.posterImage.bounds.size),
             options: SDWebImageOptions.AvoidAutoSetImage,
             completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
               if error == nil && image != nil {
@@ -256,7 +256,7 @@ class SearchVC: UITableViewController {
   } else {
     cell.posterImage.sd_setImageWithURL(
     NSURL(string: foundMovie.standardPosterImageURL!),
-    placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.posterImage.bounds.size),
+    placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.posterImage.bounds.size),
     options: SDWebImageOptions.AvoidAutoSetImage,
     completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
       if error == nil {
@@ -348,7 +348,7 @@ extension SearchVC: UISearchResultsUpdating {
       let userSearchInput = searchController.searchBar.text!
       if userSearchInput.characters.count > 1 {
         
-        Post.sharedInstance.getMovieInfoByTitleAtCountry(userSearchInput, country: "US").continueWithBlock({
+        ITunes.sharedInstance.getMovieInfoByTitleAtCountry(userSearchInput, country: "US").continueWithBlock({
           (task: BFTask!) -> AnyObject! in
           let result = task.result as! NSData
           let responseJSON = JSON(data: result)
@@ -360,7 +360,7 @@ extension SearchVC: UISearchResultsUpdating {
               theLocalizedMovieTitle: subJSON["trackName"].stringValue,
               theMovieGenre: subJSON["primaryGenreName"].stringValue,
               theMovieReleaseDate: Post.sharedInstance.getReformattedReleaseDate(subJSON["releaseDate"].stringValue),
-              theStandardPosterImageURL: Post.sharedInstance.getStandardPosterImageURL(subJSON["artworkUrl100"].stringValue)
+              theStandardPosterImageURL: ITunes.sharedInstance.getStandardPosterImageURL(subJSON["artworkUrl100"].stringValue)
             )
             self.searchResults.append(foundMovie)
           }

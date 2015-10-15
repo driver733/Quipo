@@ -24,7 +24,7 @@ class ProfileTopCell: UITableViewCell {
     @IBOutlet weak var watchedView: UIView!
     @IBOutlet weak var followingView: UIView!
     @IBOutlet weak var followersView: UIView!
-    @IBOutlet weak var unknownView: UIView!
+    @IBOutlet weak var userReviewsView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

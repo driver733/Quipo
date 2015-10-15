@@ -42,12 +42,10 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        /*
-        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
-        cell.userName.text = "Dachnik"
-        let url = NSURL(string: "http://da4nikam.ru/wp-content/uploads/2010/12/e5_1_b.jpg")
-        cell.userImage.setImageWithUrl(url!, placeHolderImage: nil)
-        */
+      
+      
+      
+      
         
             if indexPath.row == 0 {
               let cell = tableView.dequeueReusableCellWithIdentifier("ProfileTopCell", forIndexPath: indexPath) as! ProfileTopCell
@@ -61,18 +59,25 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
               cell.favouriteView.layer.masksToBounds = true
               cell.watchedView.layer.cornerRadius = 8
               cell.watchedView.layer.masksToBounds = true
-              cell.unknownView.layer.cornerRadius = 8
-              cell.unknownView.layer.masksToBounds = true
+              cell.userReviewsView.layer.cornerRadius = 8
+              cell.userReviewsView.layer.masksToBounds = true
               
-              cell.profileImageView.sd_setImageWithURL(NSURL(string: (PFUser.currentUser())!["bigProfileImage"] as! String), placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImageView.bounds.size), options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+              
+             
+              
+              cell.profileImageView.sd_setImageWithURL(NSURL(string: (PFUser.currentUser())!["bigProfileImage"] as! String), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImageView.bounds.size), options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
                 if let image = image where error == nil {
                   cell.profileImageView.image = Toucan(image: image).maskWithEllipse().image
                 }
               })
               
+              
 
-              cell.selectionStyle = .None
-            
+              cell.followingCount.text = String(UserSingelton.sharedInstance.following.count)
+              cell.followersCount.text = String(UserSingelton.sharedInstance.followers.count)
+              
+              
+              
               
               return cell
        }
@@ -83,7 +88,8 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
               case "following":
                 
                 let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
-                let user = (UserSingelton.sharedInstance.followedBy)[indexPath.row - 1]
+              
+                let user = (UserSingelton.sharedInstance.following)[indexPath.row - 1]
                 
                 cell.userName.text = user.username
                 cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -93,7 +99,7 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 }
                 cell.profileImage.sd_setImageWithURL(
                   NSURL(string: user.profileImageURL!),
-                  placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+                  placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
                   options: SDWebImageOptions.RefreshCached,
                   completed:{
                     (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
@@ -105,6 +111,42 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
                 
                 return cell
+                
+                
+                
+              case "followers":
+                
+                let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
+                let user = (UserSingelton.sharedInstance.followers)[indexPath.row - 1]
+                
+                cell.userName.text = user.username
+                cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
+                if user.isFollowed == true {
+                  cell.followButton.setTitle("following", forState: .Normal)
+                  cell.followButton.setTitleColor(.greenColor(), forState: .Normal)
+                }
+                cell.profileImage.sd_setImageWithURL(
+                  NSURL(string: user.profileImageURL!),
+                  placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
+                  options: SDWebImageOptions.RefreshCached,
+                  completed:{
+                    (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+                    if image != nil {
+                      cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+                    }
+                  }
+                )
+                
+                
+                return cell
+
+                
+                
+                
+                
+                
+                
+                
 
               default:
                 return UITableViewCell()
@@ -137,10 +179,23 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    switch viewSelected {
       
-    if viewSelected == "following" {
-      return UserSingelton.sharedInstance.followedBy.count + 1
+      case "userReviews":
+      return 0
+      
+      case "following":
+      return UserSingelton.sharedInstance.following.count + 1
+      
+      case "followers":
+      return UserSingelton.sharedInstance.followers.count + 1
+      
+    default: break
     }
+    
+    
+   
     return 1
   }
   
@@ -166,24 +221,28 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 */
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+      super.viewDidLoad()
 
-        
-        
+    
+      tableView.registerNib(UINib(nibName: "ProfileTopCell", bundle: nil), forCellReuseIdentifier: "ProfileTopCell")
+      tableView.registerNib(UINib(nibName: "ProfileUserReviews", bundle: nil), forCellReuseIdentifier: "ProfileUserReviews")   
+      tableView.registerNib(UINib(nibName: "ProfileFollowerCell", bundle: nil), forCellReuseIdentifier: "ProfileFollowerCell")
+      tableView.delegate = self
+      tableView.dataSource = self
+      tableView.rowHeight = UITableViewAutomaticDimension;
+      tableView.estimatedRowHeight = 44.0;
+ 
+      shyNavBarManager.scrollView = self.tableView
+  
       
-        
-          tableView.registerNib(UINib(nibName: "ProfileTopCell", bundle: nil), forCellReuseIdentifier: "ProfileTopCell")
-          tableView.registerNib(UINib(nibName: "ProfileUserReviews", bundle: nil), forCellReuseIdentifier: "ProfileUserReviews")   
-          tableView.registerNib(UINib(nibName: "ProfileFollowerCell", bundle: nil), forCellReuseIdentifier: "ProfileFollowerCell")
-          tableView.delegate = self
-          tableView.dataSource = self
-          tableView.rowHeight = UITableViewAutomaticDimension;
-          tableView.estimatedRowHeight = 44.0;
-     
-          shyNavBarManager.scrollView = self.tableView
-        
-        
-        
+      self.navigationController?.navigationBar.barTintColor = UIColor.quipoColor()
+    
+      self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+      
+      
+      
+      
+      
           //      self.automaticallyAdjustsScrollViewInsets = false
         
         
@@ -253,11 +312,12 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 
                 viewPoint = newCell.followersView.convertPoint(location, fromView: tableView)
                 if newCell.followersView.pointInside(viewPoint, withEvent: nil) {
-                  
+                  viewSelected = "followers"
+                  tableView.reloadData()
                 }
                 
-                viewPoint = newCell.unknownView.convertPoint(location, fromView: tableView)
-                if newCell.unknownView.pointInside(viewPoint, withEvent: nil){
+                viewPoint = newCell.userReviewsView.convertPoint(location, fromView: tableView)
+                if newCell.userReviewsView.pointInside(viewPoint, withEvent: nil){
                 }
                 
                 
@@ -296,3 +356,15 @@ class ProfileVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
 
 }
+
+
+
+extension UICollectionViewDataSource {
+  
+}
+
+
+
+
+
+

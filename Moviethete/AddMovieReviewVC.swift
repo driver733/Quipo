@@ -10,6 +10,7 @@ import UIKit
 import Bolts
 import HCSStarRatingView
 import SwiftValidator
+import Parse
 
 class AddMovieReviewVC: UIViewController {
   
@@ -34,7 +35,7 @@ class AddMovieReviewVC: UIViewController {
       self.navigationItem.setRightBarButtonItem(UIBarButtonItem(title: "Post", style: UIBarButtonItemStyle.Done, target: self, action: Selector("didEndEditingReview")), animated: true)
       
       
-      if let _ = passedReview {
+      if passedReview != nil {
         self.title = "Edit Review"
       }
     }
@@ -53,8 +54,8 @@ class AddMovieReviewVC: UIViewController {
     
     
     
-    if ((tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! ReviewCell).reviewText.text.isEmpty ||
-      (tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! ReviewCell).reviewText.text == "Tell your friends what you think about the movie...") {
+    if ((tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! ReviewTextCell).review.text.isEmpty ||
+      (tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! ReviewTextCell).review.text == "Tell your friends what you think about the movie...") {
         let alert = UIAlertController(title: "Missing review", message: "Please enter your review", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
@@ -62,26 +63,38 @@ class AddMovieReviewVC: UIViewController {
     }
     
     
-    postReview()
-  }
-  
-  
-  func postReview() {
-    
     let starRatingCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! StarRating
     let reviewTitleCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! TitleCell
-    let reviewCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! ReviewCell
+    let reviewCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! ReviewTextCell
     
-    
-    
-    
-    UserReview.sharedInstance.uploadReview(post, rating: Int(starRatingCell.rating.value), reviewTitle: reviewTitleCell.reviewTitle.text!, review: reviewCell.reviewText.text).continueWithBlock { (task: BFTask!) -> AnyObject! in
-      self.dismissViewControllerAnimated(true, completion: nil)
-      return nil
+    if passedReview != nil {
+      let reviewObject =  PFObject(withoutDataWithClassName: "Post", objectId: passedReview?.pfObject?.objectId!)
+  
+      let userReview = NSMutableArray()
+      userReview.addObject(Int(starRatingCell.rating.value))
+      userReview.addObject(reviewTitleCell.reviewTitle.text!)
+      userReview.addObject(reviewCell.review.text)
+  
+      reviewObject["userReview"] = userReview
+      reviewObject.saveInBackground().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+        self.dismissViewControllerAnimated(true, completion: nil)
+        return nil
+      })
+    } else {
+      UserReview.sharedInstance.uploadReview(post, rating: Int(starRatingCell.rating.value), reviewTitle: reviewTitleCell.reviewTitle.text!, review: reviewCell.review.text).continueWithBlock { (task: BFTask!) -> AnyObject! in
+        self.dismissViewControllerAnimated(true, completion: nil)
+        return nil
+      }
     }
-    
-    
   }
+  
+  
+ 
+    
+  
+    
+    
+  
   
   func dismiss() {
     self.dismissViewControllerAnimated(true, completion: nil)

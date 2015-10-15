@@ -8,11 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		8F0E79DB1B73FA9800C730AF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F0E79D91B73FA9800C730AF /* LaunchScreen.xib */; };
+		8F29757D1BCDFC41008E47F3 /* ITunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F29757C1BCDFC41008E47F3 /* ITunes.swift */; settings = {ASSET_TAGS = (); }; };
 		8F2AD4871BCA06C80037DAFE /* ReviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F2AD4851BCA06C80037DAFE /* ReviewCell.xib */; settings = {ASSET_TAGS = (); }; };
 		8F2C49AC1B99EFFF00535079 /* UserReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2C49AB1B99EFFF00535079 /* UserReview.swift */; };
-		8F327CEF1BC4D0EB00946606 /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F327CEE1BC4D0EB00946606 /* ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8F327CF11BC4D1C500946606 /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F327CF01BC4D1C500946606 /* ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8F327CF21BC4D1C500946606 /* ITunesSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8F327CF01BC4D1C500946606 /* ITunesSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8F44554B1B92A9C400FB1541 /* DetailedPostMainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F44554A1B92A9C400FB1541 /* DetailedPostMainCell.xib */; };
 		8F44554D1B92B46E00FB1541 /* DetailedPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F44554C1B92B46E00FB1541 /* DetailedPostCell.swift */; };
 		8F44554F1B92DC6900FB1541 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F44554E1B92DC6900FB1541 /* Main.storyboard */; };
@@ -68,6 +66,8 @@
 		8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB871A91B80FB9E00256787 /* SearchResultCell.swift */; };
 		8FB871AC1B80FB9E00256787 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */; };
 		8FBA93C81BA6117300D6F154 /* LinkedAccountsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBA93C71BA6117300D6F154 /* LinkedAccountsVC.swift */; };
+		8FCA04531BCB4F00005B0DB8 /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F327CF01BC4D1C500946606 /* ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8FCA04541BCB4F00005B0DB8 /* ITunesSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8F327CF01BC4D1C500946606 /* ITunesSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8FD456D31B85793200945E3E /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD456D21B85793200945E3E /* Toucan.swift */; };
 		8FF20B551B940B540067AFB7 /* UIImageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF20B541B940B540067AFB7 /* UIImageColors.swift */; };
 		EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAECE6804A560D6747EC5E20 /* Pods_Moviethete.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -91,13 +91,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		8F327CF31BC4D1C500946606 /* Embed Frameworks */ = {
+		8FCA04551BCB4F00005B0DB8 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8F327CF21BC4D1C500946606 /* ITunesSwift.framework in Embed Frameworks */,
+				8FCA04541BCB4F00005B0DB8 /* ITunesSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -108,6 +108,7 @@
 		2AE186941922961479F9BCB9 /* Pods-Moviethete.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.debug.xcconfig"; sourceTree = "<group>"; };
 		6A66909234E5A995E96035A1 /* Pods-Moviethete.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.release.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.release.xcconfig"; sourceTree = "<group>"; };
 		8F0E79D91B73FA9800C730AF /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		8F29757C1BCDFC41008E47F3 /* ITunes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunes.swift; sourceTree = "<group>"; };
 		8F2AD4851BCA06C80037DAFE /* ReviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReviewCell.xib; sourceTree = "<group>"; };
 		8F2C49AB1B99EFFF00535079 /* UserReview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserReview.swift; sourceTree = "<group>"; };
 		8F327CEE1BC4D0EB00946606 /* ITunesSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ITunesSwift.framework; path = "Externals/iTunesSwift/build/Release-iphoneos/ITunesSwift.framework"; sourceTree = "<group>"; };
@@ -186,9 +187,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F327CEF1BC4D0EB00946606 /* ITunesSwift.framework in Frameworks */,
+				8FCA04531BCB4F00005B0DB8 /* ITunesSwift.framework in Frameworks */,
 				8F534F161BC0DF4400E0612B /* SystemConfiguration.framework in Frameworks */,
-				8F327CF11BC4D1C500946606 /* ITunesSwift.framework in Frameworks */,
 				8F534F141BC0DF3800E0612B /* StoreKit.framework in Frameworks */,
 				8F534F121BC0DF3100E0612B /* AddressBook.framework in Frameworks */,
 				EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */,
@@ -385,6 +385,7 @@
 				8F70DA0F1B9D412B0065E791 /* UserSingleton.swift */,
 				8F8504091B9EB42B003F4DC8 /* FollowFriends.swift */,
 				8F7FF4971B73F2AB001317E2 /* Post.swift */,
+				8F29757C1BCDFC41008E47F3 /* ITunes.swift */,
 				8F2C49AB1B99EFFF00535079 /* UserReview.swift */,
 			);
 			name = Model;
@@ -443,7 +444,7 @@
 				130D33E29F56BF307D79DC1F /* Embed Pods Frameworks */,
 				7C1AED9618BCA0587ADD5506 /* Copy Pods Resources */,
 				8F4F97C41B7418E5006CA7C9 /* ShellScript */,
-				8F327CF31BC4D1C500946606 /* Embed Frameworks */,
+				8FCA04551BCB4F00005B0DB8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -655,6 +656,7 @@
 				8F70DA0E1B9D3E590065E791 /* User.swift in Sources */,
 				8F893F031B993E0F005D8305 /* TitleCell.swift in Sources */,
 				8F7FF4BC1B73F2AB001317E2 /* Cell.swift in Sources */,
+				8F29757D1BCDFC41008E47F3 /* ITunes.swift in Sources */,
 				8F7FF4B81B73F2AB001317E2 /* TopCell.swift in Sources */,
 				8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */,
 				8F7FF4B51B73F2AB001317E2 /* ProfileTopCell.swift in Sources */,

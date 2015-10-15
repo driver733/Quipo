@@ -121,7 +121,7 @@ extension DetailedSettingsVC: UITableViewDataSource {
     }
     cell.profileImage.sd_setImageWithURL(
       NSURL(string: user.profileImageURL!),
-      placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+      placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
       options: SDWebImageOptions.RefreshCached,
       completed:{
         (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in

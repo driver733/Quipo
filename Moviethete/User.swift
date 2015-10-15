@@ -31,6 +31,7 @@ struct User {
   var profileImageURL: String?
   var pfUser: PFUser?
   var isFollowed: Bool?
+  var isFollowedBy: Bool?
   
   
   init(theUsername: String, theProfileImageURL: String, thePfUser: PFUser) {

@@ -43,6 +43,11 @@ extension UIColor {
     return UIColor(r: 240, g: 240, b: 240)
   }
   
+  class func quipoColor() -> UIColor {
+    return UIColor(r: 103, g: 80, b: 182)
+  }
+  
+  
   
   
 }
@@ -66,17 +71,22 @@ class FeedVC: UIViewController {
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 44.0
     shyNavBarManager.scrollView = self.tableView
-    refresh(nil)
+    
   
     refreshControl.attributedTitle = NSAttributedString(string: "Last updated at:")
     refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
     tableView?.addSubview(refreshControl)
 
-    UserSingelton.sharedInstance.loadFollowFriendsData()
+    
     
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+    self.navigationController?.navigationBar.barTintColor = UIColor.quipoColor()
     
-   
+    
+    
+    UserSingelton.sharedInstance.loadFollowFriendsData()
+    refresh(nil)
+    
   }
   
   
@@ -88,12 +98,12 @@ class FeedVC: UIViewController {
       if self.navigationController!.viewControllers[0].isKindOfClass(SearchVC) {
         self.navigationController?.navigationBar.subviews[1].hidden = true             // hide search bar if it is present
       }
-      self.navigationController?.navigationBar.barTintColor = UIColor(r: 96, g: 160, b: 172)
+      self.navigationController?.navigationBar.barTintColor = UIColor.quipoColor()
       self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
       self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
       },
       completion: { (completionContext: UIViewControllerTransitionCoordinatorContext) -> Void in
-        self.navigationController?.navigationBar.barTintColor = UIColor(r: 96, g: 160, b: 172)
+        self.navigationController?.navigationBar.barTintColor = UIColor.quipoColor()
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
     })
@@ -105,7 +115,7 @@ class FeedVC: UIViewController {
 
   Post.sharedInstance.feedPosts.removeAll() // temporary
 
-  Post.sharedInstance.loadFeedPosts().continueWithBlock {
+  Post.sharedInstance.startLoadingFeedPosts().continueWithBlock {
   (task: BFTask!) -> AnyObject! in
     if task.error == nil {
       Async.main {

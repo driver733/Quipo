@@ -19,6 +19,7 @@ public struct UserReview {
   
   var selectedMovieReviews = [UserReview]()
   
+  
   var pfUser: PFUser?
   /// The star rating representation. Takes Int values from 1 to 5.
   var starRating: Int?
@@ -54,9 +55,16 @@ public struct UserReview {
   
   
   
+  
+  
+ 
+  
+  
+  
+  
   func uploadReview(post: Post, rating: Int, reviewTitle: String, review: String) -> BFTask {
     let mainTask = BFTaskCompletionSource()
-    let reviewsRelation = PFUser.currentUser()?.relationForKey("posts")
+    
     let parsePost = PFObject(className: "Post")
     parsePost["userReview"] = [rating, reviewTitle, review]
     parsePost["trackID"] = post.trackID!
@@ -64,8 +72,10 @@ public struct UserReview {
     parsePost["createdByObjectId"] = PFUser.currentUser()!.objectId!
     parsePost.saveInBackground().continueWithBlock { (task: BFTask!) -> AnyObject! in
       if task.error == nil {
+        let reviewsRelation = PFUser.currentUser()?.relationForKey("posts")
         reviewsRelation?.addObject(parsePost)
-        
+        let feedRelation = PFUser.currentUser()?.relationForKey("feed")
+        feedRelation?.addObject(parsePost)
         return PFUser.currentUser()?.saveInBackground()
       } else {
         mainTask.setError(task.error)

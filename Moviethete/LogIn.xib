@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9046" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -17,7 +17,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LogInVC" customModule="Moviethete" customModuleProvider="target">
             <connections>
                 <outlet property="orLabel" destination="zh7-6j-FR2" id="hnA-5Q-TiB"/>
-                <outlet property="shareThoughtsLabel" destination="yXc-wv-wjU" id="qbO-GM-lWg"/>
                 <outlet property="signInButton" destination="tbo-kA-iVF" id="IdV-dz-F8D"/>
                 <outlet property="signInOrUp" destination="xx7-XN-ka9" id="y9k-fi-Edp"/>
                 <outlet property="signInTableView" destination="EYR-Hr-Mu4" id="blM-LI-rUM"/>
@@ -121,7 +120,7 @@
                                     <animations/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="21"/>
                                     <state key="normal" title="SIGN UP">
-                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
                                         <action selector="signUpButton:" destination="-1" eventType="touchUpInside" id="J4x-ty-YEn"/>
@@ -187,24 +186,12 @@
                                         <constraint firstAttribute="width" constant="15" id="e9a-pE-P5R"/>
                                     </constraints>
                                 </view>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign Up and start sharing your thoughts" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yXc-wv-wjU">
-                                    <rect key="frame" x="125" y="213" width="350" height="50"/>
-                                    <animations/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="350" id="5Lj-Pn-phv"/>
-                                        <constraint firstAttribute="height" constant="50" id="uu8-55-7bp"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="51n-yd-fzF">
                                     <rect key="frame" x="476" y="260" width="79" height="38"/>
                                     <animations/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="21"/>
                                     <state key="normal" title="SIGN IN">
-                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
                                         <action selector="signInButton:" destination="-1" eventType="touchUpInside" id="zTJ-UN-UfW"/>
@@ -244,11 +231,9 @@
                                 <constraint firstItem="QgG-tD-swQ" firstAttribute="width" secondItem="rBQ-D7-yox" secondAttribute="width" id="Wxw-zu-rwe"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="centerX" secondItem="zh7-6j-FR2" secondAttribute="centerX" id="YJu-pY-WxX"/>
                                 <constraint firstItem="SiO-1K-INM" firstAttribute="leading" secondItem="P2m-Kb-aRc" secondAttribute="leading" constant="10" id="YWg-G4-rPw"/>
-                                <constraint firstItem="4KA-M0-isf" firstAttribute="centerX" secondItem="yXc-wv-wjU" secondAttribute="centerX" id="Ycf-Ae-4xT"/>
                                 <constraint firstItem="hVL-Z3-PbK" firstAttribute="top" secondItem="tbo-kA-iVF" secondAttribute="bottom" constant="-6" id="Yvu-7v-dXm"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="centerX" secondItem="zh7-6j-FR2" secondAttribute="centerX" constant="2" id="Zpr-XL-hdD"/>
                                 <constraint firstItem="MV3-CK-GJR" firstAttribute="leading" secondItem="P2m-Kb-aRc" secondAttribute="leading" id="aLM-G3-56Q"/>
-                                <constraint firstItem="yXc-wv-wjU" firstAttribute="top" secondItem="4KA-M0-isf" secondAttribute="bottom" constant="-87" id="bhB-tR-fWU"/>
                                 <constraint firstAttribute="trailing" secondItem="MV3-CK-GJR" secondAttribute="trailing" id="csN-e5-Vou"/>
                                 <constraint firstAttribute="trailing" secondItem="4KA-M0-isf" secondAttribute="trailing" id="csT-zf-BLX"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="top" secondItem="MV3-CK-GJR" secondAttribute="bottom" constant="-7" id="dZf-1r-M9x"/>
@@ -330,7 +315,7 @@
         <image name="facebook" width="106" height="106"/>
         <image name="google" width="106" height="106"/>
         <image name="instagram" width="106" height="106"/>
-        <image name="login_background" width="621" height="621"/>
+        <image name="login_background" width="1000" height="1000"/>
         <image name="twitter" width="106" height="106"/>
         <image name="vk" width="106" height="106"/>
     </resources>

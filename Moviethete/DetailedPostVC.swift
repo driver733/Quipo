@@ -42,7 +42,7 @@ class DetailedPostVC: UIViewController {
     
     self.view = tableView
     
-    self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.lightGrayColor(), size: (CGSizeMake(0.35, 0.35))))
+    self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.placeholderColor(), size: (CGSizeMake(0.35, 0.35))))
     
     
     
@@ -107,13 +107,13 @@ class DetailedPostVC: UIViewController {
     // do only after posting a review!
     
     Post.sharedInstance.loadMovieReviewsForMovie((passedPost?.trackID)!).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      if !UserReview.sharedInstance.selectedMovieReviews.isEmpty {
-        self.putFeedReviewToTheBeginning()
+      if self.userHasReviewForSelectedMovie() {
         self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "addPost"), animated: false)
-        self.tableView.reloadData()
       } else {
         self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: "addPost"), animated: false)
       }
+      self.putFeedReviewToTheBeginning()
+      self.tableView.reloadData()
       //     self.stopLoginActivityIndicator()
       return nil
     }
@@ -122,6 +122,16 @@ class DetailedPostVC: UIViewController {
    
     
     
+  }
+  
+  // Move to Singleton
+  func userHasReviewForSelectedMovie() -> Bool {
+    for review in UserReview.sharedInstance.selectedMovieReviews {
+      if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+        return true
+      }
+    }
+    return false
   }
   
   
@@ -200,7 +210,7 @@ extension DetailedPostVC: UITableViewDataSource {
     case 0:
       let cell = tableView.dequeueReusableCellWithIdentifier("detailedPostCell", forIndexPath: indexPath) as! DetailedPostCell
       cell.posterImage.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!),
-        placeholderImage: getImageWithColor(UIColor.lightGrayColor(),size: cell.posterImage.bounds.size))
+        placeholderImage: getImageWithColor(UIColor.placeholderColor(),size: cell.posterImage.bounds.size))
       cell.movieInfo.text = passedPost?.movieGenre
       cell.movieInfo.textColor = textColor
       return cell
@@ -212,7 +222,7 @@ extension DetailedPostVC: UITableViewDataSource {
           let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
           cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
           cell.profileImage.sd_setImageWithURL(NSURL(string: (review.pfUser!["smallProfileImage"] as! String)),
-            placeholderImage: getImageWithColor(UIColor.lightGrayColor(), size: cell.profileImage.bounds.size),
+            placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
             options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, erro: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
               cell.profileImage.image = Toucan(image: image).maskWithEllipse().image
           })

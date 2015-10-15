@@ -66,6 +66,8 @@ import Async
     
     
     
+    var allUserPosts = [Post]()
+    
     
   
     init() {}
@@ -98,7 +100,7 @@ import Async
     
     
     
-  private func getTimeSincePostedfromDate(datePosted: NSDate) -> String {
+  func getTimeSincePostedfromDate(datePosted: NSDate) -> String {
     dateFormat.dateFormat = "EEE, MMM d, h:mm a"
     let ti = NSDate().timeIntervalSinceDate(datePosted)
     
@@ -155,87 +157,57 @@ import Async
     
     
     
-  mutating func loadFeedPosts() -> BFTask {
-    let mainTask = BFTaskCompletionSource()
+ 
     
-   
-    let user = PFUser.currentUser()!
-    let relation = user.relationForKey("feed")
-    let query = relation.query()
-    query?.includeKey("createdBy")
     
-    query?.addDescendingOrder("createdAt")
     
-    query?.findObjectsInBackground().continueWithBlock({ (task: BFTask!) -> AnyObject! in
-      var tasks = [BFTask]()
-      if task.error == nil, let result = task.result {
-        let posts = result as! [PFObject]
-        
-        for post in posts {
-          let postReview = post["userReview"] as! NSArray
-          let postAuthor = post["createdBy"] as! PFUser
-          
-          var tempPost = Post(
-            thePFObject: post,
-            theUserName: postAuthor.username!,
-            theTimeSincePosted: self.getTimeSincePostedfromDate(post.createdAt!),
-            theProfilImageURL: postAuthor["smallProfileImage"] as! String,
-            theTrackID: post["trackID"] as! Int,
-            theRating: postReview[0] as! Int,
-            theReviewTitle: postReview[1] as! String,
-            theReview: postReview[2] as! String
-          )
-          Post.sharedInstance.feedPosts.append(tempPost)
-          tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))    // crashes! 
-         }
-        
+    
+    
+    
+    
+    
+    
+    
+    func startLoadingFeedPosts() -> BFTask {
+      let mainTask = BFTaskCompletionSource()
+      let query = PFUser.currentUser()?.relationForKey("feed").query()
+      ITunes.sharedInstance.startLoadingItunesDataFor(query!) { (posts) -> Void in
+        Post.sharedInstance.feedPosts = posts
+        mainTask.setResult(nil)
       }
-      
-      return BFTask(forCompletionOfAllTasksWithResults: tasks)
-    }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
-    
-
-        let results = task.result as! NSArray    // crashes!
-      
-      for (index, postData) in results.enumerate() {
-        let json = JSON(data: postData as! NSData)
-        Post.sharedInstance.feedPosts[index].bigPosterImageURL = self.getBigPosterImageURL(json["artworkUrl100"].stringValue)
-        Post.sharedInstance.feedPosts[index].standardPosterImageURL = self.getStandardPosterImageURL(json["artworkUrl100"].stringValue)
-        Post.sharedInstance.feedPosts[index].movieTitle = json["trackName"].stringValue
-      }
-      
-      
-      
-      
-      
-      mainTask.setResult(nil)
-      return nil
-    })
-    
-    return mainTask.task
+      return mainTask.task
     }
     
-    func getMovieInfoByTitleAtCountry(movieTitle: String, country: String) -> BFTask {
-      let task = BFTaskCompletionSource()
-      ITunesApi.find(Entity.Movie).by(movieTitle).at(country).request({ (responseString: String?, error: NSError?) -> Void in
-        if
-          //     error == nil,
-          let responseString = responseString,
-          let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            let json = JSON(data: dataFromString)
-            do {
-           try  task.setResult(json["results"].rawData())
-            }
-            catch {
-              
-            }
-        } else {
-          task.setError(error)
-      
-        }
-      })
-      return task.task
+    
+    
+    
+    
+    func startLoadingAllUserPosts() -> BFTask {
+      let mainTask = BFTaskCompletionSource()
+      let query = PFUser.currentUser()?.relationForKey("posts").query()
+      ITunes.sharedInstance.startLoadingItunesDataFor(query!) { (posts) -> Void in
+        Post.sharedInstance.allUserPosts = posts
+        mainTask.setResult(nil)
+      }
+      return mainTask.task
     }
+    
+    
+    
+    
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -298,55 +270,7 @@ import Async
     
     
     
-    
-    func getMovieInfoByITunesID(iTunesID: Int) -> BFTask {
-      let task = BFTaskCompletionSource()
-      ITunesApi.lookup(iTunesID).request({ (responseString: String?, error: NSError?) -> Void in
-        if
-          //        error == nil,
-          let responseString = responseString, let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-           let json = JSON(data: dataFromString)
-            
-            do {
-             try task.setResult(json["results"][0].rawData())
-            }
-            catch {
-              
-            }
-            
-          //  task.setResult(json["results"].arrayObject)
-        } else {
-          // process error
-        }
-      })
-      return task.task
-    }
-  
-    
-  func getTinyPosterImageURL(defaultPosterImageURL: String) -> String {
-    var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "50x50-75")
-    return str
-  }
-    
-  func getSmallPosterImageURL(defaultPosterImageURL: String) -> String {
-    var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
-    return str
-  }
-    
-  func getStandardPosterImageURL(defaultPosterImageURL: String) -> String {
-    var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
-    return str
-  }
-    
-  func getBigPosterImageURL(defaultPosterImageURL: String) -> String {
-    var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "600x600-85")
-    return str
-  }
-    
+        
 
 
 
