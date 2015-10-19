@@ -30,6 +30,68 @@ extension UIViewController {
       return image
   }
   
+  func getPrimaryPosterImageColorAndtextColor(posterImage: UIImage) -> [UIColor] {
+    
+    var returnColors = [UIColor]()
+    let uiColor = posterImage.getColors(CGSizeMake(50, 50)).primaryColor
+    
+    let newColor = testColor(uiColor)
+    
+    if newColor != "normal" {
+      let backgroundUiColor = posterImage.getColors(CGSizeMake(50, 50)).backgroundColor
+      let testBackroundColor = testColor(backgroundUiColor)
+      
+      if testBackroundColor != "normal" {
+        
+        if testBackroundColor == "black" {
+          returnColors.append(UIColor.whiteColor())
+          returnColors.append(backgroundUiColor)
+          return returnColors
+          
+        } else {
+          returnColors.append(UIColor.blackColor())
+          returnColors.append(backgroundUiColor)
+          return returnColors
+        }
+        
+      } else {
+        returnColors.append(UIColor.whiteColor())
+        returnColors.append(backgroundUiColor)
+        return returnColors
+      }
+      
+    } else {
+      returnColors.append(UIColor.whiteColor())
+      returnColors.append(uiColor)
+      return returnColors
+    }
+    
+  }
+  
+   func testColor(theColor: UIColor) -> String {
+    
+    let color = theColor.CGColor
+    let numComponents = CGColorGetNumberOfComponents(color)
+    
+    if numComponents == 4 {
+      let components = CGColorGetComponents(color)
+      let red = components[0]
+      let green = components[1]
+      let blue = components[2]
+      
+      if red < 0.3 && green < 0.3 && blue < 0.3 {
+        return "black"
+      } else if red > 0.7 && green > 0.7 && blue > 0.7 {
+        return "white"
+      } else {
+        return "normal"
+      }
+    }
+    return ""
+  }
+  
+  
+  
 }
 
 
@@ -73,7 +135,7 @@ class FeedVC: UIViewController {
     shyNavBarManager.scrollView = self.tableView
     
   
-    refreshControl.attributedTitle = NSAttributedString(string: "Last updated at:")
+   // refreshControl.attributedTitle = NSAttributedString(string: "Last updated at:")
     refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
     tableView?.addSubview(refreshControl)
 
@@ -113,16 +175,16 @@ class FeedVC: UIViewController {
   
   func refresh(sender: AnyObject?) {
 
-  Post.sharedInstance.feedPosts.removeAll() // temporary
 
   Post.sharedInstance.startLoadingFeedPosts().continueWithBlock {
   (task: BFTask!) -> AnyObject! in
     if task.error == nil {
+      
       Async.main {
         if self.refreshControl.refreshing {
           self.refreshControl.endRefreshing()
         }
-        self.tableView.reloadData()
+          self.tableView.reloadData()
       }
       return nil
     } else {
@@ -156,7 +218,7 @@ class FeedVC: UIViewController {
       vc.passedPost = post
       let posterImage = (tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as! ContentCell).posterImage.image!
       let resizedPosterImage = Toucan(image: posterImage).resize(CGSizeMake(50, 50), fitMode: Toucan.Resize.FitMode.Scale).image
-      let colors = Post.sharedInstance.getPrimaryPosterImageColorAndtextColor(resizedPosterImage)
+      let colors = getPrimaryPosterImageColorAndtextColor(resizedPosterImage)
       vc.passedColor = colors[1]
       vc.textColor = colors[0]
       
@@ -170,7 +232,7 @@ class FeedVC: UIViewController {
       let vc = segue.destinationViewController as? DetailedPostVC {
         if (tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!)?.isKindOfClass(TopCell) != nil) {
           vc.topCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as? TopCell
-          print(tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!))
+    
              vc.contentCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!.indexPathByAddingIndex(1)) as? ContentCell
         } else {
           vc.contentCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as? ContentCell
@@ -274,6 +336,7 @@ extension FeedVC: UITableViewDataSource {
     if (indexPath.row % 2 == 0) {
       
       let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
+      cell.selectionStyle = .None
       cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
       
       if Post.sharedInstance.feedPosts.count * 2 > indexPath.row {
@@ -382,7 +445,6 @@ extension FeedVC: UIScrollViewDelegate {
   }
   
 }
-
 
 
 

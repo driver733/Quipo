@@ -179,8 +179,8 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0n7-kL-dqP">
                         <rect key="frame" x="3" y="148" width="65" height="65"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="19" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m5g-OA-VIm">
-                                <rect key="frame" x="23" y="10" width="21" height="23"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="19" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m5g-OA-VIm">
+                                <rect key="frame" x="22" y="10" width="21" height="23"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -273,8 +273,8 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hL0-aw-zTz">
                         <rect key="frame" x="3" y="8" width="65" height="65"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="10" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dpm-pb-0cf">
-                                <rect key="frame" x="24" y="8" width="20" height="23"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="10" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dpm-pb-0cf">
+                                <rect key="frame" x="23" y="8" width="20" height="23"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -410,11 +410,12 @@
                 <outlet property="followingCount" destination="m5g-OA-VIm" id="zAe-eW-6rE"/>
                 <outlet property="followingView" destination="0n7-kL-dqP" id="hyN-Ym-pVn"/>
                 <outlet property="profileImageView" destination="Dx4-WL-zKg" id="E4h-Jc-WGH"/>
+                <outlet property="userReviewsCount" destination="dpm-pb-0cf" id="1In-qT-lvd"/>
                 <outlet property="userReviewsView" destination="hL0-aw-zTz" id="4ls-A2-xUd"/>
                 <outlet property="watchedCount" destination="190-ud-e2g" id="9la-We-wK0"/>
                 <outlet property="watchedView" destination="BSt-uz-Xfm" id="dFl-qb-gve"/>
             </connections>
-            <point key="canvasLocation" x="611" y="221"/>
+            <point key="canvasLocation" x="483" y="289"/>
         </tableViewCell>
     </objects>
 </document>

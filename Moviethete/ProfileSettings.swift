@@ -177,21 +177,21 @@ extension ProfileSettings: UITableViewDelegate {
       label.text = "Follow friends"
       return view
       
-    case 1:
-      label.text = "Account"
-      return view
+//    case 1:
+//      label.text = "Account"
+//      return view
       
     case 2:
       label.text = "Settings"
       return view
-      
-    case 3:
-      label.text = "Support"
-      return view
-      
-    case 4:
-      label.text = "About"
-      return view
+//      
+//    case 3:
+//      label.text = "Support"
+//      return view
+//      
+//    case 4:
+//      label.text = "About"
+//      return view
       
     case 5:
       label.text = ""      // Log Out
@@ -402,19 +402,24 @@ extension ProfileSettings: UITableViewDataSource {
       return UserSingelton.sharedInstance.followFriendsData.count
       
     case 1:
-      return 3
+      //return 3
+      return 0
       
     case 2:
-      return 4
+     // return 4
+      return 1
       
     case 3:
-      return 2
+   //   return 2
+      return 0
       
     case 4:
-      return 5
+//      return 5
+      return 0
       
     case 5:
-      return 2
+      // return 2
+      return 1
       
     default:
       break

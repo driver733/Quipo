@@ -131,27 +131,7 @@ import Async
     
     
     
-  private func testColor(theColor: UIColor) -> String {
-    
-    let color = theColor.CGColor
-    let numComponents = CGColorGetNumberOfComponents(color)
-    
-    if numComponents == 4 {
-      let components = CGColorGetComponents(color)
-      let red = components[0]
-      let green = components[1]
-      let blue = components[2]
-      
-      if red < 0.3 && green < 0.3 && blue < 0.3 {
-        return "black"
-      } else if red > 0.7 && green > 0.7 && blue > 0.7 {
-        return "white"
-      } else {
-        return "normal"
-      }
-    }
-    return ""
-  }
+
 
     
     
@@ -171,6 +151,7 @@ import Async
     func startLoadingFeedPosts() -> BFTask {
       let mainTask = BFTaskCompletionSource()
       let query = PFUser.currentUser()?.relationForKey("feed").query()
+      query?.addDescendingOrder("createdAt")
       ITunes.sharedInstance.startLoadingItunesDataFor(query!) { (posts) -> Void in
         Post.sharedInstance.feedPosts = posts
         mainTask.setResult(nil)
@@ -185,6 +166,7 @@ import Async
     func startLoadingAllUserPosts() -> BFTask {
       let mainTask = BFTaskCompletionSource()
       let query = PFUser.currentUser()?.relationForKey("posts").query()
+      query?.addDescendingOrder("createdAt")
       ITunes.sharedInstance.startLoadingItunesDataFor(query!) { (posts) -> Void in
         Post.sharedInstance.allUserPosts = posts
         mainTask.setResult(nil)
@@ -216,7 +198,7 @@ import Async
     
     
     func loadMovieReviewsForMovie(withTrackID: Int) -> BFTask {
-      UserReview.sharedInstance.selectedMovieReviews.removeAll(keepCapacity: false)
+      UserReview.sharedInstance.movieReviewsForSelectedMovie.removeAll(keepCapacity: false)
       
       let mainTask = BFTaskCompletionSource()
       var friendsObjectIDs = [String]()
@@ -253,7 +235,7 @@ import Async
             )
             reviews.append(tempReview)
           }
-          UserReview.sharedInstance.selectedMovieReviews = reviews
+          UserReview.sharedInstance.movieReviewsForSelectedMovie = reviews
           mainTask.setResult(nil)
         } else {
         mainTask.setError(nil)
@@ -285,48 +267,7 @@ import Async
     
     
     
-    
-    func getPrimaryPosterImageColorAndtextColor(posterImage: UIImage) -> [UIColor] {
-      
-      var returnColors = [UIColor]()
-      let uiColor = posterImage.getColors(CGSizeMake(50, 50)).primaryColor
-      
-      let newColor = testColor(uiColor)
-      
-      if newColor != "normal" {
-        let backgroundUiColor = posterImage.getColors(CGSizeMake(50, 50)).backgroundColor
-        let testBackroundColor = testColor(backgroundUiColor)
         
-        if testBackroundColor != "normal" {
-        
-          if testBackroundColor == "black" {
-            returnColors.append(UIColor.whiteColor())
-            returnColors.append(backgroundUiColor)
-            return returnColors
-      
-          } else {
-            returnColors.append(UIColor.blackColor())
-            returnColors.append(backgroundUiColor)
-            return returnColors
-          }
-          
-        } else {
-          returnColors.append(UIColor.whiteColor())
-          returnColors.append(backgroundUiColor)
-          return returnColors
-        }
-        
-      } else {
-        returnColors.append(UIColor.whiteColor())
-        returnColors.append(uiColor)
-        return returnColors
-      }
-      
-      
-      
-      
-    }
-    
     
     
     

@@ -134,7 +134,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-XN-ka9">
-                                    <rect key="frame" x="266" y="425" width="65" height="37"/>
+                                    <rect key="frame" x="268" y="425" width="65" height="37"/>
                                     <animations/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
                                     <state key="normal" title="Sign in">
@@ -229,7 +229,7 @@
                                 <constraint firstItem="51n-yd-fzF" firstAttribute="centerX" secondItem="P9a-7Y-WTb" secondAttribute="centerX" id="TpG-e9-3Wg"/>
                                 <constraint firstItem="4KA-M0-isf" firstAttribute="leading" secondItem="tbo-kA-iVF" secondAttribute="trailing" constant="-115" id="V3r-3b-nLW"/>
                                 <constraint firstItem="QgG-tD-swQ" firstAttribute="width" secondItem="rBQ-D7-yox" secondAttribute="width" id="Wxw-zu-rwe"/>
-                                <constraint firstItem="xx7-XN-ka9" firstAttribute="centerX" secondItem="zh7-6j-FR2" secondAttribute="centerX" id="YJu-pY-WxX"/>
+                                <constraint firstItem="xx7-XN-ka9" firstAttribute="centerX" secondItem="zh7-6j-FR2" secondAttribute="centerX" constant="1.5" id="YJu-pY-WxX"/>
                                 <constraint firstItem="SiO-1K-INM" firstAttribute="leading" secondItem="P2m-Kb-aRc" secondAttribute="leading" constant="10" id="YWg-G4-rPw"/>
                                 <constraint firstItem="hVL-Z3-PbK" firstAttribute="top" secondItem="tbo-kA-iVF" secondAttribute="bottom" constant="-6" id="Yvu-7v-dXm"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="centerX" secondItem="zh7-6j-FR2" secondAttribute="centerX" constant="2" id="Zpr-XL-hdD"/>

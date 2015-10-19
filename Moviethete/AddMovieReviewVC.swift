@@ -37,7 +37,12 @@ class AddMovieReviewVC: UIViewController {
       
       if passedReview != nil {
         self.title = "Edit Review"
+      } else {
+        self.title = "Write a Review"
       }
+      
+      
+      
     }
   
   
@@ -119,12 +124,14 @@ extension AddMovieReviewVC: UITableViewDataSource {
       } else {
         cell.rating.value = 1
       }
+      cell.selectionStyle = .None
       return cell
     case 1:
       let cell = tableView.dequeueReusableCellWithIdentifier("TitleCell", forIndexPath: indexPath) as! TitleCell
       if let currentUserReview = passedReview {
         cell.reviewTitle.text = currentUserReview.title!
       }
+      cell.selectionStyle = .None
       return cell
     case 2:
       let cell = tableView.dequeueReusableCellWithIdentifier("reviewTextCell", forIndexPath: indexPath) as! ReviewTextCell
@@ -133,6 +140,7 @@ extension AddMovieReviewVC: UITableViewDataSource {
         cell.review.textColor = UIColor.blackColor()
       }
       cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+      cell.selectionStyle = .None
       return cell
     default: break
     }

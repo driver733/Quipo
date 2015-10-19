@@ -20,15 +20,26 @@ class DetailedPostVC: UIViewController {
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
   
-  var passedPosterImage: UIImage? = nil
-  var passedMovieInfo = Dictionary<String, String>()
   var passedPost: Post? = nil
-  var passedColor = UIColor()
-  var textColor = UIColor()
-  var navBarShadowImage = UIImage()
-  var navBarBackgroundImage = UIImage()
+  var passedColor: UIColor? = nil
+  var textColor: UIColor? = nil
+  
+  lazy var currentUserReview: UserReview? = {
+    if !UserReview.sharedInstance.movieReviewsForSelectedMovie.isEmpty {
+      if (UserReview.sharedInstance.movieReviewsForSelectedMovie[0].pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+        return UserReview.sharedInstance.movieReviewsForSelectedMovie[0]
+      } else {
+        if UserReview.sharedInstance.movieReviewsForSelectedMovie.count > 1 {
+          if (UserReview.sharedInstance.movieReviewsForSelectedMovie[0].pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+            return UserReview.sharedInstance.movieReviewsForSelectedMovie[1]
+          }
+        }
+      }
+    }
+    return nil
+  }()
 
-    
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -48,8 +59,7 @@ class DetailedPostVC: UIViewController {
     
     self.title = passedPost!.movieTitle!
     
-  
-    
+     tableView.tableFooterView = UIView(frame: CGRectZero)
     
   }
   
@@ -78,11 +88,21 @@ class DetailedPostVC: UIViewController {
   
   
   func addPost() {
-    performSegueWithIdentifier("addPost", sender: nil)
+    let vc = AddMovieReviewVC()
+    vc.post = passedPost!
+    if let review = currentUserReview {
+      vc.passedReview = review
+    }
+    let navController = UINavigationController(rootViewController: vc)
+    self.presentViewController(navController, animated: true, completion: nil)
   }
   
   
   override func viewWillAppear(animated: Bool) {
+    
+  
+    if passedColor != nil && textColor != nil {
+    
     
     self.transitionCoordinator()?.animateAlongsideTransition({
       (context: UIViewControllerTransitionCoordinatorContext) -> Void in
@@ -91,14 +111,14 @@ class DetailedPostVC: UIViewController {
       }
       self.navigationController?.navigationBar.barTintColor = self.passedColor
       self.navigationController?.navigationBar.tintColor = self.textColor
-      self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : self.textColor]
+      self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : self.textColor!]
       },
       completion: { (completionContext: UIViewControllerTransitionCoordinatorContext) -> Void in
         self.navigationController?.navigationBar.barTintColor = self.passedColor
         self.navigationController?.navigationBar.tintColor = self.textColor
     })
     
-    
+      }
     
     //   startLoginActivityIndicator()
     
@@ -126,7 +146,7 @@ class DetailedPostVC: UIViewController {
   
   // Move to Singleton
   func userHasReviewForSelectedMovie() -> Bool {
-    for review in UserReview.sharedInstance.selectedMovieReviews {
+    for review in UserReview.sharedInstance.movieReviewsForSelectedMovie {
       if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
         return true
       }
@@ -150,7 +170,7 @@ class DetailedPostVC: UIViewController {
     
       var feedReviewIndex: Int? = Int()
       var currentUserReviewIndex: Int? = Int()
-      for (index, review) in UserReview.sharedInstance.selectedMovieReviews.enumerate() {
+      for (index, review) in UserReview.sharedInstance.movieReviewsForSelectedMovie.enumerate() {
         
         if (review.pfObject?.objectId)! == passedPostObjectId {
           feedReviewIndex = index
@@ -163,13 +183,13 @@ class DetailedPostVC: UIViewController {
       if let feedReviewIndex = feedReviewIndex {
         
         if let currentUserReviewIndex = currentUserReviewIndex {
-          UserReview.sharedInstance.selectedMovieReviews.insert(UserReview.sharedInstance.selectedMovieReviews.removeAtIndex(currentUserReviewIndex), atIndex: 0)
+          UserReview.sharedInstance.movieReviewsForSelectedMovie.insert(UserReview.sharedInstance.movieReviewsForSelectedMovie.removeAtIndex(currentUserReviewIndex), atIndex: 0)
         }
-        UserReview.sharedInstance.selectedMovieReviews.insert(UserReview.sharedInstance.selectedMovieReviews.removeAtIndex(feedReviewIndex), atIndex: 0)
+        UserReview.sharedInstance.movieReviewsForSelectedMovie.insert(UserReview.sharedInstance.movieReviewsForSelectedMovie.removeAtIndex(feedReviewIndex), atIndex: 0)
         
       } else {
         if let currentUserReviewIndex = currentUserReviewIndex {
-          UserReview.sharedInstance.selectedMovieReviews.insert(UserReview.sharedInstance.selectedMovieReviews.removeAtIndex(currentUserReviewIndex), atIndex: 0)
+          UserReview.sharedInstance.movieReviewsForSelectedMovie.insert(UserReview.sharedInstance.movieReviewsForSelectedMovie.removeAtIndex(currentUserReviewIndex), atIndex: 0)
         }
       }
       
@@ -188,7 +208,7 @@ class DetailedPostVC: UIViewController {
     if let vc = (segue.destinationViewController as? UINavigationController)?.viewControllers[0] as? AddMovieReviewVC {
       vc.post = passedPost!
       
-      for review in UserReview.sharedInstance.selectedMovieReviews {
+      for review in UserReview.sharedInstance.movieReviewsForSelectedMovie {
         if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
           vc.passedReview = review
         }
@@ -213,11 +233,12 @@ extension DetailedPostVC: UITableViewDataSource {
         placeholderImage: getImageWithColor(UIColor.placeholderColor(),size: cell.posterImage.bounds.size))
       cell.movieInfo.text = passedPost?.movieGenre
       cell.movieInfo.textColor = textColor
+      cell.selectionStyle = .None
       return cell
       
     default:
-      if !UserReview.sharedInstance.selectedMovieReviews.isEmpty {
-        let review = UserReview.sharedInstance.selectedMovieReviews[getCellPostIndex(indexPath.row - 1)]
+      if !UserReview.sharedInstance.movieReviewsForSelectedMovie.isEmpty {
+        let review = UserReview.sharedInstance.movieReviewsForSelectedMovie[getCellPostIndex(indexPath.row - 1)]
         if indexPath.row % 2 != 0 {
           let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
           cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
@@ -228,6 +249,7 @@ extension DetailedPostVC: UITableViewDataSource {
           })
           cell.userName.text = review.pfUser?.username
           cell.timeSincePosted.text = review.timeSincePosted
+          cell.selectionStyle = .None
           return cell
       }
         
@@ -235,6 +257,7 @@ extension DetailedPostVC: UITableViewDataSource {
         cell.reviewTitle.text = "- " + review.title!
         cell.reviewText.text = review.review!
         cell.rating.value = CGFloat(review.starRating!)
+        cell.selectionStyle = .None
         return cell
         
       }
@@ -244,7 +267,7 @@ extension DetailedPostVC: UITableViewDataSource {
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return UserReview.sharedInstance.selectedMovieReviews.count * 2 + 1
+    return UserReview.sharedInstance.movieReviewsForSelectedMovie.count * 2 + 1
   }
   
 }

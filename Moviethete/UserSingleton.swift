@@ -54,6 +54,9 @@ public struct UserSingelton {
   
   var isFromDetailedVC = false
   
+  var hasLoadedStartupData = false
+
+  
   
   // MARK: - Parse
   
@@ -107,10 +110,10 @@ public struct UserSingelton {
           } else {
             UserSingelton.sharedInstance.allFriends[i][j].isFollowed = false
           }
-          mainTask.setResult(nil)
+          
         }
       }
-      
+      mainTask.setResult(nil)
     }
     return mainTask.task
   }
@@ -129,19 +132,19 @@ public struct UserSingelton {
       
       for (socIndex, socialNetwork) in UserSingelton.sharedInstance.allFriends.enumerate() {
         for (userIndex, _) in socialNetwork.enumerate() {
+          
           if followersPfUserObjectIDs.contains((UserSingelton.sharedInstance.allFriends[socIndex][userIndex].pfUser?.objectId)!) {
             UserSingelton.sharedInstance.allFriends[socIndex][userIndex].isFollowedBy = true
           } else {
             UserSingelton.sharedInstance.allFriends[socIndex][userIndex].isFollowedBy = false
           }
-          mainTask.setResult(nil)
+          
         }
       }
-      
+      mainTask.setResult(nil)
       
     }
     return mainTask.task
-
   }
 
   
@@ -707,7 +710,7 @@ func getVKUsername() -> BFTask {
     UserSingelton.sharedInstance.followers.removeAll(keepCapacity: false)
     for socialNetwork in UserSingelton.sharedInstance.allFriends {
       for friend in socialNetwork {
-        if friend.isFollowedBy! {                                   // crash!
+        if friend.isFollowedBy {                                   // crash!
           UserSingelton.sharedInstance.followers.append(friend)
         }
       }
@@ -720,7 +723,7 @@ func getVKUsername() -> BFTask {
     UserSingelton.sharedInstance.following.removeAll(keepCapacity: false)
     for socialNetwork in UserSingelton.sharedInstance.allFriends {
       for friend in socialNetwork {
-        if friend.isFollowed! {                                   // crash!
+        if friend.isFollowed {                                   // crash!
           UserSingelton.sharedInstance.following.append(friend)
         }
       }
@@ -849,20 +852,22 @@ func getVKUsername() -> BFTask {
   
   
   
-  private func updateData() -> BFTask {
+   func updateData() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     UserSingelton.sharedInstance.sortAllFriends()
     UserSingelton.sharedInstance.loadFollowFriendsCells()
-    
     return BFTask(
       forCompletionOfAllTasks: [
         UserSingelton.sharedInstance.checkCurrentUserFollowingUsers(),
         UserSingelton.sharedInstance.checkCurrentUsersFollowers(),
-        FollowFriends.sharedInstance.loadLinkedAccountsData()
+        FollowFriends.sharedInstance.loadLinkedAccountsData(),
+        Post.sharedInstance.startLoadingAllUserPosts()
       ]
       ).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
         UserSingelton.sharedInstance.updateFollowers()
         UserSingelton.sharedInstance.updateFollowing()
+        UserSingelton.sharedInstance.hasLoadedStartupData = true
+        NSNotificationCenter.defaultCenter().postNotificationName("didFinishLoadingStartupData", object: nil)
         mainTask.setResult(nil)
         return nil
     }

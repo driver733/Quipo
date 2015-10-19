@@ -30,10 +30,10 @@ class StarRating: UITableViewCell {
 
     override func awakeFromNib() {
       super.awakeFromNib()
-      rating.emptyStarImage = getImageWithColor(UIColor.blackColor(), size: CGSizeMake(50, 50))
+     // rating.emptyStarImage = getImageWithColor(UIColor.blackColor(), size: CGSizeMake(50, 50))
       
-      rating.filledStarImage = getImageWithColor(UIColor.greenColor(), size: CGSizeMake(50, 50))
-      // Initialization code
+  //    rating.filledStarImage = getImageWithColor(UIColor.greenColor(), size: CGSizeMake(50, 50))
+
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

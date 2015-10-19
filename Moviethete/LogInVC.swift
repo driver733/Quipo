@@ -65,9 +65,9 @@ class LogInVC: UIViewController {
       signUpTriangle.hidden = false
       signInTriangle.hidden = true
       orLabel.text = "or Sign Up with:"
-
-      
+      signInOrUp.setTitle("Sign Up", forState: .Normal)
     }
+  
     @IBAction func signInButton(sender: AnyObject) {
       signUpTableView.hidden = true
       signInTableView.hidden = false
@@ -76,7 +76,7 @@ class LogInVC: UIViewController {
       signUpTriangle.hidden = true
       signInTriangle.hidden = false
       orLabel.text = "or Sign In with:"
-    
+      signInOrUp.setTitle("Sign In", forState: .Normal)
     }
     
     @IBAction func startLogin(sender: AnyObject) {
@@ -235,12 +235,10 @@ class LogInVC: UIViewController {
           
         })
       
-      
-      
-          
     }
     
-    
+  
+  
     func SignUp(){
         let user = PFUser()
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
@@ -254,16 +252,22 @@ class LogInVC: UIViewController {
         }
         user.password = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! Cell).textfield.text
         user.email = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text
+        user["smallProfileImage"] = "https://graph.facebook.com/133559250332613/picture?type=normal&width=100&height=100"
+        user["bigProfileImage"] = "https://graph.facebook.com/133559250332613/picture?type=normal&width=600&height=600"
         user.signUpInBackground().continueWithBlock {
           (task: BFTask!) -> AnyObject! in
           if task.error == nil {
-            self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+            Async.main {
+              self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+            }
           } else {
             switch task.error.code {
             case 202:
               alert.title = "Username already taken"   // "Or email is already taken. Have trouble logging in? " -> Needs to take into account email too.
               alert.message = "This username is already taken. Please use a different one."
-              self.presentViewController(alert, animated: true, completion: nil)
+              Async.main {
+                self.presentViewController(alert, animated: true, completion: nil)
+              }
             default: break
             }
 
@@ -428,6 +432,11 @@ extension LogInVC: ValidationDelegate {
   
   
   func validationSuccessful() {
+    if orLabel.text == "or Sign In with:" {
+      signIn()
+    } else {
+      SignUp()
+    }
   }
   
   

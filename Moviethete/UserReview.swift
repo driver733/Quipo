@@ -17,7 +17,7 @@ public struct UserReview {
   
   var pfObject: PFObject?
   
-  var selectedMovieReviews = [UserReview]()
+  var movieReviewsForSelectedMovie = [UserReview]()
   
   
   var pfUser: PFUser?
