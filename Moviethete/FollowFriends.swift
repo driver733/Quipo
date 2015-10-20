@@ -70,8 +70,8 @@ struct FollowFriends {
       
       var instagram = FollowFriends(theLocalIconName: "instagram", theServiceName: "Instagram", theUsername: "")
       
-      let instagramKeychain = UserSingelton.sharedInstance.instagramKeychain
-      if instagramKeychain["instagram"] != nil {
+      let linkedAccountsKeychain = UserSingelton.sharedInstance.linkedAccountsKeychain
+      if linkedAccountsKeychain["instagram"] != nil {
         let currentUser = task.result as! InstagramUser
         instagram.username = currentUser.username
         FollowFriends.sharedInstance.linkedAccounts.append(instagram)

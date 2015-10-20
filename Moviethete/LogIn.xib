@@ -51,14 +51,14 @@
                                     </variation>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rBQ-D7-yox">
-                                    <rect key="frame" x="482" y="482" width="108" height="108"/>
+                                    <rect key="frame" x="484" y="484" width="106" height="106"/>
                                     <animations/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="rBQ-D7-yox" secondAttribute="height" multiplier="1:1" id="Nuz-Is-Vd6"/>
                                         <constraint firstAttribute="height" relation="lessThanOrEqual" priority="750" constant="50" id="QCf-sb-U23"/>
+                                        <constraint firstAttribute="width" secondItem="rBQ-D7-yox" secondAttribute="height" multiplier="1:1" id="WAD-cO-eLA"/>
                                         <constraint firstAttribute="height" relation="lessThanOrEqual" constant="120" id="cDs-Rd-WUE"/>
                                         <constraint firstAttribute="height" constant="60" id="hf7-wI-iN2"/>
-                                        <constraint firstAttribute="width" secondItem="rBQ-D7-yox" secondAttribute="height" multiplier="1:1" id="qgP-Kf-dno"/>
                                     </constraints>
                                     <state key="normal" image="vk">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -75,44 +75,14 @@
                                         <action selector="loginWithVkontakte:" destination="-1" eventType="touchUpInside" id="yie-iv-RDU"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SiO-1K-INM">
-                                    <rect key="frame" x="10" y="482" width="108" height="108"/>
-                                    <animations/>
-                                    <state key="normal" image="facebook">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="loginWithFacebook:" destination="-1" eventType="touchUpInside" id="0PP-hc-RTQ"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QgG-tD-swQ">
-                                    <rect key="frame" x="128" y="482" width="108" height="108"/>
-                                    <animations/>
-                                    <state key="normal" image="twitter">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="buttonTwitterLogin:" destination="-1" eventType="touchUpInside" id="5fH-5h-HYc"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fbe-6n-APi">
-                                    <rect key="frame" x="364" y="482" width="108" height="108"/>
+                                    <rect key="frame" x="247" y="484" width="106" height="106"/>
                                     <animations/>
                                     <state key="normal" image="instagram">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
                                         <action selector="loginWithInstagram:" destination="-1" eventType="touchUpInside" id="bk2-lY-fHl"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vg9-mB-vR9">
-                                    <rect key="frame" x="246" y="482" width="108" height="108"/>
-                                    <animations/>
-                                    <state key="normal" image="google">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="loginWithGoogle:" destination="-1" eventType="touchUpInside" id="g95-2d-f0s"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tbo-kA-iVF">
@@ -127,14 +97,14 @@
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or Sign In with:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zh7-6j-FR2" userLabel="ORLabel">
-                                    <rect key="frame" x="232" y="453" width="133" height="24"/>
+                                    <rect key="frame" x="234" y="453" width="133" height="24"/>
                                     <animations/>
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-XN-ka9">
-                                    <rect key="frame" x="268" y="425" width="65" height="37"/>
+                                    <rect key="frame" x="270" y="425" width="65" height="37"/>
                                     <animations/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
                                     <state key="normal" title="Sign in">
@@ -197,68 +167,71 @@
                                         <action selector="signInButton:" destination="-1" eventType="touchUpInside" id="zTJ-UN-UfW"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SiO-1K-INM">
+                                    <rect key="frame" x="10" y="484" width="106" height="106"/>
+                                    <animations/>
+                                    <state key="normal" image="facebook">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="loginWithFacebook:" destination="-1" eventType="touchUpInside" id="0PP-hc-RTQ"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <animations/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="4KA-M0-isf" firstAttribute="leading" secondItem="tbo-kA-iVF" secondAttribute="trailing" constant="-124" id="0rf-8Z-0hl"/>
-                                <constraint firstItem="rBQ-D7-yox" firstAttribute="leading" secondItem="Fbe-6n-APi" secondAttribute="trailing" constant="10" id="1de-03-6cA"/>
+                                <constraint firstItem="Fbe-6n-APi" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SiO-1K-INM" secondAttribute="trailing" constant="10" id="0uS-la-gWd"/>
+                                <constraint firstItem="zh7-6j-FR2" firstAttribute="centerX" secondItem="Fbe-6n-APi" secondAttribute="centerX" id="2eb-fl-XLf"/>
                                 <constraint firstItem="51n-yd-fzF" firstAttribute="top" secondItem="4KA-M0-isf" secondAttribute="bottom" constant="-40" id="2uX-o4-DO3"/>
                                 <constraint firstItem="51n-yd-fzF" firstAttribute="top" secondItem="P9a-7Y-WTb" secondAttribute="bottom" constant="-50" id="3NU-rC-3MI"/>
+                                <constraint firstItem="rBQ-D7-yox" firstAttribute="top" secondItem="zh7-6j-FR2" secondAttribute="bottom" constant="7" id="3yP-nf-Dgf"/>
+                                <constraint firstItem="rBQ-D7-yox" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fbe-6n-APi" secondAttribute="trailing" constant="10" id="4aG-R2-aHb"/>
                                 <constraint firstItem="hVL-Z3-PbK" firstAttribute="top" secondItem="tbo-kA-iVF" secondAttribute="top" constant="30" id="4z2-fh-Vbz"/>
-                                <constraint firstItem="rBQ-D7-yox" firstAttribute="width" secondItem="Fbe-6n-APi" secondAttribute="width" id="5jZ-64-m7I"/>
-                                <constraint firstItem="Fbe-6n-APi" firstAttribute="leading" secondItem="Vg9-mB-vR9" secondAttribute="trailing" constant="10" id="7Xw-BR-c3A"/>
-                                <constraint firstItem="Vg9-mB-vR9" firstAttribute="centerY" secondItem="SiO-1K-INM" secondAttribute="centerY" id="9ab-LX-aUk"/>
-                                <constraint firstItem="QgG-tD-swQ" firstAttribute="leading" secondItem="SiO-1K-INM" secondAttribute="trailing" constant="10" id="9oE-YB-keK"/>
+                                <constraint firstItem="zh7-6j-FR2" firstAttribute="top" secondItem="MV3-CK-GJR" secondAttribute="bottom" constant="38" id="7U3-yB-nTP"/>
                                 <constraint firstItem="P9a-7Y-WTb" firstAttribute="centerY" secondItem="hVL-Z3-PbK" secondAttribute="centerY" id="C3B-Qw-n0B"/>
                                 <constraint firstItem="zh7-6j-FR2" firstAttribute="top" secondItem="MV3-CK-GJR" secondAttribute="bottom" constant="50" id="DSo-F9-H7f"/>
                                 <constraint firstItem="4KA-M0-isf" firstAttribute="top" secondItem="P2m-Kb-aRc" secondAttribute="top" id="DvX-aZ-YAO"/>
-                                <constraint firstItem="rBQ-D7-yox" firstAttribute="height" secondItem="Fbe-6n-APi" secondAttribute="height" id="F0p-tH-bt5"/>
+                                <constraint firstItem="Fbe-6n-APi" firstAttribute="centerX" secondItem="P2m-Kb-aRc" secondAttribute="centerX" id="F3g-JR-mx3"/>
                                 <constraint firstItem="zh7-6j-FR2" firstAttribute="top" secondItem="xx7-XN-ka9" secondAttribute="bottom" constant="-9" id="F5s-pH-NEc"/>
                                 <constraint firstItem="zh7-6j-FR2" firstAttribute="top" secondItem="xx7-XN-ka9" secondAttribute="bottom" constant="10" id="G5o-uI-yXE"/>
+                                <constraint firstItem="rBQ-D7-yox" firstAttribute="width" secondItem="SiO-1K-INM" secondAttribute="width" id="Gu8-EH-zUp"/>
+                                <constraint firstItem="rBQ-D7-yox" firstAttribute="centerY" secondItem="SiO-1K-INM" secondAttribute="centerY" id="Hzl-iN-YKZ"/>
                                 <constraint firstItem="4KA-M0-isf" firstAttribute="leading" secondItem="P2m-Kb-aRc" secondAttribute="leading" id="I2g-ZM-AIJ"/>
-                                <constraint firstItem="rBQ-D7-yox" firstAttribute="width" secondItem="SiO-1K-INM" secondAttribute="width" id="K62-7Y-K0A"/>
-                                <constraint firstAttribute="trailing" secondItem="rBQ-D7-yox" secondAttribute="trailing" constant="10" id="KFF-3I-VRi"/>
+                                <constraint firstAttribute="trailing" secondItem="rBQ-D7-yox" secondAttribute="trailing" constant="10" id="M1o-G8-oEd"/>
                                 <constraint firstItem="zh7-6j-FR2" firstAttribute="top" secondItem="EYR-Hr-Mu4" secondAttribute="bottom" constant="90" id="Mzk-DH-y13"/>
                                 <constraint firstItem="hVL-Z3-PbK" firstAttribute="bottom" secondItem="tbo-kA-iVF" secondAttribute="bottom" constant="45" id="Nl2-4X-XEq"/>
-                                <constraint firstItem="QgG-tD-swQ" firstAttribute="centerY" secondItem="SiO-1K-INM" secondAttribute="centerY" id="Npy-Ps-Ifq"/>
-                                <constraint firstItem="Vg9-mB-vR9" firstAttribute="centerY" secondItem="rBQ-D7-yox" secondAttribute="centerY" id="OmM-A6-aSj"/>
+                                <constraint firstItem="rBQ-D7-yox" firstAttribute="width" secondItem="Fbe-6n-APi" secondAttribute="width" id="RWL-hj-8Q2"/>
                                 <constraint firstItem="tbo-kA-iVF" firstAttribute="centerX" secondItem="hVL-Z3-PbK" secondAttribute="centerX" id="SK9-Py-hKr"/>
-                                <constraint firstItem="Vg9-mB-vR9" firstAttribute="leading" secondItem="QgG-tD-swQ" secondAttribute="trailing" constant="10" id="Sp0-Rs-aTU"/>
-                                <constraint firstItem="zh7-6j-FR2" firstAttribute="centerX" secondItem="Vg9-mB-vR9" secondAttribute="centerX" constant="-2" id="THm-tX-5Bt"/>
                                 <constraint firstItem="51n-yd-fzF" firstAttribute="centerX" secondItem="P9a-7Y-WTb" secondAttribute="centerX" id="TpG-e9-3Wg"/>
                                 <constraint firstItem="4KA-M0-isf" firstAttribute="leading" secondItem="tbo-kA-iVF" secondAttribute="trailing" constant="-115" id="V3r-3b-nLW"/>
-                                <constraint firstItem="QgG-tD-swQ" firstAttribute="width" secondItem="rBQ-D7-yox" secondAttribute="width" id="Wxw-zu-rwe"/>
+                                <constraint firstItem="SiO-1K-INM" firstAttribute="leading" secondItem="P2m-Kb-aRc" secondAttribute="leading" constant="10" id="XyR-QD-HB9"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="centerX" secondItem="zh7-6j-FR2" secondAttribute="centerX" constant="1.5" id="YJu-pY-WxX"/>
-                                <constraint firstItem="SiO-1K-INM" firstAttribute="leading" secondItem="P2m-Kb-aRc" secondAttribute="leading" constant="10" id="YWg-G4-rPw"/>
                                 <constraint firstItem="hVL-Z3-PbK" firstAttribute="top" secondItem="tbo-kA-iVF" secondAttribute="bottom" constant="-6" id="Yvu-7v-dXm"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="centerX" secondItem="zh7-6j-FR2" secondAttribute="centerX" constant="2" id="Zpr-XL-hdD"/>
                                 <constraint firstItem="MV3-CK-GJR" firstAttribute="leading" secondItem="P2m-Kb-aRc" secondAttribute="leading" id="aLM-G3-56Q"/>
+                                <constraint firstItem="rBQ-D7-yox" firstAttribute="centerY" secondItem="Fbe-6n-APi" secondAttribute="centerY" id="bXg-Wq-fCh"/>
                                 <constraint firstAttribute="trailing" secondItem="MV3-CK-GJR" secondAttribute="trailing" id="csN-e5-Vou"/>
                                 <constraint firstAttribute="trailing" secondItem="4KA-M0-isf" secondAttribute="trailing" id="csT-zf-BLX"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="top" secondItem="MV3-CK-GJR" secondAttribute="bottom" constant="-7" id="dZf-1r-M9x"/>
                                 <constraint firstItem="zh7-6j-FR2" firstAttribute="top" secondItem="xx7-XN-ka9" secondAttribute="bottom" constant="10" id="dl6-84-DM2"/>
                                 <constraint firstItem="EYR-Hr-Mu4" firstAttribute="leading" secondItem="P2m-Kb-aRc" secondAttribute="leading" id="eY7-cc-0Bk"/>
-                                <constraint firstItem="Vg9-mB-vR9" firstAttribute="top" secondItem="zh7-6j-FR2" secondAttribute="bottom" constant="5" id="exp-88-s58"/>
-                                <constraint firstItem="QgG-tD-swQ" firstAttribute="height" secondItem="rBQ-D7-yox" secondAttribute="height" id="f3l-fi-Ygk"/>
+                                <constraint firstAttribute="bottom" secondItem="rBQ-D7-yox" secondAttribute="bottom" constant="10" id="ekt-DX-UVZ"/>
                                 <constraint firstItem="tbo-kA-iVF" firstAttribute="top" secondItem="4KA-M0-isf" secondAttribute="bottom" constant="-40" id="git-zc-EBR"/>
-                                <constraint firstItem="Vg9-mB-vR9" firstAttribute="width" secondItem="rBQ-D7-yox" secondAttribute="width" id="hPJ-xC-T3q"/>
-                                <constraint firstItem="rBQ-D7-yox" firstAttribute="height" secondItem="SiO-1K-INM" secondAttribute="height" id="jIP-Fi-u1p"/>
-                                <constraint firstItem="rBQ-D7-yox" firstAttribute="centerY" secondItem="Fbe-6n-APi" secondAttribute="centerY" id="lOM-nQ-sew"/>
+                                <constraint firstItem="rBQ-D7-yox" firstAttribute="height" secondItem="SiO-1K-INM" secondAttribute="height" id="krZ-4W-UmW"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="top" secondItem="MV3-CK-GJR" secondAttribute="bottom" constant="10" id="m1g-kw-Hdj"/>
+                                <constraint firstItem="rBQ-D7-yox" firstAttribute="height" secondItem="Fbe-6n-APi" secondAttribute="height" id="nWu-CC-x4H"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="top" secondItem="MV3-CK-GJR" secondAttribute="bottom" constant="-7" id="ocS-6C-p29"/>
                                 <constraint firstAttribute="trailing" secondItem="EYR-Hr-Mu4" secondAttribute="trailing" id="p9o-qp-G6b"/>
                                 <constraint firstItem="51n-yd-fzF" firstAttribute="leading" secondItem="4KA-M0-isf" secondAttribute="trailing" constant="-124" id="pnV-z1-r7q"/>
-                                <constraint firstAttribute="bottom" secondItem="SiO-1K-INM" secondAttribute="bottom" constant="10" id="qRP-f7-1fL"/>
                                 <constraint firstItem="P9a-7Y-WTb" firstAttribute="top" secondItem="51n-yd-fzF" secondAttribute="bottom" constant="-10" id="rcd-ia-NBH"/>
                                 <constraint firstItem="4KA-M0-isf" firstAttribute="height" secondItem="P2m-Kb-aRc" secondAttribute="height" multiplier="0.5" id="sfU-gM-AJf"/>
                                 <constraint firstItem="zh7-6j-FR2" firstAttribute="centerX" secondItem="xx7-XN-ka9" secondAttribute="centerX" constant="-2.5" id="ssd-Cf-fvE"/>
                                 <constraint firstItem="EYR-Hr-Mu4" firstAttribute="top" secondItem="4KA-M0-isf" secondAttribute="bottom" constant="5" id="wHm-qR-N2h"/>
                                 <constraint firstItem="xx7-XN-ka9" firstAttribute="top" secondItem="EYR-Hr-Mu4" secondAttribute="bottom" constant="23" id="wuP-6E-uS3"/>
-                                <constraint firstItem="Vg9-mB-vR9" firstAttribute="height" secondItem="rBQ-D7-yox" secondAttribute="height" id="y4m-LI-qLV"/>
                                 <constraint firstAttribute="bottom" secondItem="4KA-M0-isf" secondAttribute="bottom" constant="318" id="yB6-Ul-VJw"/>
                                 <constraint firstItem="MV3-CK-GJR" firstAttribute="top" secondItem="4KA-M0-isf" secondAttribute="bottom" constant="5" id="yOg-72-kZO"/>
-                                <constraint firstAttribute="bottom" secondItem="rBQ-D7-yox" secondAttribute="bottom" constant="10" id="zJw-5h-xyi"/>
                             </constraints>
                             <variation key="default">
                                 <mask key="constraints">
@@ -313,10 +286,8 @@
     </objects>
     <resources>
         <image name="facebook" width="106" height="106"/>
-        <image name="google" width="106" height="106"/>
         <image name="instagram" width="106" height="106"/>
         <image name="login_background" width="1000" height="1000"/>
-        <image name="twitter" width="106" height="106"/>
         <image name="vk" width="106" height="106"/>
     </resources>
 </document>

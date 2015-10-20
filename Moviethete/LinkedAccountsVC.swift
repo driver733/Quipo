@@ -52,6 +52,11 @@ class LinkedAccountsVC: UIViewController {
     // Dispose of any resources that can be recreated.
   }
   
+  
+  override func viewWillAppear(animated: Bool) {
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
+  }
+  
 
   
   func instagramLoginWebViewWillDisappear(notif: NSNotification) {
@@ -60,9 +65,12 @@ class LinkedAccountsVC: UIViewController {
   
   func didReceiveFacebookProfile(notif: NSNotification) {
     startLoginActivityIndicator()
+    NSNotificationCenter.defaultCenter().removeObserver(self, name: FBSDKProfileDidChangeNotification, object: nil)
     UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithBlock { (task: BFTask!) -> AnyObject! in
-      self.tableView.reloadData()
-      self.stopLoginActivityIndicator()
+      Async.main {
+        self.tableView.reloadData()
+        self.stopLoginActivityIndicator()
+      }
       return nil
       }  
   }
@@ -117,7 +125,8 @@ extension LinkedAccountsVC: UITableViewDataSource {
   
   
 func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return FollowFriends.sharedInstance.linkedAccounts.count
+//  print(FollowFriends.sharedInstance.linkedAccounts.count)
+  return FollowFriends.sharedInstance.linkedAccounts.count
 }
 
 
@@ -141,8 +150,10 @@ extension LinkedAccountsVC: UITableViewDelegate {
         let logOutAction = UIAlertAction(title: "Log Out", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) -> Void in
           self.startLoginActivityIndicator()
           UserSingelton.sharedInstance.logoutFromFacebook().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-            tableView.reloadData()
-            self.stopLoginActivityIndicator()
+            Async.main {
+              tableView.reloadData()
+              self.stopLoginActivityIndicator()
+            }
             return nil
           })
         })
@@ -155,9 +166,10 @@ extension LinkedAccountsVC: UITableViewDelegate {
     case 1:
       if InstagramEngine.sharedEngine().accessToken == nil {
         UserSingelton.sharedInstance.loginWithInstagram().continueWithSuccessBlock({ (task:BFTask!) -> AnyObject! in
-          self.tableView.reloadData()
-          self.stopLoginActivityIndicator()
-          
+          Async.main {
+            self.tableView.reloadData()
+            self.stopLoginActivityIndicator()
+          }
           return nil
         })
       } else {
@@ -165,8 +177,10 @@ extension LinkedAccountsVC: UITableViewDelegate {
         let logOutAction = UIAlertAction(title: "Log Out", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) -> Void in
           self.startLoginActivityIndicator()
           UserSingelton.sharedInstance.logoutFromInstagram().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-            tableView.reloadData()
-            self.stopLoginActivityIndicator()
+            Async.main {
+              tableView.reloadData()
+              self.stopLoginActivityIndicator()
+            }
             return nil
           })
           
@@ -186,8 +200,10 @@ extension LinkedAccountsVC: UITableViewDelegate {
         let logOutAction = UIAlertAction(title: "Log Out", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) -> Void in
           self.startLoginActivityIndicator()
           UserSingelton.sharedInstance.logoutFromVkontakte().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-            tableView.reloadData()
-            self.stopLoginActivityIndicator()
+            Async.main {
+              tableView.reloadData()
+              self.stopLoginActivityIndicator()
+            }
             return nil
           })
         })

@@ -236,6 +236,10 @@ import Async
             reviews.append(tempReview)
           }
           UserReview.sharedInstance.movieReviewsForSelectedMovie = reviews
+    
+            
+          
+  
           mainTask.setResult(nil)
         } else {
         mainTask.setError(nil)

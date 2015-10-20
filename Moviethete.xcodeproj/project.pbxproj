@@ -130,14 +130,14 @@
 		8F62BE131B73EFEB00B87865 /* MovietheteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovietheteUITests.swift; sourceTree = "<group>"; };
 		8F62BE151B73EFEB00B87865 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8F70DA0D1B9D3E590065E791 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		8F70DA0F1B9D412B0065E791 /* UserSingleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSingleton.swift; sourceTree = "<group>"; };
+		8F70DA0F1B9D412B0065E791 /* UserSingleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UserSingleton.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8F70DA111B9D5D6A0065E791 /* DetailedSettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedSettingsVC.swift; sourceTree = "<group>"; };
 		8F7348B81BCA0A120033A3C1 /* ReviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewCell.swift; sourceTree = "<group>"; };
 		8F7348BA1BCA126E0033A3C1 /* ReviewTextCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewTextCell.swift; sourceTree = "<group>"; };
 		8F7348BB1BCA126E0033A3C1 /* ReviewTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReviewTextCell.xib; sourceTree = "<group>"; };
 		8F7FF4811B73F1E0001317E2 /* Moviethete-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Moviethete-Bridging-Header.h"; sourceTree = "<group>"; };
 		8F7FF4841B73F2AB001317E2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		8F7FF4871B73F2AB001317E2 /* ProfileSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettings.swift; sourceTree = "<group>"; };
+		8F7FF4871B73F2AB001317E2 /* ProfileSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ProfileSettings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8F7FF4881B73F2AB001317E2 /* ProfileSettingsFollowFriendsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileSettingsFollowFriendsCell.xib; sourceTree = "<group>"; };
 		8F7FF4891B73F2AB001317E2 /* ProfileSettingsFollowFriendsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettingsFollowFriendsCell.swift; sourceTree = "<group>"; };
 		8F7FF48A1B73F2AB001317E2 /* ProfileSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileSettingsCell.xib; sourceTree = "<group>"; };
@@ -162,7 +162,7 @@
 		8F7FF49F1B73F2AB001317E2 /* LikesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LikesVC.swift; sourceTree = "<group>"; };
 		8F7FF4A01B73F2AB001317E2 /* NanumPenScript-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NanumPenScript-Regular.ttf"; sourceTree = "<group>"; };
 		8F7FF4A41B73F2AB001317E2 /* WebViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewVC.swift; sourceTree = "<group>"; };
-		8F8504091B9EB42B003F4DC8 /* FollowFriends.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowFriends.swift; sourceTree = "<group>"; };
+		8F8504091B9EB42B003F4DC8 /* FollowFriends.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = FollowFriends.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8F893EFB1B99217E005D8305 /* AddMovieReviewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMovieReviewVC.swift; sourceTree = "<group>"; };
 		8F893F001B993DB1005D8305 /* TitleCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TitleCell.xib; sourceTree = "<group>"; };
 		8F893F021B993E0F005D8305 /* TitleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleCell.swift; sourceTree = "<group>"; };

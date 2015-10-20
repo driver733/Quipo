@@ -147,6 +147,9 @@ class FeedVC: UIViewController {
     
     
     UserSingelton.sharedInstance.loadFollowFriendsData()
+    
+    
+    
     refresh(nil)
     
   }

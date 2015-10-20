@@ -159,7 +159,7 @@ class LogInVC: UIViewController {
     NSNotificationCenter.defaultCenter().removeObserver(self)
   }
   
-  func signUpTableViewUserInteraction(condition: Bool){
+  func signUpTableViewUserInteraction(condition: Bool) {
     for var section = 0; section < signUpTableView.numberOfSections; ++section {
       for var row = 0; row < signUpTableView.numberOfRowsInSection(section); ++row {
         let cellPath = NSIndexPath(forRow: row, inSection: section)
@@ -215,6 +215,7 @@ class LogInVC: UIViewController {
               block: {
                 (user: PFUser?, error: NSError?) -> Void in
                 if user != nil {
+                  UserSingelton.sharedInstance.checkUserLinkedAccounts()
                   self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
                 } else {
                   switch error!.code {
@@ -258,6 +259,7 @@ class LogInVC: UIViewController {
           (task: BFTask!) -> AnyObject! in
           if task.error == nil {
             Async.main {
+              UserSingelton.sharedInstance.checkUserLinkedAccounts()
               self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
             }
           } else {
@@ -302,6 +304,10 @@ class LogInVC: UIViewController {
     
     @IBAction func loginWithFacebook(sender: AnyObject) {
       let fbLoginManager = FBSDKLoginManager()
+      fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
+//      if UIApplication.sharedApplication().canOpenURL(NSURL(string: "fb://")!) {
+//        fbLoginManager.loginBehavior = FBSDKLoginBehavior.
+//      }
       fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"],
         fromViewController: self,
         handler: {

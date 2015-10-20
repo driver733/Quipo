@@ -59,13 +59,8 @@ class ProfileSettings: UIViewController {
   
   
   override func viewWillAppear(animated: Bool) {
-    if FollowFriends.sharedInstance.linkedAccounts.isEmpty {
-     
-       startLoginActivityIndicator()
-    
-    }
-    
-    tableView.reloadData()
+    startLoginActivityIndicator()
+    UserSingelton.sharedInstance.loadFollowFriendsData()
   }
   
   
@@ -123,7 +118,7 @@ class ProfileSettings: UIViewController {
     FBSDKLoginManager().logOut()
     Twitter.sharedInstance().logOut()
     
-    UserSingelton.sharedInstance.instagramKeychain["instagram"] = nil
+    UserSingelton.sharedInstance.linkedAccountsKeychain["instagram"] = nil
     
     
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate

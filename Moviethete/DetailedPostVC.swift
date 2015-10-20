@@ -93,6 +93,11 @@ class DetailedPostVC: UIViewController {
     if let review = currentUserReview {
       vc.passedReview = review
     }
+    for review in UserReview.sharedInstance.movieReviewsForSelectedMovie {
+      if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+        vc.passedReview = review
+      }
+    }
     let navController = UINavigationController(rootViewController: vc)
     self.presentViewController(navController, animated: true, completion: nil)
   }

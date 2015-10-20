@@ -79,7 +79,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>5</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -108,7 +108,7 @@
 	<key>FacebookAppID</key>
 	<string>122664868071644</string>
 	<key>FacebookDisplayName</key>
-	<string>TestSheesh</string>
+	<string>Quipo</string>
 	<key>InstagramAppClientId</key>
 	<string>1c2e2066145342c3a841bdbdca8e53ae</string>
 	<key>InstagramAppRedirectURL</key>
