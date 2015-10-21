@@ -319,6 +319,8 @@ extension ProfileVC: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
         
+        cell.userInteractionEnabled = false
+        
         let user = (UserSingelton.sharedInstance.following)[indexPath.row - 1]
         
         cell.userName.text = user.username
@@ -347,6 +349,9 @@ extension ProfileVC: UITableViewDataSource {
       case "followers":
         
         let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
+        
+        cell.userInteractionEnabled = false
+        
         let user = (UserSingelton.sharedInstance.followers)[indexPath.row - 1]
         
         cell.userName.text = user.username
