@@ -1,4 +1,7 @@
 # Quipo
+
+XCode 7 is required to run this application
+
 Quipo is a simple and convenient way to share movie reviews made by you and your friends. Find a movie and tell your friends what you think about it!
 
 See what your friends are watching and pick a movie for yourself to watch.
