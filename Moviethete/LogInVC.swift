@@ -17,7 +17,7 @@ import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
 import SwiftValidator
-import FontBlaster
+//import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
 import Async
@@ -51,7 +51,6 @@ class LogInVC: UIViewController {
     GIDSignIn.sharedInstance().clientID = "1095542523991-7s9j46knl20bhge5ggv6ctbn0be6bf0f.apps.googleusercontent.com"
     GIDSignIn.sharedInstance().shouldFetchBasicProfile = true
     GIDSignIn.sharedInstance().signIn()
-    
   }
 
     @IBAction func didLogOut(segue: UIStoryboardSegue) {
@@ -95,7 +94,7 @@ class LogInVC: UIViewController {
     
     override func viewDidLoad() {
       super.viewDidLoad()
-      FontBlaster.blast()
+    //  FontBlaster.blast()
       NSBundle.mainBundle().loadNibNamed("LogIn", owner: self, options: nil)
       self.navigationController?.navigationBarHidden = true
       self.hidesBottomBarWhenPushed = true
@@ -126,6 +125,13 @@ class LogInVC: UIViewController {
       FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "instagramLoginWebViewWillDisappear:", name: "instagramLoginWebViewWillDisappear", object: nil)
+      
+      
+      
+      
+
+      
+      
       
   }
   
@@ -561,6 +567,11 @@ extension LogInVC: GIDSignInUIDelegate {
     }
     // performSegueWithIdentifier("did_log_in", sender: nil)
   }
+  
+  
+  
+  
+  
 
 }
 

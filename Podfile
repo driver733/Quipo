@@ -4,6 +4,7 @@ use_frameworks!
 workspace 'Moviethete'
 
 target 'Moviethete' do
+    pod "DynamicBlurView"
     pod 'KeychainAccess'
     pod 'HCSStarRatingView', '~> 1.4.2'
     pod 'OAStackView'
@@ -18,7 +19,7 @@ target 'Moviethete' do
     pod 'ParseFacebookUtilsV4', '~> 1.7'
     pod 'ParseTwitterUtils'
     pod 'SDWebImage', '~> 3.7'
-    pod 'FontBlaster', :git => 'https://github.com/AndrewSB/FontBlaster.git'
+    pod 'FontBlaster'
     pod 'SwiftValidator', :git => 'https://github.com/i-schuetz/SwiftValidator.git'
     pod 'TPKeyboardAvoiding', '~> 1.2'
     pod 'InstagramKit', '~> 3.0'
@@ -26,8 +27,8 @@ target 'Moviethete' do
     pod "FBSDKLoginKit"
     pod "FBSDKShareKit"
     pod "VK-ios-sdk"
-    pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git', :branch => 'xcode7'
-    pod 'Async', :git => 'https://github.com/duemunk/Async.git', :branch => 'feature/Swift_2.0'
+    pod 'SwiftyJSON'
+    pod 'Async', :git => 'https://github.com/JohnCoates/Async.git'
     pod "TLYShyNavBar"
     pod "OAuthSwift", :git => 'https://github.com/dongri/OAuthSwift.git', :branch => 'swift2.0' 
 

@@ -12,6 +12,7 @@
 #import "OAStackView+Traversal.h"
 #import "OAStackViewAlignmentStrategy.h"
 #import "OAStackViewDistributionStrategy.h"
+#import "OATransformLayer.h"
 
 @interface OAStackView ()
 @property(nonatomic, copy) NSArray *arrangedSubviews;
@@ -21,6 +22,10 @@
 @end
 
 @implementation OAStackView
+
++ (Class)layerClass {
+    return [OATransformLayer class];
+}
 
 #pragma mark - Initialization
 
@@ -35,7 +40,7 @@
 }
 
 - (instancetype)initWithArrangedSubviews:(NSArray*)views {
-  self = [super init];
+  self = [super initWithFrame:CGRectZero];
   
   if (self) {
     [self addViewsAsSubviews:views];
@@ -45,15 +50,18 @@
   return self;
 }
 
-- (UIColor * __nullable)backgroundColor {
-  return [UIColor clearColor];
+- (instancetype)initWithFrame:(CGRect)frame {
+    return [self initWithArrangedSubviews:@[]];
 }
 
 - (void)commonInit {
   _axis = UILayoutConstraintAxisVertical;
   _alignment = OAStackViewAlignmentFill;
   _distribution = OAStackViewDistributionFill;
-  
+
+  _layoutMargins = UIEdgeInsetsMake(0, 8, 0, 8);
+  _layoutMarginsRelativeArrangement = NO;
+
   _alignmentStrategy = [OAStackViewAlignmentStrategy strategyWithStackView:self];
   _distributionStrategy = [OAStackViewDistributionStrategy strategyWithStackView:self];
   
@@ -61,6 +69,19 @@
 }
 
 #pragma mark - Properties
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    // Does not have any effect because `CATransformLayer` is not rendered.
+}
+
+- (void)setOpaque:(BOOL)opaque {
+  // Does not have any effect because `CATransformLayer` is not rendered.
+}
+
+- (void)setClipsToBounds:(BOOL)clipsToBounds
+{
+  // Does not have any effect because `CATransformLayer` is not rendered.
+}
 
 - (void)setSpacing:(CGFloat)spacing {
   if (_spacing == spacing) { return; }
@@ -104,6 +125,7 @@
   
   [self iterateVisibleViews:^(UIView *view, UIView *previousView) {
     [self.alignmentStrategy addConstraintsOnOtherAxis:view];
+    [self.alignmentStrategy alignView:view withPreviousView:previousView];
   }];
 }
 
@@ -126,6 +148,7 @@
   [self iterateVisibleViews:^(UIView *view, UIView *previousView) {
     [self.alignmentStrategy addConstraintsOnOtherAxis:view];
     [self.distributionStrategy alignView:view afterView:previousView];
+    [self.alignmentStrategy alignView:view withPreviousView:previousView];
   }];
 }
 
@@ -134,33 +157,14 @@
   self.distribution = distributionValue;
 }
 
-#pragma mark Layouting
-
-- (void)layoutSubviews {
-  [super layoutSubviews];
-  [self invalidateIntrinsicContentSize];
+- (void)setLayoutMargins:(UIEdgeInsets)layoutMargins {
+    _layoutMargins = layoutMargins;
+    [self layoutArrangedViews];
 }
 
-- (CGSize)intrinsicContentSize {
-  CGSize size = [super intrinsicContentSize];
-  
-  __block float maxSize = 0;
-  
-  [self iterateVisibleViews:^(UIView *view, UIView *previousView) {
-    if (self.axis == UILayoutConstraintAxisVertical) {
-      maxSize = fmaxf(maxSize, CGRectGetWidth(view.frame));
-    } else {
-      maxSize = fmaxf(maxSize, CGRectGetHeight(view.frame));
-    }
-  }];
-  
-  if (self.axis == UILayoutConstraintAxisVertical) {
-    size.width = maxSize;
-  } else {
-    size.height = maxSize;
-  }
-  
-  return size;
+- (void)setLayoutMarginsRelativeArrangement:(BOOL)layoutMarginsRelativeArrangement {
+    _layoutMarginsRelativeArrangement = layoutMarginsRelativeArrangement;
+    [self layoutArrangedViews];
 }
 
 #pragma mark - Adding and removing
@@ -195,8 +199,10 @@
     previousView = [self lastVisibleItem];
     nextView = nil;
     
-    NSArray *constraints = [self constraintsBetweenView:self andView:previousView inAxis:self.axis];
-    [self removeConstraints:constraints];
+    NSArray *constraints = [self lastConstraintAffectingView:self andView:previousView inAxis:self.axis];
+    if (constraints) {
+      [self removeConstraints:constraints];
+    }
     
     if (newItem) {
       [self addSubview:view];
@@ -231,8 +237,10 @@
   }
   
   [self.distributionStrategy alignView:view afterView:previousView];
+  [self.alignmentStrategy alignView:view withPreviousView:previousView];
   [self.alignmentStrategy addConstraintsOnOtherAxis:view];
   [self.distributionStrategy alignView:nextView afterView:view];
+  [self.alignmentStrategy alignView:nextView withPreviousView:view];
 }
 
 - (void)removeViewFromArrangedViews:(UIView*)view permanently:(BOOL)permanently {

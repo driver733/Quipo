@@ -8,14 +8,25 @@
 
 #import "OAStackViewDistributionStrategy.h"
 
+#import "_OALayoutGuide.h"
+
 @interface OAStackViewDistributionStrategyFill : OAStackViewDistributionStrategy
 @end
 
 @interface OAStackViewDistributionStrategyFillEqually : OAStackViewDistributionStrategy
 @end
 
+@interface OAStackViewDistributionStrategyFillProportionally : OAStackViewDistributionStrategy
+@end
+
+@interface OAStackViewDistributionStrategyEqualSpacing : OAStackViewDistributionStrategy
+@end
+
+@interface OAStackViewDistributionStrategyEqualCentering : OAStackViewDistributionStrategy
+@end
+
 @interface OAStackViewDistributionStrategy ()
-@property(nonatomic) OAStackView *stackView;
+@property(nonatomic, weak) OAStackView *stackView;
 @property(nonatomic) NSMutableArray *constraints;
 @end
 
@@ -31,6 +42,18 @@
       
     case OAStackViewDistributionFillEqually:
       cls = [OAStackViewDistributionStrategyFillEqually class];
+      break;
+   
+    case OAStackViewDistributionFillProportionally:
+      cls = [OAStackViewDistributionStrategyFillProportionally class];
+      break;
+      
+    case OAStackViewDistributionEqualSpacing:
+      cls = [OAStackViewDistributionStrategyEqualSpacing class];
+      break;
+      
+    case OAStackViewDistributionEqualCentering:
+      cls = [OAStackViewDistributionStrategyEqualCentering class];
       break;
       
     default:
@@ -65,27 +88,31 @@
 }
 
 - (void)alignLastView:(UIView*)view {
-  NSString *constraintString = [NSString stringWithFormat:@"%@:[view]-0-|", [self currentAxisString]];
+  NSString *constraintString = [NSString stringWithFormat:@"%@:[view]-(lastMargin)-|", [self currentAxisString]];
+  NSNumber *lastMargin = @([self lastMargin]);
   [self.stackView addConstraints:
    [NSLayoutConstraint constraintsWithVisualFormat:constraintString
                                            options:0
-                                           metrics:nil
+                                           metrics:NSDictionaryOfVariableBindings(lastMargin)
                                              views:NSDictionaryOfVariableBindings(view)]];
 }
 
 - (void)alignFirstView:(UIView*)view {
-  NSString *str = [NSString stringWithFormat:@"%@:|-0-[view]", [self currentAxisString]];
+  NSString *str = [NSString stringWithFormat:@"%@:|-(firstMargin)-[view]", [self currentAxisString]];
+  NSNumber *firstMargin = @([self firstMargin]);
   [self.stackView addConstraints:
    [NSLayoutConstraint constraintsWithVisualFormat:str
                                            options:0
-                                           metrics:nil
+                                           metrics:NSDictionaryOfVariableBindings(firstMargin)
                                              views:NSDictionaryOfVariableBindings(view)]];
 }
 
 
 - (void)alignMiddleView:(UIView*)view afterView:(UIView*)previousView {
-  NSString *str = [NSString stringWithFormat:@"%@:[previousView]-%f-[view]",
-                   [self currentAxisString], self.stackView.spacing];
+  NSString *str = [NSString stringWithFormat:@"%@:[previousView]-(%@%f)-[view]",
+                   [self currentAxisString],
+                   [self symbolicSpacingRelation],
+                   self.stackView.spacing];
   
   id arr = [NSLayoutConstraint constraintsWithVisualFormat:str
                                                    options:0
@@ -101,6 +128,26 @@
   return self.stackView.axis == UILayoutConstraintAxisHorizontal ? @"H" : @"V";
 }
 
+- (NSLayoutAttribute)equalityAxis {
+  return self.stackView.axis == UILayoutConstraintAxisVertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth;
+}
+
+- (CGFloat)firstMargin {
+    if (self.stackView.axis == UILayoutConstraintAxisHorizontal) {
+        return self.stackView.layoutMarginsRelativeArrangement ? self.stackView.layoutMargins.left : 0.0f;
+    } else {
+        return self.stackView.layoutMarginsRelativeArrangement ? self.stackView.layoutMargins.top : 0.0f;
+    }
+}
+
+- (CGFloat)lastMargin {
+    if (self.stackView.axis == UILayoutConstraintAxisHorizontal) {
+        return self.stackView.layoutMarginsRelativeArrangement ? self.stackView.layoutMargins.right : 0.0f;
+    } else {
+        return self.stackView.layoutMarginsRelativeArrangement ? self.stackView.layoutMargins.bottom : 0.0f;
+    }
+}
+
 - (NSMutableArray *)constraints {
   if (!_constraints) {
     _constraints = [@[] mutableCopy];
@@ -112,6 +159,11 @@
 - (void)removeAddedConstraints {
   [self.stackView removeConstraints:self.constraints];
   [self.constraints removeAllObjects];
+}
+
+- (NSString *)symbolicSpacingRelation
+{
+  return @"==";
 }
 
 @end
@@ -143,8 +195,142 @@
   [self.stackView addConstraint:constraint];
 }
 
-- (NSLayoutAttribute)equalityAxis {
-  return self.stackView.axis == UILayoutConstraintAxisVertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth;
+@end
+
+@implementation OAStackViewDistributionStrategyFillProportionally
+
+- (void)alignMiddleView:(UIView*)view afterView:(UIView*)previousView {
+  [super alignMiddleView:view afterView:previousView];
+  [self addProportionalityConstraintsBetween:view otherView:previousView];
 }
+
+- (void)addProportionalityConstraintsBetween:(UIView *)view otherView:(UIView *)otherView {
+  if (view == nil || otherView == nil) {
+    return;
+  }
+  
+  CGFloat multiplier = 1;
+  if (self.stackView.axis == UILayoutConstraintAxisHorizontal) {
+    multiplier = view.intrinsicContentSize.width / otherView.intrinsicContentSize.width;
+  } else {
+    multiplier = view.intrinsicContentSize.height / otherView.intrinsicContentSize.height;
+  }
+
+  id constraint = [NSLayoutConstraint constraintWithItem:view
+                                               attribute:[self equalityAxis]
+                                               relatedBy:NSLayoutRelationEqual
+                                                  toItem:otherView
+                                               attribute:[self equalityAxis]
+                                              multiplier:multiplier
+                                                constant:0];
+  
+  [self.constraints addObject:constraint];
+  [self.stackView addConstraint:constraint];
+}
+
+@end
+
+@interface OAStackViewDistributionStrategyEqualSpacing ()
+
+@property (nonatomic, strong) NSMutableArray *equalSpacingLayoutGuides;
+
+@end
+
+@implementation OAStackViewDistributionStrategyEqualSpacing
+
+- (NSLayoutAttribute)spanningAttributeForAxis:(UILayoutConstraintAxis)axis
+                                isInitialEdge:(BOOL)isInitialConstraint
+{
+  switch (axis) {
+    case UILayoutConstraintAxisHorizontal:
+      return isInitialConstraint ? NSLayoutAttributeLeading : NSLayoutAttributeTrailing;
+
+    case UILayoutConstraintAxisVertical:
+      return isInitialConstraint ? NSLayoutAttributeTop : NSLayoutAttributeBottom;
+  }
+}
+
+- (NSMutableArray *)equalSpacingLayoutGuides
+{
+  if (!_equalSpacingLayoutGuides) {
+    _equalSpacingLayoutGuides = [NSMutableArray array];
+  }
+
+  return _equalSpacingLayoutGuides;
+}
+
+- (NSString *)symbolicSpacingRelation
+{
+  return @">=";
+}
+
+- (void)alignMiddleView:(UIView *)view afterView:(UIView *)previousView
+{
+  [super alignMiddleView:view afterView:previousView];
+
+  _OALayoutGuide *guide = [_OALayoutGuide new];
+  [self.equalSpacingLayoutGuides addObject:guide];
+  [self.stackView addSubview:guide];
+
+  NSMutableArray *newConstraints = [NSMutableArray array];
+
+  UILayoutConstraintAxis axis = self.stackView.axis;
+
+  NSLayoutConstraint *firstEdgeConstraint =
+  [NSLayoutConstraint constraintWithItem:guide
+                               attribute:[self spanningAttributeForAxis:axis
+                                                          isInitialEdge:YES]
+                               relatedBy:NSLayoutRelationEqual
+                                  toItem:previousView
+                               attribute:[self spanningAttributeForAxis:axis
+                                                          isInitialEdge:NO]
+                              multiplier:1
+                                constant:0];
+
+  NSLayoutConstraint *secondEdgeConstraint =
+  [NSLayoutConstraint constraintWithItem:view
+                               attribute:[self spanningAttributeForAxis:axis
+                                                          isInitialEdge:YES]
+                               relatedBy:NSLayoutRelationEqual
+                                  toItem:guide
+                               attribute:[self spanningAttributeForAxis:axis
+                                                          isInitialEdge:NO]
+                              multiplier:1
+                                constant:0];
+
+  [newConstraints addObjectsFromArray:@[firstEdgeConstraint, secondEdgeConstraint]];
+
+  id firstGuide = self.equalSpacingLayoutGuides.firstObject;
+  if (firstGuide != guide) {
+    NSLayoutConstraint *equalWidth =
+    [NSLayoutConstraint constraintWithItem:firstGuide
+                                 attribute:[self equalityAxis]
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:guide
+                                 attribute:[self equalityAxis]
+                                multiplier:1
+                                  constant:0];
+
+    equalWidth.identifier = @"OA-fill-equally";
+
+    [newConstraints addObject:equalWidth];
+  }
+
+  [self.constraints addObjectsFromArray:newConstraints];
+  [self.stackView addConstraints:newConstraints];
+}
+
+- (void)removeAddedConstraints
+{
+  [self.stackView removeConstraints:self.constraints];
+  [self.constraints removeAllObjects];
+
+  [self.equalSpacingLayoutGuides makeObjectsPerformSelector:@selector(removeFromSuperview)];
+  [self.equalSpacingLayoutGuides removeAllObjects];
+}
+
+@end
+
+@implementation OAStackViewDistributionStrategyEqualCentering
 
 @end

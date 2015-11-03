@@ -26,17 +26,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+      // Override point for customization after application launch.
+    
+    
+      // [Optional] Power your app with Local Datastore. For more info, go to
+      // https://parse.com/docs/ios_guide#localdatastore/iOS
+      Parse.enableLocalDatastore()
+      
+      // Initialize Parse.
+      
+ //     // Production - "Quipo"
+        Parse.setApplicationId("FHtrAm8LOVA1UWPNicmSXd4xn8Zpq7NM1fkLtb11", clientKey: "Ul05iFZTBIIKGEfwUnagU7nUTTcs1Cm8sH1VXNbg")
+
+      
+      // Development - "Quipo_dev"
+  //    Parse.setApplicationId("d6noyA1UJYKTyQcRhEPZT6AEU0PG2fuF2zo7IVcp", clientKey: "4HTDoVgFUCZdRXmD0iO9IiUwgJ8C3vciyZpKfary")
       
       
-      
-        // [Optional] Power your app with Local Datastore. For more info, go to
-        // https://parse.com/docs/ios_guide#localdatastore/iOS
-        Parse.enableLocalDatastore()
-        
-        // Initialize Parse.
-        Parse.setApplicationId("FHtrAm8LOVA1UWPNicmSXd4xn8Zpq7NM1fkLtb11",
-            clientKey: "Ul05iFZTBIIKGEfwUnagU7nUTTcs1Cm8sH1VXNbg")
         PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
         
         // [Optional] Track statistics around application opens.

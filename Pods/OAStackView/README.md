@@ -1,13 +1,13 @@
 # OAStackView
 
-[![CI Status](http://img.shields.io/travis/Omar Abdelhafith/OAStackView.svg?style=flat)](https://travis-ci.org/Omar Abdelhafith/OAStackView)
+[![Build Status](https://travis-ci.org/oarrabi/OAStackView.svg)](https://travis-ci.org/oarrabi/OAStackView)
 [![Version](https://img.shields.io/cocoapods/v/OAStackView.svg?style=flat)](http://cocoapods.org/pods/OAStackView)
 [![License](https://img.shields.io/cocoapods/l/OAStackView.svg?style=flat)](http://cocoapods.org/pods/OAStackView)
 [![Platform](https://img.shields.io/cocoapods/p/OAStackView.svg?style=flat)](http://cocoapods.org/pods/OAStackView)
 
 iOS 9 introduced the very cool [UIStackView](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/), UIStackView can be used to easily create simple and complex layouts.
 
-As expected `UIStackView` can only be used for iOS9 and up. This project tries to port back the stackview to iOS 6+.
+As expected `UIStackView` can only be used for iOS 9 and up. This project tries to port back the stackview to iOS 7+.
 
 `OAStackView` aims at replicating all the features in `UIStackView`
 
@@ -43,7 +43,7 @@ Run the project!
 
 ### From Code
 
-To use `OAStackView` from code, Please refer to [UIStackView](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/) for propper documentation.
+To use `OAStackView` from code, Please refer to [UIStackView](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/) for proper documentation.
 
 As a quick example on its usage do the following:
 
@@ -98,7 +98,7 @@ The following a [human readable](https://raw.githubusercontent.com/oarrabi/OASta
 
 All contributions in any form are welcomed, if you find the project helpful, and you want to contribute then please do.
 
-## Known Issues, and future improvments
+## Known Issues, and future improvements
 
 ### Missing functionality
 `OAStackView` implements most of the features from `UIStackView` except the following:
@@ -107,27 +107,28 @@ All contributions in any form are welcomed, if you find the project helpful, and
 
 	@property(nonatomic,getter=isBaselineRelativeArrangement) BOOL baselineRelativeArrangement;
 
-- [ ] `layoutMarginsRelativeArrangement`     
+- [x] `layoutMarginsRelativeArrangement`     
 
 
 	@property(nonatomic,getter=isLayoutMarginsRelativeArrangement) BOOL layoutMarginsRelativeArrangement;    
 
-`UIStackViewDistribution` is also partially implemented (3 elements out of 5 are still not implemented)    
+`UIStackViewDistribution` is also partially implemented (2 elements out of 5 are still not implemented)    
+
 - [x] `UIStackViewDistributionFill`
 - [x] `UIStackViewDistributionFillEqually`    
-- [ ] `UIStackViewDistributionFillProportionally`   
+- [x] `UIStackViewDistributionFillProportionally`   
 - [ ] `UIStackViewDistributionEqualSpacing`    
-- [ ] `UIStackViewDistributionEqualCentering`   
+- [ ] `UIStackViewDistributionEqualCentering`
 
-Please refer to [UIStackView](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/) for propper documentation.
+Please refer to [UIStackView](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/) for proper documentation.
 
-### Future improvments
+### Future improvements
 The following would be nice to have for future versions
 
 - [ ] Covering the remaining functionality from `UIStackView`
 - [ ] Better Documentation
-- [ ] Better test coverage for come edge cases
-- [ ] Rewrite in swift, or more swift friend
+- [ ] Better test coverage for some edge cases
+- [ ] Rewrite in swift, or more swift friendly
 
 ## Author
 

@@ -17,7 +17,7 @@ import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
 import SwiftValidator
-import FontBlaster
+//import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
 import SDWebImage

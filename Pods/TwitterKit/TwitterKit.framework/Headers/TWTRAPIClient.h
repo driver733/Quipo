@@ -4,18 +4,16 @@
 //  Copyright (c) 2015 Twitter. All rights reserved.
 //
 
-#import "TWTRDefines.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-FOUNDATION_EXPORT NSString * const TWTRTweetsNotLoadedKey;
-
 @class TWTRUser;
 @class TWTRTweet;
 @class TWTRAuthConfig;
 @class TWTRGuestSession;
 @protocol TWTRAuthSession;
 @protocol TWTRSessionStore;
+
+NS_ASSUME_NONNULL_BEGIN
+
+FOUNDATION_EXPORT NSString * const TWTRTweetsNotLoadedKey;
 
 /**
  *  @name Completion Block Types
@@ -112,7 +110,7 @@ typedef void (^TWTRTweetActionCompletion)(TWTRTweet * __twtr_nullable tweet, NSE
  *
  *  @note If the request is not sent with the -[TWTRAPIClient sendTwitterRequest:completion:] method it is the developers responsibility to ensure that there is a valid guest session before this method is called.
  */
-- (NSURLRequest *)URLRequestWithMethod:(NSString *)method URL:(NSString *)URLString parameters:(NSDictionary *)parameters error:(NSError **)error;
+- (NSURLRequest *)URLRequestWithMethod:(NSString *)method URL:(NSString *)URLString parameters:(twtr_nullable NSDictionary *)parameters error:(NSError **)error;
 
 /**
  *  Sends a Twitter request.

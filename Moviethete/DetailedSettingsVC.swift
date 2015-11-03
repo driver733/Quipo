@@ -17,7 +17,7 @@ import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
 import SwiftValidator
-import FontBlaster
+//import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
 import SDWebImage
@@ -58,13 +58,16 @@ class DetailedSettingsVC: UIViewController {
   override func viewWillDisappear(animated: Bool) {
    
       // second if => "self" is being shown because of a "back" button.
+    if UserSingelton.sharedInstance.shouldUpdateLinkedAccounts {
       UserSingelton.sharedInstance.updateUserSubscriptions(
         UserSingelton.sharedInstance.followedUsers,
         unfollowedUsersObjectIDs: UserSingelton.sharedInstance.unfollowedUsers
         )
         .continueWithBlock({ (task: BFTask!) -> AnyObject! in
+          UserSingelton.sharedInstance.shouldUpdateLinkedAccounts = false
           return nil
         })
+    }
     
   }
   
@@ -94,6 +97,7 @@ class DetailedSettingsVC: UIViewController {
       cell.followButton.setTitle("+ follow", forState: .Normal)
       cell.followButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
     }
+    UserSingelton.sharedInstance.shouldUpdateLinkedAccounts = true
   }
 
   

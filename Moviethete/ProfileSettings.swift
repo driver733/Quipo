@@ -18,7 +18,7 @@ import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
 import SwiftValidator
-import FontBlaster
+//import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
 
@@ -48,7 +48,13 @@ class ProfileSettings: UIViewController {
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingLinkedAccountsData:", name: "didFinishLoadingLinkedAccountsData", object: nil)
       
-    
+      if UserSingelton.sharedInstance.shouldUpdateFollowFriends && UserSingelton.sharedInstance.allFriends.isEmpty {
+        UserSingelton.sharedInstance.loadFollowFriendsData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+          self.tableView.reloadData()
+          UserSingelton.sharedInstance.shouldUpdateFollowFriends = false
+          return nil
+        }
+      }
       
     }
   
@@ -59,8 +65,8 @@ class ProfileSettings: UIViewController {
   
   
   override func viewWillAppear(animated: Bool) {
-    startLoginActivityIndicator()
-    UserSingelton.sharedInstance.loadFollowFriendsData()
+ //   startLoginActivityIndicator()
+    
   }
   
   
@@ -68,8 +74,8 @@ class ProfileSettings: UIViewController {
   
   
   func didFinishLoadingLinkedAccountsData(notif: NSNotification) {
-    stopLoginActivityIndicator()
-    tableView.reloadData()
+//    stopLoginActivityIndicator()
+ //   tableView.reloadData()
   }
   
   func startLoginActivityIndicator() {

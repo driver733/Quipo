@@ -17,7 +17,7 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
-import FontBlaster
+//import FontBlaster
 import TLYShyNavBar
 import Parse
 import SDWebImage
@@ -31,6 +31,7 @@ class ProfileVC: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
   var posterCollectionView: UICollectionView!
+  var refreshControl = UIRefreshControl()
   
   var textArray: NSMutableArray! = NSMutableArray()
   var viewSelected = ""
@@ -43,26 +44,26 @@ class ProfileVC: UIViewController {
   
   var tableViewContentSizeWithPosterCollectionView = CGSize()
   
-  func startLoginActivityIndicator() {
-    loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
-    loginActivityIndicatorBackgroundView =  UIView(frame: self.view.frame)
-    loginActivityIndicatorBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
-    loginActivityIndicatorBackgroundView.center = self.view.center
-    //  loadingIndicatorBackgroundView.layer.cornerRadius = 10
-    loginActivityIndicator.center = self.view.center
-    loginActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
-    self.view.addSubview(loginActivityIndicatorBackgroundView)
-    self.view.addSubview(loginActivityIndicator)
-    loginActivityIndicator.startAnimating()
-  }
-  
-  func stopLoginActivityIndicator() {
-    if loginActivityIndicator != nil {
-      loginActivityIndicator.stopAnimating()
-      loginActivityIndicator.removeFromSuperview()
-      loginActivityIndicatorBackgroundView.removeFromSuperview()
-    }
-  }
+//  func startLoginActivityIndicator() {
+//    loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
+//    loginActivityIndicatorBackgroundView =  UIView(frame: self.view.frame)
+//    loginActivityIndicatorBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+//    loginActivityIndicatorBackgroundView.center = self.view.center
+//    //  loadingIndicatorBackgroundView.layer.cornerRadius = 10
+//    loginActivityIndicator.center = self.view.center
+//    loginActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+//    self.view.addSubview(loginActivityIndicatorBackgroundView)
+//    self.view.addSubview(loginActivityIndicator)
+//    loginActivityIndicator.startAnimating()
+//  }
+//  
+//  func stopLoginActivityIndicator() {
+//    if loginActivityIndicator != nil {
+//      loginActivityIndicator.stopAnimating()
+//      loginActivityIndicator.removeFromSuperview()
+//      loginActivityIndicatorBackgroundView.removeFromSuperview()
+//    }
+//  }
   
   
   func setupCollectionView() {
@@ -72,6 +73,7 @@ class ProfileVC: UIViewController {
     
     let layout = UICollectionViewFlowLayout()
     layout.sectionInset = UIEdgeInsetsMake(0, 0, 10, 0)
+    
     layout.minimumInteritemSpacing = 1
     layout.minimumLineSpacing = 1
     
@@ -80,7 +82,7 @@ class ProfileVC: UIViewController {
     
     let numberOfCellsInRow = 4
     let numberOfRows = ceil(((CGFloat(Post.sharedInstance.allUserPosts.count) / CGFloat(numberOfCellsInRow))))
-    let posterCollectionViewHeight = kPosterCollectionViewCellHeight * CGFloat(numberOfRows) + 10
+    let posterCollectionViewHeight = kPosterCollectionViewCellHeight * CGFloat(numberOfRows)
     
     
     self.posterCollectionView = UICollectionView(frame: CGRectMake(0, tableView.rectForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)).maxY, self.view.frame.width, posterCollectionViewHeight), collectionViewLayout: layout)
@@ -98,7 +100,7 @@ class ProfileVC: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    //    NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingStartupData:", name: "didFinishLoadingStartupData", object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingStartupData:", name: "didFinishLoadingStartupData", object: nil)
     
     tableView.registerNib(UINib(nibName: "ProfileTopCell", bundle: nil), forCellReuseIdentifier: "ProfileTopCell")
     tableView.registerNib(UINib(nibName: "ProfileUserReviews", bundle: nil), forCellReuseIdentifier: "ProfileUserReviews")
@@ -107,8 +109,6 @@ class ProfileVC: UIViewController {
     tableView.dataSource = self
     tableView.rowHeight = UITableViewAutomaticDimension;
     tableView.estimatedRowHeight = 44.0;
-    
-    // shyNavBarManager.scrollView = self.tableView
     
     let gesture = UITapGestureRecognizer(target: self, action: "cellPressed:")
     self.view.addGestureRecognizer(gesture)
@@ -120,43 +120,57 @@ class ProfileVC: UIViewController {
     
     tableView.tableFooterView = UIView(frame: CGRectZero)
     
-  //  if !UserSingelton.sharedInstance.hasLoadedStartupData {
- //     startLoginActivityIndicator()
- //   }
     
-    
+    refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+    tableView?.addSubview(refreshControl)
   }
   
-  
+  func refresh(sender: AnyObject?) {
+    UserSingelton.sharedInstance.updateData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      Async.main {
+        if self.refreshControl.refreshing {
+          self.refreshControl.endRefreshing()
+          self.posterCollectionView.reloadData()
+          self.tableView.reloadData()
+          if !self.posterCollectionView.hidden {
+            self.tableView.contentSize = self.tableViewContentSizeWithPosterCollectionView
+          }
+        }
+      }
+      return nil
+    }
+  }
   
   func didFinishLoadingStartupData(notif: NSNotification) {
-    stopLoginActivityIndicator()
     tableView.reloadData()
     posterCollectionView.reloadData()
   }
   
   
   override func viewWillAppear(animated: Bool) {
-    viewSelected = "following"
     self.navigationController?.navigationBar.barTintColor = UIColor.quipoColor()
     self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
     self.title = "Profile"
-    UserSingelton.sharedInstance.hasLoadedStartupData = false
-    startLoginActivityIndicator()
-    UserSingelton.sharedInstance.updateData().continueWithBlock { (task: BFTask!) -> AnyObject! in
-      
-      self.tableView.reloadData()
-      if let posterCollectionView = self.posterCollectionView {
-        posterCollectionView.reloadData()
-        //   self.tableView.contentSize = self.tableViewContentSizeWithPosterCollectionView
-      }
-      self.stopLoginActivityIndicator()
-      
-      return nil
-    }
     
     
+    
+    
+    
+//    UserSingelton.sharedInstance.hasLoadedStartupData = false
+//    startLoginActivityIndicator()
+//    UserSingelton.sharedInstance.updateData().continueWithBlock { (task: BFTask!) -> AnyObject! in
+//      
+//      self.tableView.reloadData()
+//      if let posterCollectionView = self.posterCollectionView {
+//        posterCollectionView.reloadData()
+//        //   self.tableView.contentSize = self.tableViewContentSizeWithPosterCollectionView
+//      }
+//      self.stopLoginActivityIndicator()
+//      
+//      return nil
+//    }
+//    
   }
   
   
@@ -164,7 +178,7 @@ class ProfileVC: UIViewController {
   override func viewDidAppear(animated: Bool) {
     if let posterView = posterCollectionView where tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) != nil {
       if !posterView.hidden {
-        //  tableView.contentSize = tableViewContentSizeWithPosterCollectionView
+          tableView.contentSize = tableViewContentSizeWithPosterCollectionView
       }
     }
     
@@ -405,6 +419,9 @@ extension ProfileVC: UITableViewDelegate {
       if posterCollectionView == nil {
         setupCollectionView()
       }
+    }
+    if indexPath.row == tableView.numberOfRowsInSection(indexPath.section) - 1 {
+      cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
     }
     
     

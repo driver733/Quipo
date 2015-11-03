@@ -18,7 +18,7 @@ import FBSDKLoginKit
 import FBSDKShareKit
 import KeychainAccess
 import SwiftValidator
-import FontBlaster
+//import FontBlaster
 import Parse
 import ParseFacebookUtilsV4
 import Bolts
@@ -52,7 +52,8 @@ public struct UserSingelton {
   
   var isFromDetailedVC = false
   var hasLoadedStartupData = false
-
+  var shouldUpdateLinkedAccounts = false
+  var shouldUpdateFollowFriends = true
 
   // MARK: - Parse
   
@@ -174,8 +175,6 @@ public struct UserSingelton {
       
       if let results = results {
         
-      
-      
       var followersPfUserObjectIDs = [String]()
       for follow in results {
         followersPfUserObjectIDs.append((follow["from"] as! PFUser).objectId!)
@@ -696,19 +695,6 @@ mutating func didReceiveNewVKToken() -> BFTask {
     
     return mainTask.task
   }
-
-  
-  
-
-  
-  
-  
-  
-
-
-
-  
-  
   
   
 // MARK: - VK SDK

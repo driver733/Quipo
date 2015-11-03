@@ -18,6 +18,16 @@ import SDWebImage
 import ITunesSwift
 import VK_ios_sdk
 
+
+extension UIView {
+  class func loadFromNibNamed(nibNamed: String, bundle : NSBundle? = nil) -> UIView? {
+    return UINib(
+      nibName: nibNamed,
+      bundle: bundle
+      ).instantiateWithOwner(nil, options: nil)[0] as? UIView
+  }
+}
+
 extension UIViewController {
   
   func getImageWithColor(color: UIColor, size: CGSize) -> UIImage {
@@ -152,6 +162,21 @@ class FeedVC: UIViewController {
     
     refresh(nil)
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   }
   
   
@@ -277,6 +302,7 @@ class FeedVC: UIViewController {
               completed:{
                 (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
                 cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+                // crash
               }
             )
           }
@@ -374,7 +400,9 @@ extension FeedVC: UITableViewDataSource {
             placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
             options: SDWebImageOptions.RefreshCached, completed:{(
               image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-              cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+              if error == nil && image != nil {
+                cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+              }
           })
           return cell
         }

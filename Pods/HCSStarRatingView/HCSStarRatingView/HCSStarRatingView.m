@@ -256,11 +256,11 @@
     CGContextSetFillColorWithColor(context, self.backgroundColor.CGColor);
     CGContextFillRect(context, rect);
     
-    CGFloat availableWidth = rect.size.width - (_spacing * (_maximumValue - 1));
+    CGFloat availableWidth = rect.size.width - (_spacing * (_maximumValue - 1)) - 2;
     CGFloat cellWidth = (availableWidth / _maximumValue);
     CGFloat starSide = (cellWidth <= rect.size.height) ? cellWidth : rect.size.height;
     for (int idx = 0; idx < _maximumValue; idx++) {
-        CGPoint center = CGPointMake(cellWidth*idx + cellWidth/2 + _spacing*idx, rect.size.height/2);
+        CGPoint center = CGPointMake(cellWidth*idx + cellWidth/2 + _spacing*idx + 1, rect.size.height/2);
         CGRect frame = CGRectMake(center.x - starSide/2, center.y - starSide/2, starSide, starSide);
         BOOL highlighted = (idx+1 <= ceilf(_value));
         if (_allowsHalfStars && highlighted && (idx+1 > _value)) {
@@ -301,23 +301,31 @@
 #pragma mark - Touches
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-    [super beginTrackingWithTouch:touch withEvent:event];
-    if (![self isFirstResponder]) {
-        [self becomeFirstResponder];
+    if (self.isEnabled) {
+        [super beginTrackingWithTouch:touch withEvent:event];
+        if (_shouldBecomeFirstResponder && ![self isFirstResponder]) {
+            [self becomeFirstResponder];
+        }
+        [self _handleTouch:touch];
+        return YES;
+    } else {
+        return NO;
     }
-    [self _handleTouch:touch];
-    return YES;
 }
 
 - (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-    [super continueTrackingWithTouch:touch withEvent:event];
-    [self _handleTouch:touch];
-    return YES;
+    if (self.isEnabled) {
+        [super continueTrackingWithTouch:touch withEvent:event];
+        [self _handleTouch:touch];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
     [super endTrackingWithTouch:touch withEvent:event];
-    if ([self isFirstResponder]) {
+    if (_shouldBecomeFirstResponder && [self isFirstResponder]) {
         [self resignFirstResponder];
     }
     [self _handleTouch:touch];
@@ -328,7 +336,7 @@
 
 - (void)cancelTrackingWithEvent:(UIEvent *)event {
     [super cancelTrackingWithEvent:event];
-    if ([self isFirstResponder]) {
+    if (_shouldBecomeFirstResponder && [self isFirstResponder]) {
         [self resignFirstResponder];
     }
 }
@@ -364,7 +372,7 @@
 #pragma mark - First responder
 
 - (BOOL)canBecomeFirstResponder {
-    return YES;
+    return _shouldBecomeFirstResponder;
 }
 
 #pragma mark - Intrinsic Content Size

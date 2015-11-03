@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15C27e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailedPostVC" customModule="Moviethete" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="aTY-h8-mMt">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Rr5-hF-Qae">
+                    <rect key="frame" x="223" y="191" width="155" height="29"/>
+                    <animations/>
+                    <segments>
+                        <segment title="Reviews"/>
+                        <segment title="Movie Info"/>
+                    </segments>
+                </segmentedControl>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Movie Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PAU-6i-4pH">
+                    <rect key="frame" x="129" y="10" width="96" height="21"/>
+                    <animations/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TF7-GQ-R7d" customClass="HCSStarRatingView">
+                    <rect key="frame" x="129" y="157" width="240" height="12"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="12" id="Kj7-bd-ahL"/>
+                        <constraint firstAttribute="height" constant="28" id="kkb-d4-iNA"/>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="12" id="npd-FV-aXj"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="Kj7-bd-ahL"/>
+                            <exclude reference="kkb-d4-iNA"/>
+                        </mask>
+                    </variation>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" restorationIdentifier="watched" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IhD-Ff-gGJ">
+                    <rect key="frame" x="419" y="157" width="171" height="12"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="12" id="HeD-Tl-G1g"/>
+                    </constraints>
+                    <state key="normal" title="+ Watched"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="fav" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8qJ-tx-O36">
+                    <rect key="frame" x="486" y="117" width="37" height="30"/>
+                    <animations/>
+                    <state key="normal" title="+ Fav"/>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" verticalHuggingPriority="251" image="vk" translatesAutoresizingMaskIntoConstraints="NO" id="bfx-2o-CbZ">
+                    <rect key="frame" x="8" y="10" width="106" height="159"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="bfx-2o-CbZ" secondAttribute="height" multiplier="2:3" id="gvf-VT-VPb"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="TF7-GQ-R7d" firstAttribute="leading" secondItem="PAU-6i-4pH" secondAttribute="leading" id="4CT-yZ-dTT"/>
+                <constraint firstItem="TF7-GQ-R7d" firstAttribute="bottom" secondItem="bfx-2o-CbZ" secondAttribute="bottom" id="Fcs-7Y-Pjn"/>
+                <constraint firstItem="8qJ-tx-O36" firstAttribute="centerX" secondItem="IhD-Ff-gGJ" secondAttribute="centerX" id="Fk8-81-ry1"/>
+                <constraint firstItem="Rr5-hF-Qae" firstAttribute="centerX" secondItem="aTY-h8-mMt" secondAttribute="centerX" id="Gcj-zj-1w3"/>
+                <constraint firstAttribute="trailing" secondItem="IhD-Ff-gGJ" secondAttribute="trailing" constant="10" id="GyJ-75-jT8"/>
+                <constraint firstAttribute="trailing" secondItem="bfx-2o-CbZ" secondAttribute="trailing" constant="50" id="JVb-aW-gBM"/>
+                <constraint firstItem="IhD-Ff-gGJ" firstAttribute="bottom" secondItem="bfx-2o-CbZ" secondAttribute="bottom" id="ODb-8o-7qZ"/>
+                <constraint firstItem="IhD-Ff-gGJ" firstAttribute="top" secondItem="8qJ-tx-O36" secondAttribute="bottom" constant="10" id="S32-bp-RAn"/>
+                <constraint firstItem="bfx-2o-CbZ" firstAttribute="top" secondItem="aTY-h8-mMt" secondAttribute="top" constant="10" id="WPD-MG-tSf"/>
+                <constraint firstItem="PAU-6i-4pH" firstAttribute="leading" secondItem="bfx-2o-CbZ" secondAttribute="trailing" constant="15" id="eIr-3z-R4u"/>
+                <constraint firstItem="TF7-GQ-R7d" firstAttribute="width" secondItem="PAU-6i-4pH" secondAttribute="width" id="fzb-Ac-u87"/>
+                <constraint firstItem="PAU-6i-4pH" firstAttribute="top" secondItem="bfx-2o-CbZ" secondAttribute="top" id="hJG-Uj-BXM"/>
+                <constraint firstItem="bfx-2o-CbZ" firstAttribute="leading" secondItem="aTY-h8-mMt" secondAttribute="leading" constant="8" id="icc-lK-Hy2"/>
+                <constraint firstItem="Rr5-hF-Qae" firstAttribute="top" secondItem="bfx-2o-CbZ" secondAttribute="bottom" constant="22" id="pKM-D1-Kb6"/>
+                <constraint firstItem="IhD-Ff-gGJ" firstAttribute="leading" secondItem="TF7-GQ-R7d" secondAttribute="trailing" constant="50" id="shJ-T4-ygn"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="JVb-aW-gBM"/>
+                    <exclude reference="fzb-Ac-u87"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="460" y="10"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="vk" width="106" height="106"/>
+    </resources>
+</document>

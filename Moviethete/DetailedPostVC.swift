@@ -11,11 +11,15 @@ import SDWebImage
 import Async
 import Bolts
 import Parse
+import DynamicBlurView
+import HCSStarRatingView
+
 
 class DetailedPostVC: UIViewController {
-
-
+  
+  var lastContentOffset = CGFloat()
   var tableView = UITableView()
+  var movieInfoTableView = UITableView()
   
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
@@ -38,29 +42,88 @@ class DetailedPostVC: UIViewController {
     }
     return nil
   }()
+  
+  func didTapFavButton(sender: UIButton) {
+    
+  }
+  
+  func didTapWatchedButton(sender: UIButton) {
+    
+  }
+  
+  
+  func didChangeSection(sender: UISegmentedControl ) {
+    switch sender.selectedSegmentIndex {
+      
+    case 0:
+      self.view = tableView
+    case 1:
+    //  self.view = movieInfoTableView
+      
+    default: break
+    }
+  }
 
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     
+    
     tableView.dataSource = self
+    tableView.delegate = self
     tableView.registerNib(UINib(nibName: "DetailedPostMainCell", bundle: nil), forCellReuseIdentifier: "detailedPostCell")
     tableView.registerNib(UINib(nibName: "TopCell", bundle: nil), forCellReuseIdentifier: "TopCell")
     tableView.registerNib(UINib(nibName: "ReviewCell", bundle: nil), forCellReuseIdentifier: "reviewCell")
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 44.0
     
+    
+
     self.view = tableView
+    
+  
+    let headerView = UIView(frame: CGRectMake(0, 64, 0, 180))
+    
+    let headerContentView = UIView.loadFromNibNamed("DetailedPostTopView")!
+    headerContentView.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.85)
+    headerContentView.frame = headerView.frame
+    headerContentView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
+    
+    for subView in headerContentView.subviews {
+      if subView.isKindOfClass(UISegmentedControl) {
+        let segControl = subView as! UISegmentedControl
+        segControl.addTarget(self, action: Selector("didChangeSection:"), forControlEvents: .AllEvents)
+      }
+      if subView.isKindOfClass(UIButton) {
+        let button = subView as! UIButton
+        if button.restorationIdentifier == "fav" {
+          button.addTarget(self, action: Selector("didTapFavButton:"), forControlEvents: .TouchUpInside)
+        } else if button.restorationIdentifier == "watched" {
+          button.addTarget(self, action: Selector("didTapWatchedButton:"), forControlEvents: .TouchUpInside)
+        }
+        
+      }
+    }
+   
+    headerView.addSubview(headerContentView)
+
+ 
+    tableView.tableHeaderView = headerView
+
+    
+    
+
+
+    movieInfoTableView.dataSource = self
+    movieInfoTableView.delegate = self
     
     self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.placeholderColor(), size: (CGSizeMake(0.35, 0.35))))
     
-    
-    
     self.title = passedPost!.movieTitle!
     
-     tableView.tableFooterView = UIView(frame: CGRectZero)
-    
+    tableView.tableFooterView = UIView(frame: CGRectZero)
+    movieInfoTableView.tableFooterView = UIView(frame: CGRectZero)
   }
   
 
@@ -230,27 +293,29 @@ class DetailedPostVC: UIViewController {
 extension DetailedPostVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    switch indexPath.row {
+  
       
-    case 0:
-      let cell = tableView.dequeueReusableCellWithIdentifier("detailedPostCell", forIndexPath: indexPath) as! DetailedPostCell
-      cell.posterImage.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!),
-        placeholderImage: getImageWithColor(UIColor.placeholderColor(),size: cell.posterImage.bounds.size))
-      cell.movieInfo.text = passedPost?.movieGenre
-      cell.movieInfo.textColor = textColor
-      cell.selectionStyle = .None
-      return cell
+//    case 0:
+//      let cell = tableView.dequeueReusableCellWithIdentifier("detailedPostCell", forIndexPath: indexPath) as! DetailedPostCell
+//      cell.posterImage.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!),
+//        placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.posterImage.bounds.size))
+//      cell.movieRating.userInteractionEnabled = false
+//      cell.selectionStyle = .None
+//      cell.segmentedControl.addTarget(self, action: Selector("didChangeSection:"), forControlEvents: .AllEvents)
+//      return cell
       
-    default:
+  
       if !UserReview.sharedInstance.movieReviewsForSelectedMovie.isEmpty {
         let review = UserReview.sharedInstance.movieReviewsForSelectedMovie[getCellPostIndex(indexPath.row - 1)]
-        if indexPath.row % 2 != 0 {
+        if indexPath.row % 2 == 0 {
           let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
+          
           cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
           cell.profileImage.sd_setImageWithURL(NSURL(string: (review.pfUser!["smallProfileImage"] as! String)),
             placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
             options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, erro: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
               cell.profileImage.image = Toucan(image: image).maskWithEllipse().image
+              
           })
           cell.userName.text = review.pfUser?.username
           cell.timeSincePosted.text = review.timeSincePosted
@@ -269,11 +334,16 @@ extension DetailedPostVC: UITableViewDataSource {
       
       return UITableViewCell()
     }
-  }
+  
+  
+  
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return UserReview.sharedInstance.movieReviewsForSelectedMovie.count * 2 + 1
+    return UserReview.sharedInstance.movieReviewsForSelectedMovie.count * 2
   }
+  
+  
+  
   
 }
 
@@ -281,10 +351,25 @@ extension DetailedPostVC: UITableViewDataSource {
 
 
 
-
-
-
-
+extension DetailedPostVC: UITableViewDelegate {
+  
+  func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    scrollView.bounces = true
+  }
+ 
+  
+  func scrollViewDidScroll(scrollView: UIScrollView) {
+    let offsetY = scrollView.contentOffset.y
+    let headerContentView = tableView.tableHeaderView?.subviews[0]
+    headerContentView?.transform = CGAffineTransformMakeTranslation(0, offsetY)
+  }
+  
+  func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    if indexPath.row == tableView.numberOfRowsInSection(indexPath.section) - 1 {
+      cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+    }
+  }
+}
 
 
 

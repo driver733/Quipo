@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, OAStackViewAlignment) {
    */
   OAStackViewAlignmentLeading,
   OAStackViewAlignmentTop = OAStackViewAlignmentLeading,
-  OAStackViewAlignmentFirstBaseline, // Valid for horizontal axis only
+  OAStackViewAlignmentFirstBaseline NS_ENUM_AVAILABLE_IOS(8_0), // Valid for horizontal axis only
   
   /* Center the items in a vertical stack horizontally
    or the items in a horizontal stack vertically
@@ -68,9 +68,18 @@ typedef NS_ENUM(NSInteger, OAStackViewAlignment) {
    */
   OAStackViewAlignmentTrailing,
   OAStackViewAlignmentBottom = OAStackViewAlignmentTrailing,
-  OAStackViewAlignmentLastBaseline, // Valid for horizontal axis only
+  OAStackViewAlignmentBaseline,
+  OAStackViewAlignmentLastBaseline = OAStackViewAlignmentBaseline, // Valid for horizontal axis only
 };
 
+// Keep older versions of the compiler happy
+#ifndef NS_ASSUME_NONNULL_BEGIN
+#define NS_ASSUME_NONNULL_BEGIN
+#define NS_ASSUME_NONNULL_END
+#define nullable
+#define nonnullable
+#define __nullable
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OAStackView : UIView
@@ -90,6 +99,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic) OAStackViewDistribution distribution;
 @property(nonatomic) IBInspectable NSInteger distributionValue;
+
+//layoutMargins has been added to OAStackView since iOS 7 does not include a layout margin
+@property(nonatomic) UIEdgeInsets layoutMargins;
+
+@property(nonatomic, getter=isLayoutMarginsRelativeArrangement) BOOL layoutMarginsRelativeArrangement;
 
 - (instancetype)initWithArrangedSubviews:(NSArray*)views NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;

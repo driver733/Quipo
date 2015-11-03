@@ -75,11 +75,9 @@ public class ITunesSearchApi {
     
     
     public func request(completionHandler: (String?, NSError?) -> Void) -> Void {
-        Alamofire.request(.GET, self.buildUrl())
-            .responseString { (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<String>) -> Void in
-              let err = NSError(domain: "", code: 0, userInfo: ["" : ""])
-                  completionHandler(result.value, err)
-        }
+      Alamofire.request(.GET, self.buildUrl()).responseString { (response: Response<String, NSError>) -> Void in
+        completionHandler(response.result.value, response.result.error)
+      }
     }
     
     internal func buildUrl() -> String {
