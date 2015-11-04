@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '0B19039FA4026D08F9806225'
+               BlueprintIdentifier = '217D199526197966CE286BB6'
                BlueprintName = 'OAStackView'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'OAStackView.framework'>

@@ -80,6 +80,8 @@ struct ITunes {
         newPosts[index].bigPosterImageURL = self.getBigPosterImageURL(json["artworkUrl100"].stringValue)
         newPosts[index].standardPosterImageURL = self.getStandardPosterImageURL(json["artworkUrl100"].stringValue)
         newPosts[index].movieTitle = json["trackName"].stringValue
+        newPosts[index].releaseDate = self.getReformattedReleaseDate(json["releaseDate"].stringValue)
+        newPosts[index].releaseYear = self.getReleaseYear(json["releaseDate"].stringValue)
       }
       
       completionHandler(posts: newPosts)
@@ -92,7 +94,7 @@ struct ITunes {
   
   
   
-  
+
   
   
   
@@ -154,7 +156,23 @@ struct ITunes {
   
   
   
+   func getReformattedReleaseDate(rawReleaseDate: String) -> String {
+    let dateFormatter = NSDateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm::ssZ"
+    let date = dateFormatter.dateFromString(rawReleaseDate)
+    let calendar = NSCalendar.currentCalendar()
+    let comp = calendar.components([.Day, .Month, .Year], fromDate: date!)
+    return ("\(comp.day) \(dateFormatter.monthSymbols[comp.month-1]), \(comp.year)")
+  }
   
+  private func getReleaseYear(rawReleaseDate: String) -> String {
+    let dateFormatter = NSDateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm::ssZ"
+    let date = dateFormatter.dateFromString(rawReleaseDate)
+    let calendar = NSCalendar.currentCalendar()
+    let comp = calendar.components([.Day, .Month, .Year], fromDate: date!)
+    return ("\(comp.year)")
+  }
   
   
   

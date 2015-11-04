@@ -4,6 +4,8 @@ use_frameworks!
 workspace 'Moviethete'
 
 target 'Moviethete' do
+    pod 'YouTubePlayer'
+    pod 'Player'
     pod "DynamicBlurView"
     pod 'KeychainAccess'
     pod 'HCSStarRatingView', '~> 1.4.2'

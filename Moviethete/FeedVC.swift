@@ -249,9 +249,6 @@ class FeedVC: UIViewController {
       let colors = getPrimaryPosterImageColorAndtextColor(resizedPosterImage)
       vc.passedColor = colors[1]
       vc.textColor = colors[0]
-      
- 
-      
     }
     
     

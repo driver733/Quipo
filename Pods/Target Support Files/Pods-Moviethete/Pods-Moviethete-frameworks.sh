@@ -100,12 +100,14 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-Moviethete/ParseFacebookUtilsV4.framework"
   install_framework "Pods-Moviethete/ParseTwitterUtils.framework"
   install_framework "Pods-Moviethete/ParseUI.framework"
+  install_framework "Pods-Moviethete/Player.framework"
   install_framework "Pods-Moviethete/SDWebImage.framework"
   install_framework "Pods-Moviethete/SwiftValidator.framework"
   install_framework "Pods-Moviethete/SwiftyJSON.framework"
   install_framework "Pods-Moviethete/TLYShyNavBar.framework"
   install_framework "Pods-Moviethete/TPKeyboardAvoiding.framework"
   install_framework "Pods-Moviethete/VK_ios_sdk.framework"
+  install_framework "Pods-Moviethete/YouTubePlayer.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-Moviethete/AFNetworking.framework"
@@ -126,10 +128,12 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-Moviethete/ParseFacebookUtilsV4.framework"
   install_framework "Pods-Moviethete/ParseTwitterUtils.framework"
   install_framework "Pods-Moviethete/ParseUI.framework"
+  install_framework "Pods-Moviethete/Player.framework"
   install_framework "Pods-Moviethete/SDWebImage.framework"
   install_framework "Pods-Moviethete/SwiftValidator.framework"
   install_framework "Pods-Moviethete/SwiftyJSON.framework"
   install_framework "Pods-Moviethete/TLYShyNavBar.framework"
   install_framework "Pods-Moviethete/TPKeyboardAvoiding.framework"
   install_framework "Pods-Moviethete/VK_ios_sdk.framework"
+  install_framework "Pods-Moviethete/YouTubePlayer.framework"
 fi

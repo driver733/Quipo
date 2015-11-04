@@ -13,13 +13,16 @@ import Bolts
 import Parse
 import DynamicBlurView
 import HCSStarRatingView
-
+import YouTubePlayer
+import Alamofire
 
 class DetailedPostVC: UIViewController {
+
+  var player: YouTubePlayerView!
+  var movieTrailerURL: NSURL!
   
-  var lastContentOffset = CGFloat()
   var tableView = UITableView()
-  var movieInfoTableView = UITableView()
+  var tableViewSection = 0
   
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
@@ -56,9 +59,11 @@ class DetailedPostVC: UIViewController {
     switch sender.selectedSegmentIndex {
       
     case 0:
-      self.view = tableView
+      tableViewSection = 0
+      tableView.reloadData()
     case 1:
-    //  self.view = movieInfoTableView
+      tableViewSection = 1
+      tableView.reloadData()
       
     default: break
     }
@@ -75,6 +80,7 @@ class DetailedPostVC: UIViewController {
     tableView.registerNib(UINib(nibName: "DetailedPostMainCell", bundle: nil), forCellReuseIdentifier: "detailedPostCell")
     tableView.registerNib(UINib(nibName: "TopCell", bundle: nil), forCellReuseIdentifier: "TopCell")
     tableView.registerNib(UINib(nibName: "ReviewCell", bundle: nil), forCellReuseIdentifier: "reviewCell")
+    tableView.registerNib(UINib(nibName: "TrailersCell", bundle: nil), forCellReuseIdentifier: "trailersCell")
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 44.0
     
@@ -86,7 +92,7 @@ class DetailedPostVC: UIViewController {
     let headerView = UIView(frame: CGRectMake(0, 64, 0, 180))
     
     let headerContentView = UIView.loadFromNibNamed("DetailedPostTopView")!
-    headerContentView.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.85)
+    headerContentView.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.9)
     headerContentView.frame = headerView.frame
     headerContentView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
     
@@ -112,22 +118,68 @@ class DetailedPostVC: UIViewController {
     tableView.tableHeaderView = headerView
 
     
-    
-
-
-    movieInfoTableView.dataSource = self
-    movieInfoTableView.delegate = self
-    
+   
     self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.placeholderColor(), size: (CGSizeMake(0.35, 0.35))))
     
     self.title = passedPost!.movieTitle!
     
     tableView.tableFooterView = UIView(frame: CGRectZero)
-    movieInfoTableView.tableFooterView = UIView(frame: CGRectZero)
+    
+    
+    
+    let gesture = UITapGestureRecognizer(target: self, action: "didTapPlayer:")
+    self.view.addGestureRecognizer(gesture)
+    gesture.cancelsTouchesInView = false
+
+
+
   }
   
 
+  func didTapPlayer(press: UITapGestureRecognizer) {
+    
+    if press.state == .Ended {
+      
+      
+      let location = press.locationInView(tableView)
+      let path = tableView.indexPathForRowAtPoint(location)
+      if path?.row == 0  {
+        let cell = tableView.cellForRowAtIndexPath(path!) as! TrailersCell
+        
+        var viewPoint = cell.video.convertPoint(location, fromView: tableView)
+        if cell.video.pointInside(viewPoint, withEvent: nil) {
+          
+          
+          
+      
+          self.player = YouTubePlayerView(frame: self.view.frame)
+          self.player.delegate = self
+          self.player.loadVideoID("wQg3bXrVLtg")
 
+          
+          
+          
+         
+//            YouTube.sharedInstance.getMovieTrailerWithMovieTitle((passedPost?.movieTitle)!, releasedIn: (passedPost?.releaseYear)!).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+//              Async.main {
+//                let trailerId = task.result as! String
+//                self.player = YouTubePlayerView(frame: self.view.frame)
+//                self.player.delegate = self
+//                self.player.loadVideoID(trailerId)
+//              }
+//              return nil
+//             })
+          
+
+        }
+
+      
+      }
+      
+   
+      
+    }
+  }
   
   func startLoginActivityIndicator() {
     loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
@@ -212,6 +264,9 @@ class DetailedPostVC: UIViewController {
     
   }
   
+  
+  
+
   // Move to Singleton
   func userHasReviewForSelectedMovie() -> Bool {
     for review in UserReview.sharedInstance.movieReviewsForSelectedMovie {
@@ -303,7 +358,34 @@ extension DetailedPostVC: UITableViewDataSource {
 //      cell.selectionStyle = .None
 //      cell.segmentedControl.addTarget(self, action: Selector("didChangeSection:"), forControlEvents: .AllEvents)
 //      return cell
+    
+    
+    if tableViewSection == 1 {
+      let cell = tableView.dequeueReusableCellWithIdentifier("trailersCell") as! TrailersCell
+      cell.selectionStyle = .None
+     
+     
       
+//      player = Player()
+//      player.setUrl(NSURL(string: "https://v.cdn.vine.co/r/videos/AA3C120C521177175800441692160_38f2cbd1ffb.1.5.13763579289575020226.mp4")!)
+//      player.delegate = self
+      
+//      self.addChildViewController(cell.player)
+//      self.view.addSubview(cell.player.view)
+//      player.didMoveToParentViewController(self)
+  //    player.playFromBeginning()
+
+      
+      
+      
+      
+      
+     
+  
+      
+      return cell
+    }
+    
   
       if !UserReview.sharedInstance.movieReviewsForSelectedMovie.isEmpty {
         let review = UserReview.sharedInstance.movieReviewsForSelectedMovie[getCellPostIndex(indexPath.row - 1)]
@@ -339,6 +421,9 @@ extension DetailedPostVC: UITableViewDataSource {
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if tableViewSection == 1 {
+      return 1
+    }
     return UserReview.sharedInstance.movieReviewsForSelectedMovie.count * 2
   }
   
@@ -372,7 +457,18 @@ extension DetailedPostVC: UITableViewDelegate {
 }
 
 
-
+extension DetailedPostVC: YouTubePlayerDelegate {
+  func playerReady(videoPlayer: YouTubePlayerView) {
+    player.play()
+  }
+  func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
+   
+    
+  }
+  func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {
+    
+  }
+}
 
 
 

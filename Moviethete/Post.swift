@@ -41,7 +41,9 @@ import Async
     /// The genre of the movie that the post is dedicated to
     var movieGenre: String?
     /// The release date of the movie that the post is dedicated to
-    var movieReleaseDate: String?
+    var releaseDate: String?
+    /// The release year
+    var releaseYear: String?
     /// The small poster image URL of the movie that the post is dedicated to
     var smallPosterImageURL: String?
     /// The small poster image URL of the movie that the post is dedicated to
@@ -91,7 +93,7 @@ import Async
       movieTitle = theMovieTitle
       localizedMovieTitle = theLocalizedMovieTitle
       movieGenre = theMovieGenre
-      movieReleaseDate = theMovieReleaseDate
+      releaseDate = theMovieReleaseDate
       standardPosterImageURL = theStandardPosterImageURL
     }
     
@@ -260,14 +262,7 @@ import Async
 
 
 
-  func getReformattedReleaseDate(rawReleaseDate: String) -> String {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm::ssZ"
-    let date = dateFormatter.dateFromString(rawReleaseDate)
-    let calendar = NSCalendar.currentCalendar()
-    let comp = calendar.components([.Day, .Month, .Year], fromDate: date!)
-    return ("\(comp.day) \(dateFormatter.monthSymbols[comp.month-1]), \(comp.year)")
-  }
+  
     
     
     

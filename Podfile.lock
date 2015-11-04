@@ -69,6 +69,7 @@ PODS:
   - ParseUI (1.1.6):
     - Bolts/Tasks (~> 1.2)
     - Parse (~> 1.8)
+  - Player (0.0.8)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
@@ -79,6 +80,7 @@ PODS:
   - TwitterCore (1.12.0)
   - TwitterKit (1.12.0)
   - VK-ios-sdk (1.3.4)
+  - YouTubePlayer (0.3.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -99,6 +101,7 @@ DEPENDENCIES:
   - ParseFacebookUtilsV4 (~> 1.7)
   - ParseTwitterUtils
   - ParseUI (~> 1.1)
+  - Player
   - SDWebImage (~> 3.7)
   - SwiftValidator (from `https://github.com/i-schuetz/SwiftValidator.git`)
   - SwiftyJSON
@@ -107,6 +110,7 @@ DEPENDENCIES:
   - TwitterCore
   - TwitterKit
   - VK-ios-sdk
+  - YouTubePlayer
 
 EXTERNAL SOURCES:
   Async:
@@ -149,6 +153,7 @@ SPEC CHECKSUMS:
   ParseFacebookUtilsV4: aadebfaaaf4a45bf0a0992863bf48c8fc49189e3
   ParseTwitterUtils: 0155d1a4e388690aa5d80405a586474e66606968
   ParseUI: 8a22e448c03f825203d8c379c80523517f68baa3
+  Player: 31becc185d219b96dac5419ce90745095940ab92
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SwiftValidator: 79936ea870f1dba8a0824763375375bb209fe30d
   SwiftyJSON: 592b53bee5ef3dd9b3bebc6b9cb7ee35426ae8c3
@@ -157,5 +162,6 @@ SPEC CHECKSUMS:
   TwitterCore: a1feadb793512962003ed2bad23e846c8daa4efd
   TwitterKit: c27e7b997cd82d5c626fcfd8b1dead1e15dac7ca
   VK-ios-sdk: a20fbb61a1f45648fb185b77bb16f65aa735b2d6
+  YouTubePlayer: 88713a96c356f2c88da8925eb61438eda88bcd57
 
 COCOAPODS: 0.39.0.beta.4

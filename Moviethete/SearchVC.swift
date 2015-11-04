@@ -231,7 +231,7 @@ class SearchVC: UITableViewController {
     cell.movieTitle.text = foundMovie.movieTitle
     cell.localizedMovieTitle.text = foundMovie.localizedMovieTitle
     cell.genre.text = foundMovie.movieGenre
-    cell.releaseDate.text = foundMovie.movieReleaseDate
+    cell.releaseDate.text = foundMovie.releaseDate
     
     if (tableView.dragging || tableView.decelerating) {
     
@@ -359,7 +359,7 @@ extension SearchVC: UISearchResultsUpdating {
               theMovieTitle: subJSON["trackName"].stringValue,
               theLocalizedMovieTitle: subJSON["trackName"].stringValue,
               theMovieGenre: subJSON["primaryGenreName"].stringValue,
-              theMovieReleaseDate: Post.sharedInstance.getReformattedReleaseDate(subJSON["releaseDate"].stringValue),
+              theMovieReleaseDate: ITunes.sharedInstance.getReformattedReleaseDate(subJSON["releaseDate"].stringValue),
               theStandardPosterImageURL: ITunes.sharedInstance.getStandardPosterImageURL(subJSON["artworkUrl100"].stringValue)
             )
             self.searchResults.append(foundMovie)

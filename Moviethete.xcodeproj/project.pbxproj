@@ -14,7 +14,7 @@
 		8F44554B1B92A9C400FB1541 /* DetailedPostTopView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F44554A1B92A9C400FB1541 /* DetailedPostTopView.xib */; };
 		8F44554D1B92B46E00FB1541 /* DetailedPostTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F44554C1B92B46E00FB1541 /* DetailedPostTopView.swift */; };
 		8F44554F1B92DC6900FB1541 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F44554E1B92DC6900FB1541 /* Main.storyboard */; };
-		8F489A211BE958D400FB7606 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F489A201BE958D400FB7606 /* GoogleSignIn.framework */; settings = {ASSET_TAGS = (); }; };
+		8F489A211BE958D400FB7606 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F489A201BE958D400FB7606 /* GoogleSignIn.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8F534F121BC0DF3100E0612B /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F534F111BC0DF3100E0612B /* AddressBook.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8F534F141BC0DF3800E0612B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F534F131BC0DF3800E0612B /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8F534F161BC0DF4400E0612B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F534F151BC0DF4400E0612B /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -56,6 +56,7 @@
 		8F893EFC1B99217E005D8305 /* AddMovieReviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F893EFB1B99217E005D8305 /* AddMovieReviewVC.swift */; };
 		8F893F011B993DB1005D8305 /* TitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F893F001B993DB1005D8305 /* TitleCell.xib */; };
 		8F893F031B993E0F005D8305 /* TitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F893F021B993E0F005D8305 /* TitleCell.swift */; };
+		8F8DB8741BE9C8D80090E709 /* YouTube.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8DB8731BE9C8D80090E709 /* YouTube.swift */; settings = {ASSET_TAGS = (); }; };
 		8F999FC41BD34D8100016FE0 /* PosterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F999FC31BD34D8100016FE0 /* PosterCollectionViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		8F9A0D511B994E660060A7B6 /* StarRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9A0D4F1B994E660060A7B6 /* StarRating.swift */; };
 		8F9A0D521B994E660060A7B6 /* StarRating.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F9A0D501B994E660060A7B6 /* StarRating.xib */; };
@@ -68,6 +69,11 @@
 		8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB871A91B80FB9E00256787 /* SearchResultCell.swift */; };
 		8FB871AC1B80FB9E00256787 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */; };
 		8FBA93C81BA6117300D6F154 /* LinkedAccountsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBA93C71BA6117300D6F154 /* LinkedAccountsVC.swift */; };
+		8FC946221BE982D2005F23AA /* TrailersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC946201BE982D2005F23AA /* TrailersCell.swift */; settings = {ASSET_TAGS = (); }; };
+		8FC946231BE982D2005F23AA /* TrailersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FC946211BE982D2005F23AA /* TrailersCell.xib */; settings = {ASSET_TAGS = (); }; };
+		8FCC1EB81BE9D45400C1D100 /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FCC1EB71BE9D45400C1D100 /* ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8FCC1EB91BE9DC3700C1D100 /* ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F327CF01BC4D1C500946606 /* ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8FCC1EBA1BE9DC3700C1D100 /* ITunesSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8F327CF01BC4D1C500946606 /* ITunesSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8FD456D31B85793200945E3E /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD456D21B85793200945E3E /* Toucan.swift */; };
 		8FF20B551B940B540067AFB7 /* UIImageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF20B541B940B540067AFB7 /* UIImageColors.swift */; };
 		EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAECE6804A560D6747EC5E20 /* Pods_Moviethete.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -89,6 +95,20 @@
 			remoteInfo = Moviethete;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8FCC1EBB1BE9DC3700C1D100 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8FCC1EBA1BE9DC3700C1D100 /* ITunesSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2AE186941922961479F9BCB9 /* Pods-Moviethete.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.debug.xcconfig"; sourceTree = "<group>"; };
@@ -151,6 +171,7 @@
 		8F893EFB1B99217E005D8305 /* AddMovieReviewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMovieReviewVC.swift; sourceTree = "<group>"; };
 		8F893F001B993DB1005D8305 /* TitleCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TitleCell.xib; sourceTree = "<group>"; };
 		8F893F021B993E0F005D8305 /* TitleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleCell.swift; sourceTree = "<group>"; };
+		8F8DB8731BE9C8D80090E709 /* YouTube.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTube.swift; sourceTree = "<group>"; };
 		8F9998B81B86B32E00BFEFAC /* ITunesSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ITunesSwift.framework; path = "Externals/iTunesSwift/build/Debug-iphoneos/ITunesSwift.framework"; sourceTree = "<group>"; };
 		8F999FC31BD34D8100016FE0 /* PosterCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PosterCollectionViewCell.swift; sourceTree = "<group>"; };
 		8F9A0D4F1B994E660060A7B6 /* StarRating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarRating.swift; sourceTree = "<group>"; };
@@ -164,6 +185,9 @@
 		8FB871A91B80FB9E00256787 /* SearchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		8FB871AA1B80FB9E00256787 /* SearchResultCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultCell.xib; sourceTree = "<group>"; };
 		8FBA93C71BA6117300D6F154 /* LinkedAccountsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedAccountsVC.swift; sourceTree = "<group>"; };
+		8FC946201BE982D2005F23AA /* TrailersCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrailersCell.swift; sourceTree = "<group>"; };
+		8FC946211BE982D2005F23AA /* TrailersCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrailersCell.xib; sourceTree = "<group>"; };
+		8FCC1EB71BE9D45400C1D100 /* ITunesSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ITunesSwift.framework; path = "Externals/iTunesSwift/build/Debug-iphoneos/ITunesSwift.framework"; sourceTree = "<group>"; };
 		8FD456D21B85793200945E3E /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toucan.swift; sourceTree = "<group>"; };
 		8FD5374A1B927AC300DD355B /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "Pods/../build/Debug-iphoneos/Alamofire.framework"; sourceTree = "<group>"; };
 		8FF20B541B940B540067AFB7 /* UIImageColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageColors.swift; sourceTree = "<group>"; };
@@ -175,7 +199,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FCC1EB81BE9D45400C1D100 /* ITunesSwift.framework in Frameworks */,
 				8F534F161BC0DF4400E0612B /* SystemConfiguration.framework in Frameworks */,
+				8FCC1EB91BE9DC3700C1D100 /* ITunesSwift.framework in Frameworks */,
 				8F534F141BC0DF3800E0612B /* StoreKit.framework in Frameworks */,
 				8F534F121BC0DF3100E0612B /* AddressBook.framework in Frameworks */,
 				EAFCFCF4F26961E00EB376AE /* Pods_Moviethete.framework in Frameworks */,
@@ -213,6 +239,8 @@
 			isa = PBXGroup;
 			children = (
 				8F9DC3E51B96313B00F30616 /* DetailedPostVC.swift */,
+				8FC946201BE982D2005F23AA /* TrailersCell.swift */,
+				8FC946211BE982D2005F23AA /* TrailersCell.xib */,
 				8F7348B81BCA0A120033A3C1 /* ReviewCell.swift */,
 				8F2AD4851BCA06C80037DAFE /* ReviewCell.xib */,
 				8F44554C1B92B46E00FB1541 /* DetailedPostTopView.swift */,
@@ -374,6 +402,7 @@
 				8F8504091B9EB42B003F4DC8 /* FollowFriends.swift */,
 				8F7FF4971B73F2AB001317E2 /* Post.swift */,
 				8F29757C1BCDFC41008E47F3 /* ITunes.swift */,
+				8F8DB8731BE9C8D80090E709 /* YouTube.swift */,
 				8F2C49AB1B99EFFF00535079 /* UserReview.swift */,
 			);
 			name = Model;
@@ -401,6 +430,7 @@
 		C76F4F8BDF23CEBB89CA0EA3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8FCC1EB71BE9D45400C1D100 /* ITunesSwift.framework */,
 				8F489A201BE958D400FB7606 /* GoogleSignIn.framework */,
 				8FB427701BE954FC007E02DD /* FMBlurable.swift */,
 				8F327CF01BC4D1C500946606 /* ITunesSwift.framework */,
@@ -433,6 +463,7 @@
 				130D33E29F56BF307D79DC1F /* Embed Pods Frameworks */,
 				7C1AED9618BCA0587ADD5506 /* Copy Pods Resources */,
 				8F4F97C41B7418E5006CA7C9 /* ShellScript */,
+				8FCC1EBB1BE9DC3700C1D100 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -538,6 +569,7 @@
 				8F7FF4B01B73F2AB001317E2 /* ProfileTopCell.xib in Resources */,
 				8F7FF4AB1B73F2AB001317E2 /* ProfileSettingsFollowFriendsCell.xib in Resources */,
 				8F44554F1B92DC6900FB1541 /* Main.storyboard in Resources */,
+				8FC946231BE982D2005F23AA /* TrailersCell.xib in Resources */,
 				8F7FF4B11B73F2AB001317E2 /* ProfileUserReviews.xib in Resources */,
 				8F7FF4B61B73F2AB001317E2 /* ContentCell.xib in Resources */,
 				8FB871AC1B80FB9E00256787 /* SearchResultCell.xib in Resources */,
@@ -634,6 +666,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8FB427721BE95581007E02DD /* DetailedPostVC.swift in Sources */,
+				8FC946221BE982D2005F23AA /* TrailersCell.swift in Sources */,
 				8F2C49AC1B99EFFF00535079 /* UserReview.swift in Sources */,
 				8F44554D1B92B46E00FB1541 /* DetailedPostTopView.swift in Sources */,
 				8F7FF4B21B73F2AB001317E2 /* ProfileUserReviews.swift in Sources */,
@@ -659,6 +692,7 @@
 				8F7FF4AC1B73F2AB001317E2 /* ProfileSettingsFollowFriendsCell.swift in Sources */,
 				8FB427711BE954FC007E02DD /* FMBlurable.swift in Sources */,
 				8F9A0D511B994E660060A7B6 /* StarRating.swift in Sources */,
+				8F8DB8741BE9C8D80090E709 /* YouTube.swift in Sources */,
 				8F70DA101B9D412B0065E791 /* UserSingleton.swift in Sources */,
 				8F70DA121B9D5D6A0065E791 /* DetailedSettingsVC.swift in Sources */,
 				8F7FF4AA1B73F2AB001317E2 /* ProfileSettings.swift in Sources */,
@@ -802,6 +836,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Externals/iTunesSwift/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = Moviethete/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
@@ -904,6 +939,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Externals/iTunesSwift/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = Moviethete/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
