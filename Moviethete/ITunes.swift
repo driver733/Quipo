@@ -82,6 +82,7 @@ struct ITunes {
         newPosts[index].movieTitle = json["trackName"].stringValue
         newPosts[index].releaseDate = self.getReformattedReleaseDate(json["releaseDate"].stringValue)
         newPosts[index].releaseYear = self.getReleaseYear(json["releaseDate"].stringValue)
+        newPosts[index].longDescription = json["longDescription"].stringValue
       }
       
       completionHandler(posts: newPosts)
@@ -180,25 +181,25 @@ struct ITunes {
   
   func getTinyPosterImageURL(defaultPosterImageURL: String) -> String {
     var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "50x50-75")
+    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "50x50-75")
     return str
   }
   
   func getSmallPosterImageURL(defaultPosterImageURL: String) -> String {
     var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
+    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
     return str
   }
   
   func getStandardPosterImageURL(defaultPosterImageURL: String) -> String {
     var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
+    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
     return str
   }
   
   func getBigPosterImageURL(defaultPosterImageURL: String) -> String {
     var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-14), end: str.endIndex.advancedBy(-4)), with: "600x600-85")
+    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "600x600-85")
     return str
   }
 

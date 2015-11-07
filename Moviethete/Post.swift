@@ -56,6 +56,8 @@ import Async
     var review: String?
     /// Numerical represention of the rating (for stars)
     var rating: Int?
+    /// Long description
+    var longDescription: String?
     
     
     

@@ -18,6 +18,13 @@ import SDWebImage
 import ITunesSwift
 import VK_ios_sdk
 
+extension String {
+  func sizeForWidth(width: CGFloat, font: UIFont) -> CGSize {
+    let attr = [NSFontAttributeName: font]
+    let height = NSString(string: self).boundingRectWithSize(CGSize(width: width, height: CGFloat.max), options:.UsesLineFragmentOrigin, attributes: attr, context: nil).height
+    return CGSize(width: width, height: ceil(height))
+  }
+}
 
 extension UIView {
   class func loadFromNibNamed(nibNamed: String, bundle : NSBundle? = nil) -> UIView? {
@@ -384,7 +391,9 @@ extension FeedVC: UITableViewDataSource {
                   placeholderImage: self.getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
                   options: SDWebImageOptions.RefreshCached, completed:{(
                     image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-                    cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+                    if image != nil && error == nil {
+                      cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+                    }
                 })
               } else {
                 cell.profileImage.image = self.getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size)

@@ -12,7 +12,8 @@ import Player
 
 class TrailersCell: UITableViewCell {
 
-  @IBOutlet weak var video: UIView!
+
+  @IBOutlet weak var thumbnail: UIImageView!
   @IBOutlet weak var topLabel: UILabel!
   @IBOutlet weak var videoType: UILabel!
   @IBOutlet weak var videoLength: UILabel!
@@ -21,6 +22,7 @@ class TrailersCell: UITableViewCell {
   
     override func awakeFromNib() {
         super.awakeFromNib()
+      
         // Initialization code
     }
 

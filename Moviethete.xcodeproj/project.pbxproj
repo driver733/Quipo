@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8F0E79DB1B73FA9800C730AF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F0E79D91B73FA9800C730AF /* LaunchScreen.xib */; };
+		8F2319821BEC3283004AACEB /* PlotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2319801BEC3283004AACEB /* PlotCell.swift */; settings = {ASSET_TAGS = (); }; };
+		8F2319831BEC3283004AACEB /* PlotCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F2319811BEC3283004AACEB /* PlotCell.xib */; settings = {ASSET_TAGS = (); }; };
 		8F29757D1BCDFC41008E47F3 /* ITunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F29757C1BCDFC41008E47F3 /* ITunes.swift */; settings = {ASSET_TAGS = (); }; };
 		8F2AD4871BCA06C80037DAFE /* ReviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F2AD4851BCA06C80037DAFE /* ReviewCell.xib */; settings = {ASSET_TAGS = (); }; };
 		8F2C49AC1B99EFFF00535079 /* UserReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2C49AB1B99EFFF00535079 /* UserReview.swift */; };
@@ -114,6 +116,8 @@
 		2AE186941922961479F9BCB9 /* Pods-Moviethete.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.debug.xcconfig"; sourceTree = "<group>"; };
 		6A66909234E5A995E96035A1 /* Pods-Moviethete.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moviethete.release.xcconfig"; path = "Pods/Target Support Files/Pods-Moviethete/Pods-Moviethete.release.xcconfig"; sourceTree = "<group>"; };
 		8F0E79D91B73FA9800C730AF /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		8F2319801BEC3283004AACEB /* PlotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlotCell.swift; sourceTree = "<group>"; };
+		8F2319811BEC3283004AACEB /* PlotCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlotCell.xib; sourceTree = "<group>"; };
 		8F29757C1BCDFC41008E47F3 /* ITunes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunes.swift; sourceTree = "<group>"; };
 		8F2AD4851BCA06C80037DAFE /* ReviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReviewCell.xib; sourceTree = "<group>"; };
 		8F2C49AB1B99EFFF00535079 /* UserReview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserReview.swift; sourceTree = "<group>"; };
@@ -239,6 +243,8 @@
 			isa = PBXGroup;
 			children = (
 				8F9DC3E51B96313B00F30616 /* DetailedPostVC.swift */,
+				8F2319801BEC3283004AACEB /* PlotCell.swift */,
+				8F2319811BEC3283004AACEB /* PlotCell.xib */,
 				8FC946201BE982D2005F23AA /* TrailersCell.swift */,
 				8FC946211BE982D2005F23AA /* TrailersCell.xib */,
 				8F7348B81BCA0A120033A3C1 /* ReviewCell.swift */,
@@ -569,6 +575,7 @@
 				8F7FF4B01B73F2AB001317E2 /* ProfileTopCell.xib in Resources */,
 				8F7FF4AB1B73F2AB001317E2 /* ProfileSettingsFollowFriendsCell.xib in Resources */,
 				8F44554F1B92DC6900FB1541 /* Main.storyboard in Resources */,
+				8F2319831BEC3283004AACEB /* PlotCell.xib in Resources */,
 				8FC946231BE982D2005F23AA /* TrailersCell.xib in Resources */,
 				8F7FF4B11B73F2AB001317E2 /* ProfileUserReviews.xib in Resources */,
 				8F7FF4B61B73F2AB001317E2 /* ContentCell.xib in Resources */,
@@ -681,6 +688,7 @@
 				8F29757D1BCDFC41008E47F3 /* ITunes.swift in Sources */,
 				8F7FF4B81B73F2AB001317E2 /* TopCell.swift in Sources */,
 				8FB871AB1B80FB9E00256787 /* SearchResultCell.swift in Sources */,
+				8F2319821BEC3283004AACEB /* PlotCell.swift in Sources */,
 				8F7FF4B51B73F2AB001317E2 /* ProfileTopCell.swift in Sources */,
 				8F7348BC1BCA126E0033A3C1 /* ReviewTextCell.swift in Sources */,
 				8F7FF4AE1B73F2AB001317E2 /* ProfileSettingsCell.swift in Sources */,

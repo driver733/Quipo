@@ -125,7 +125,6 @@ extension LinkedAccountsVC: UITableViewDataSource {
   
   
 func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//  print(FollowFriends.sharedInstance.linkedAccounts.count)
   return FollowFriends.sharedInstance.linkedAccounts.count
 }
 
