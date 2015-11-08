@@ -15,16 +15,27 @@ import Alamofire
 struct YouTube {
   static var sharedInstance = YouTube()
   
+  var currentTrailerId: String!
+  var currentThumbnailURL: String!
+  var currenVideoDuration: String!
+  
   
   
  private func getReformattedVideoDuration(rawVideoDuration: String) -> String {
     let dateFormatter = NSDateFormatter()
-//    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm::ssZ"
-    dateFormatter.dateFormat = "'PT'm'M'ss'S'"
-    let date = dateFormatter.dateFromString(rawVideoDuration)
-    let calendar = NSCalendar.currentCalendar()
-    let comp = calendar.components([.Minute, .Second], fromDate: date!)
-    return ("\(comp.minute):\(comp.second)")
+    if rawVideoDuration.characters.contains("M") {
+      dateFormatter.dateFormat = "'PT'm'M'ss'S'"
+      let date = dateFormatter.dateFromString(rawVideoDuration)
+      let calendar = NSCalendar.currentCalendar()
+      let comp = calendar.components([.Minute, .Second], fromDate: date!)
+      return ("\(comp.minute):\(comp.second)")
+    } else {
+      dateFormatter.dateFormat = "'PT'ss'S'"
+      let date = dateFormatter.dateFromString(rawVideoDuration)
+      let calendar = NSCalendar.currentCalendar()
+      let comp = calendar.components([.Second], fromDate: date!)
+      return ("0:\(comp.second)")
+    }
   }
   
   
@@ -35,9 +46,9 @@ struct YouTube {
       "part" : "snippet",
       "maxResults" : 1,
       "type" : "video",
-      "videoCategoryId" : "44",
+  //    "videoCategoryId" : "44",    // 44 - restricts search results to trailers only
       "regionCode" : "US",
-      "q" : movieName + " " + releasedIn
+      "q" : movieName + " " + releasedIn + "trailer"
       ]
       ).responseJSON { (response: Response<AnyObject, NSError>) -> Void in
       let json = JSON(response.result.value!)           // crash

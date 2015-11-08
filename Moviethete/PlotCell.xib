@@ -55,7 +55,7 @@
                 <outlet property="more" destination="mZF-H3-Rda" id="Kzk-CJ-YFD"/>
                 <outlet property="plot" destination="p16-zb-DFT" id="dJE-lZ-Y39"/>
             </connections>
-            <point key="canvasLocation" x="347" y="127.5"/>
+            <point key="canvasLocation" x="160" y="90.5"/>
         </tableViewCell>
     </objects>
 </document>

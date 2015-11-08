@@ -22,7 +22,9 @@ class DetailedPostVC: UIViewController {
   var movieTrailerURL: NSURL!
   
   var tableView = UITableView()
-  var tableViewSection = 0
+  var selectedTableViewSection = 0
+  var firstSectionContentOffset: CGPoint!
+  var secondSectionContentOffset: CGPoint!
   
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
@@ -63,56 +65,14 @@ class DetailedPostVC: UIViewController {
     
     self.view = tableView
     
-    let headerContentView = UIView.loadFromNibNamed("DetailedPostTopView")!
+    self.automaticallyAdjustsScrollViewInsets = true
+
     
-    headerContentView.backgroundColor = UIColor.clearColor()
-    headerContentView.frame = CGRectMake(0, 64, self.view.frame.width, 180)
-    headerContentView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
-    
-    for subView in headerContentView.subviews {
-      
-      switch subView.restorationIdentifier! {
-      case "moviePoster":
-        let moviePoster = subView as! UIImageView
-        moviePoster.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: moviePoster.frame.size))
-        
-      case "segmCtrl":
-        let segControl = subView as! UISegmentedControl
-        segControl.addTarget(self, action: Selector("didChangeSection:"), forControlEvents: .AllEvents)
-      case "movieTitle":
-        let movieName = subView as! UILabel
-        movieName.text = passedPost?.movieTitle
-      case "+fav":
-        let button = subView as! UIButton
-        button.addTarget(self, action: Selector("didTapFavButton:"), forControlEvents: .TouchUpInside)
-      case "+watched":
-        let button = subView as! UIButton
-        button.addTarget(self, action: Selector("didTapWatchedButton:"), forControlEvents: .TouchUpInside)
-      case "movieRating":
-        let movieRating = subView as! HCSStarRatingView
-        movieRating.backgroundColor = UIColor.clearColor()
-        movieRating.value = CGFloat((passedPost?.rating)!) // change to average rating amongst friends
-        movieRating.userInteractionEnabled = false
-        
-      default:
-        break
-        
-      }
-      
-    }
-    
-    let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .Light)) as UIVisualEffectView
-    visualEffectView.frame = headerContentView.frame
-    
-    visualEffectView.addSubview(headerContentView)
-    
-    tableView.tableHeaderView = visualEffectView
+    setupTableHeaderView()
+    tableView.tableFooterView = UIView(frame: CGRectZero)
     
     self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.placeholderColor(), size: (CGSizeMake(0.35, 0.35))))
-    
     self.title = passedPost!.movieTitle!
-    
-    tableView.tableFooterView = UIView(frame: CGRectZero)
     
     let gesture = UITapGestureRecognizer(target: self, action: "didTapPlayer:")
     self.view.addGestureRecognizer(gesture)
@@ -146,7 +106,7 @@ class DetailedPostVC: UIViewController {
     
     // do only after posting a review!
     
-    if tableViewSection == 0 {
+    if selectedTableViewSection == 0 {
       
       Post.sharedInstance.loadMovieReviewsForMovie((passedPost?.trackID)!).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
         if self.userHasReviewForSelectedMovie() {
@@ -210,16 +170,18 @@ class DetailedPostVC: UIViewController {
   }
   
   
-  func didChangeSection(sender: UISegmentedControl ) {
+  func didChangeSection(sender: UISegmentedControl) {
     switch sender.selectedSegmentIndex {
       
     case 0:
-      tableViewSection = 0
+      selectedTableViewSection = 0
+      secondSectionContentOffset = tableView.contentOffset
       tableView.reloadData()
     case 1:
-      tableViewSection = 1
-      tableView.reloadData()
+      selectedTableViewSection = 1
+      firstSectionContentOffset = tableView.contentOffset
       tableView.contentSize.height += 20
+
       if player == nil {
         YouTube.sharedInstance.getMovieTrailerWithMovieTitle((passedPost?.movieTitle)!, releasedIn: (passedPost?.releaseYear)!).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
           
@@ -227,43 +189,106 @@ class DetailedPostVC: UIViewController {
           let trailerId = videoInfo[0]
           let thumbnailURL = videoInfo[1]
           let videoDuration = videoInfo[2]
-          let trailerCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! TrailersCell
-          trailerCell.videoLength.text = videoDuration
-    //      trailersCell.videoLength.text =
-          trailerCell.thumbnail.sd_setImageWithURL(NSURL(string: thumbnailURL), placeholderImage: self.getImageWithColor(UIColor.placeholderColor(), size: CGSizeMake(trailerCell.bounds.width, trailerCell.bounds.height)), completed: { (image: UIImage!, error: NSError!, _, _) -> Void in
-            if image != nil && error == nil {
-              let img = self.getImageWithColor(UIColor.redColor(), size: CGSizeMake(30, 30))
-              let view = UIImageView(frame: CGRectMake(0, 0, 30, 30))
-              view.image = img
-            //  trailersCell.thumbnail.addSubview(view)
-              
-            }
-          })
+          
+          YouTube.sharedInstance.currentTrailerId = trailerId
+          YouTube.sharedInstance.currentThumbnailURL = thumbnailURL
+          YouTube.sharedInstance.currenVideoDuration = videoDuration
+          
           self.player = YouTubePlayerView(frame: self.view.frame)
           self.player.delegate = self
           self.player.loadVideoID(trailerId)
           
+          self.tableView.reloadData()
           
           return nil
         })
+      } else {
+        tableView.reloadData()
       }
+     
       
     default: break
     }
   }
 
-  
-  
+  func setContentOffset() {
+    switch selectedTableViewSection {
+    case 0:
+      if firstSectionContentOffset != nil {
+        tableView.setContentOffset(firstSectionContentOffset, animated: false)
+      }
+    case 1:
+      if secondSectionContentOffset != nil {
+        tableView.setContentOffset(secondSectionContentOffset, animated: false)
+      }
+    default:
+      break
+    }
+  }
 
   func didTapPlayer(press: UITapGestureRecognizer) {
     
     if press.state == .Ended {
       
       
-      let location = press.locationInView(tableView)
+      let location = press.locationInView(self.view)
+
+      let point = (tableView.tableHeaderView?.subviews[2])!.convertPoint(location, fromView: tableView)
+      if (tableView.tableHeaderView?.subviews[2])!.pointInside(point, withEvent: nil) {
+        for subView in (tableView.tableHeaderView?.subviews[2].subviews)! {
+          
+          let newPoint = subView.convertPoint(location, fromView: tableView)
+          
+          if subView.pointInside(newPoint, withEvent: nil) {
+            
+            switch subView.restorationIdentifier! {
+            case "moviePoster":
+              let moviePoster = subView as! UIImageView
+              // open high res poster image on touch
+              
+            case "segmCtrl":
+              let segControl = subView as! UISegmentedControl
+              let sectionChosen = newPoint.x / segControl.bounds.width
+              if sectionChosen < 0.5 {
+                segControl.selectedSegmentIndex = 0
+              } else {
+                segControl.selectedSegmentIndex = 1
+              }
+              didChangeSection(segControl)
+            
+            case "+fav":
+              let button = subView as! UIButton
+              didTapFavButton(button)
+            case "+watched":
+              let button = subView as! UIButton
+              didTapWatchedButton(button)
+              
+            default:
+              break
+              
+            }
+
+            
+            
+            
+          }
+          
+        }
+
+      }
+        
+        
+      
+    
+      
+      
+
+      
+      
+      
       let path = tableView.indexPathForRowAtPoint(location)
       if path?.row == 0  {
-        if tableViewSection == 1 {
+        if selectedTableViewSection == 1 {
           let cell = tableView.cellForRowAtIndexPath(path!) as! TrailersCell
           
           var viewPoint = cell.thumbnail.convertPoint(location, fromView: tableView)
@@ -290,6 +315,57 @@ class DetailedPostVC: UIViewController {
   
   
   // MARK: - Utility
+  
+  
+  
+  func setupTableHeaderView() {
+    let headerContentView = UIView.loadFromNibNamed("DetailedPostTopView")!
+    
+    headerContentView.backgroundColor = UIColor.clearColor()
+    headerContentView.frame = CGRectMake(0, 64, self.view.frame.width, 180)
+    headerContentView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
+    
+    for subView in headerContentView.subviews {
+      
+      switch subView.restorationIdentifier! {
+      case "moviePoster":
+        let moviePoster = subView as! UIImageView
+        moviePoster.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: moviePoster.frame.size))
+        
+//      case "segmCtrl":
+//        let segControl = subView as! UISegmentedControl
+//        segControl.addTarget(self, action: Selector("didChangeSection:"), forControlEvents: .AllEvents)
+      case "movieTitle":
+        let movieName = subView as! UILabel
+        movieName.text = passedPost?.movieTitle
+//      case "+fav":
+//        let button = subView as! UIButton
+//        button.addTarget(self, action: Selector("didTapFavButton:"), forControlEvents: .TouchUpInside)
+//      case "+watched":
+//        let button = subView as! UIButton
+//        button.addTarget(self, action: Selector("didTapWatchedButton:"), forControlEvents: .TouchUpInside)
+      case "movieRating":
+        let movieRating = subView as! HCSStarRatingView
+        movieRating.backgroundColor = UIColor.clearColor()
+        movieRating.value = CGFloat((passedPost?.rating)!) // change to average rating amongst friends
+        movieRating.userInteractionEnabled = false
+        
+      default:
+        break
+        
+      }
+      
+    }
+    
+    let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
+    visualEffectView.frame = headerContentView.frame
+    visualEffectView.addSubview(headerContentView)
+    
+
+    tableView.tableHeaderView = visualEffectView
+    
+  }
+  
   
   func addPost() {
     let vc = AddMovieReviewVC()
@@ -381,24 +457,26 @@ extension DetailedPostVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
   
-      
-//    case 0:
-//      let cell = tableView.dequeueReusableCellWithIdentifier("detailedPostCell", forIndexPath: indexPath) as! DetailedPostCell
-//      cell.posterImage.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!),
-//        placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.posterImage.bounds.size))
-//      cell.movieRating.userInteractionEnabled = false
-//      cell.selectionStyle = .None
-//      cell.segmentedControl.addTarget(self, action: Selector("didChangeSection:"), forControlEvents: .AllEvents)
-//      return cell
-    
-    
-    if tableViewSection == 1 {
+    if selectedTableViewSection == 1 {
       
       switch indexPath.row {
         
       case 0:
         let cell = tableView.dequeueReusableCellWithIdentifier("trailersCell") as! TrailersCell
         cell.selectionStyle = .None
+        cell.videoLength.font = cell.videoLength.font.fontWithSize(13)
+        cell.videoLength.text = YouTube.sharedInstance.currenVideoDuration
+        cell.videoType.font = cell.videoType.font.fontWithSize(13)
+        cell.thumbnail.sd_setImageWithURL(NSURL(string: YouTube.sharedInstance.currentThumbnailURL), placeholderImage: self.getImageWithColor(UIColor.placeholderColor(), size: cell.bounds.size), completed: { (image: UIImage!, error: NSError!, _, _) -> Void in
+          if image != nil && error == nil {
+            let img = self.getImageWithColor(UIColor.redColor(), size: CGSizeMake(30, 30))
+            let view = UIImageView(frame: CGRectMake(0, 0, 30, 30))
+            view.image = img
+          }
+        })
+
+        
+        
         return cell
         
       case 1:
@@ -441,7 +519,7 @@ extension DetailedPostVC: UITableViewDataSource {
     
   
       if !UserReview.sharedInstance.movieReviewsForSelectedMovie.isEmpty {
-        let review = UserReview.sharedInstance.movieReviewsForSelectedMovie[getCellPostIndex(indexPath.row - 1)]
+        let review = UserReview.sharedInstance.movieReviewsForSelectedMovie[getCellPostIndex(indexPath.row)]
         if indexPath.row % 2 == 0 {
           let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
           
@@ -474,11 +552,12 @@ extension DetailedPostVC: UITableViewDataSource {
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if tableViewSection == 1 {
+    if selectedTableViewSection == 1 {
       return 2
     }
     return UserReview.sharedInstance.movieReviewsForSelectedMovie.count * 2
   }
+  
   
   
   
@@ -491,21 +570,32 @@ extension DetailedPostVC: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension DetailedPostVC: UITableViewDelegate {
   
+  
+  
+  
+
+  
+  
+  
+  
   func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     scrollView.bounces = true
   }
  
   func scrollViewDidScroll(scrollView: UIScrollView) {
     let offsetY = scrollView.contentOffset.y
-    let headerContentView = tableView.tableHeaderView?.subviews[0]
-    let headerVisualEffectView = tableView.tableHeaderView?.subviews[2]
-    headerContentView?.transform = CGAffineTransformMakeTranslation(0, offsetY + 64)
-    headerVisualEffectView?.transform = CGAffineTransformMakeTranslation(0, offsetY)
+    let headerVisualEffectView = tableView.tableHeaderView?.subviews[0]
+    let headerContentView = tableView.tableHeaderView?.subviews[2]
+    
+    headerVisualEffectView?.frame.origin.y = offsetY + 64
+    headerContentView?.frame.origin.y = offsetY + 64
+  
   }
   
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if indexPath.row == tableView.numberOfRowsInSection(indexPath.section) - 1 {
       cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+      setContentOffset()
     }
   }
   

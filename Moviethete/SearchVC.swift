@@ -92,7 +92,9 @@ class SearchVC: UITableViewController {
         let post = searchResults[(self.tableView.indexPathForSelectedRow?.row)!]
         self.searchController.searchBar.resignFirstResponder()
         vc.navigationItem.title = post.movieTitle!
+      
         vc.passedPost = post
+        vc.passedPost?.rating = 0
         let colors = getPrimaryPosterImageColorAndtextColor((tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as! SearchResultCell).posterImage.image!)
         color = colors[1]
         vc.passedColor = color
