@@ -63,10 +63,9 @@ import Async
     
     
     
-    
-    
+     /// The array of current user`s feed posts
     var feedPosts: [Post] = [Post]()
-    /// The array of current user`s feed posts
+    var commentsForSelectedReview: [Comment]!
     
     
     
@@ -136,21 +135,6 @@ import Async
     
     
 
-
-    
-    
-    
-    
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     func startLoadingFeedPosts() -> BFTask {
       let mainTask = BFTaskCompletionSource()
@@ -178,27 +162,7 @@ import Async
       return mainTask.task
     }
     
-    
-    
-    
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
     
     func loadMovieReviewsForMovie(withTrackID: Int) -> BFTask {
@@ -252,22 +216,7 @@ import Async
       return mainTask.task
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-        
-
-
-
   
-    
-    
-    
         
     
     

@@ -14,6 +14,7 @@ class ReviewCell: UITableViewCell {
   @IBOutlet weak var rating: HCSStarRatingView!
   @IBOutlet weak var reviewTitle: UILabel!
   @IBOutlet weak var reviewText: UITextView!
+  @IBOutlet weak var comments: UIButton!
   
     override func awakeFromNib() {
         super.awakeFromNib()

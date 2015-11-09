@@ -15,7 +15,7 @@
 		79C401A219CDD75300D6F4E2 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C401A119CDD75300D6F4E2 /* Entity.swift */; };
 		79C401A419CDD83100D6F4E2 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C401A319CDD83100D6F4E2 /* Attribute.swift */; };
 		79C401AA19CDD92800D6F4E2 /* ITunesSearchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C401A919CDD92800D6F4E2 /* ITunesSearchApi.swift */; };
-		C7C061022BF5E95C58A3E125 /* Pods_ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462166457F5F621DCC43A927 /* Pods_ITunesSwift.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		C7C061022BF5E95C58A3E125 /* Pods_ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462166457F5F621DCC43A927 /* Pods_ITunesSwift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */

@@ -149,6 +149,8 @@ class FeedVC: UIViewController {
     tableView.dataSource = self
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 44.0
+    tableView.tableFooterView = UIView(frame: CGRectZero)
+    
     shyNavBarManager.scrollView = self.tableView
     
   
@@ -167,6 +169,9 @@ class FeedVC: UIViewController {
     
     
     
+    
+    
+    
     refresh(nil)
     
     
@@ -174,15 +179,7 @@ class FeedVC: UIViewController {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
   }
   

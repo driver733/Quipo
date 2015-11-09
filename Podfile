@@ -5,7 +5,7 @@ workspace 'Moviethete'
 
 target 'Moviethete' do
     pod 'YouTubePlayer'
-    pod 'Player'
+    pod 'SlackTextViewController'
     pod "DynamicBlurView"
     pod 'KeychainAccess'
     pod 'HCSStarRatingView', '~> 1.4.2'

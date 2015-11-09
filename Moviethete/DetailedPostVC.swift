@@ -104,6 +104,8 @@ class DetailedPostVC: UIViewController {
     
     //   startLoginActivityIndicator()
     
+    
+    
     // do only after posting a review!
     
     if selectedTableViewSection == 0 {
@@ -116,6 +118,12 @@ class DetailedPostVC: UIViewController {
         }
         self.putFeedReviewToTheBeginning()
         self.tableView.reloadData()
+        
+        
+        
+   //     Comment.sharedInstance.uploadComment(Comment(theCreatedBy: User(theUsername: "sdf", theProfileImageURL: "", thePfUser: PFUser.currentUser()!), theTimeSincePosted: "234", theText: "sdfsdfsdfsdf", thePfObject: PFUser.currentUser()!), forReviewWithPfObject: UserReview.sharedInstance.movieReviewsForSelectedMovie[0].pfObject!)
+        
+        
         //     self.stopLoginActivityIndicator()
         return nil
       }
@@ -146,6 +154,24 @@ class DetailedPostVC: UIViewController {
   
   // MARK: - Buttons
   
+  
+  
+  func didTapCommentsButton(sender: UIButton) {
+
+    var parentView = sender.superview!
+    while (!(parentView.isKindOfClass(ReviewCell)) ) {
+      parentView = parentView.superview!
+    }
+    
+    
+    let cell = parentView as! ReviewCell
+    
+    let vc = CommentsVC(tableViewStyle: .Plain)
+    vc.passedReviewObject = UserReview.sharedInstance.movieReviewsForSelectedMovie[getCellPostIndex((tableView.indexPathForCell(cell)?.row)!)].pfObject!
+    
+    
+    self.navigationController?.pushViewController(vc, animated: true)
+  }
   
   
   func didTapMoreTextButton(sender: UIButton) {
@@ -537,10 +563,11 @@ extension DetailedPostVC: UITableViewDataSource {
       }
         
         let cell = tableView.dequeueReusableCellWithIdentifier("reviewCell", forIndexPath: indexPath) as! ReviewCell
+        cell.selectionStyle = .None
         cell.reviewTitle.text = "- " + review.title!
         cell.reviewText.text = review.review!
         cell.rating.value = CGFloat(review.starRating!)
-        cell.selectionStyle = .None
+        cell.comments.addTarget(self, action: Selector("didTapCommentsButton:"), forControlEvents: .TouchUpInside)
         return cell
         
       }
@@ -569,13 +596,6 @@ extension DetailedPostVC: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 extension DetailedPostVC: UITableViewDelegate {
-  
-  
-  
-  
-
-  
-  
   
   
   func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {

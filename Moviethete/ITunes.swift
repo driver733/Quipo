@@ -32,11 +32,7 @@ struct ITunes {
   static var sharedInstance = ITunes()
   
   
-  
-  
-  
-  
-  
+    
   func startLoadingItunesDataFor(postsQuery: PFQuery, completionHandler: ((posts: [Post]) -> Void)) {
     postsQuery.includeKey("createdBy")
     
@@ -45,7 +41,6 @@ struct ITunes {
     postsQuery.findObjectsInBackground().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
       var tasks = [BFTask]()
     
-      
       if let result = task.result {
         let posts = result as! [PFObject]
         

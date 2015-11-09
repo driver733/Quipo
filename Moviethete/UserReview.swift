@@ -18,6 +18,7 @@ public struct UserReview {
   var pfObject: PFObject?
   
   var movieReviewsForSelectedMovie = [UserReview]()
+  var commentsForSelectedReview: [Comment]!
   
   
   var pfUser: PFUser?
@@ -25,11 +26,12 @@ public struct UserReview {
   var starRating: Int?
   /// The title of the review
   var title: String?
-   /// The review of the movie
+  /// The review of the movie
   var review: String?
- 
+  /// Time since the review was posted
   var timeSincePosted: String?
-  
+  /// Comments for the review
+  var comments: [Comment]!
   
   init(){}
   
@@ -52,15 +54,7 @@ public struct UserReview {
   
   
   
-  
-  
-  
-  
-  
- 
-  
-  
-  
+
   
   func uploadReview(post: Post, rating: Int, reviewTitle: String, review: String) -> BFTask {
     let mainTask = BFTaskCompletionSource()
