@@ -8,7 +8,6 @@
 
 import UIKit
 import AVKit
-import Player
 
 class TrailersCell: UITableViewCell {
 

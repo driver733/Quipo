@@ -497,11 +497,6 @@ mutating func didReceiveNewVKToken() -> BFTask {
 
 
 
-  
-  
-  
-  
-  
 
 // MARK: - Linked accounts Log Out
   

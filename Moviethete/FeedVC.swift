@@ -174,13 +174,7 @@ class FeedVC: UIViewController {
     
     refresh(nil)
     
-    
-    
-    
-    
-    
-
-    
+ 
   }
   
   
@@ -294,16 +288,17 @@ class FeedVC: UIViewController {
       let visiblePaths = tableView.indexPathsForVisibleRows!
       for indexPath in visiblePaths {
         if (indexPath.row % 2 == 0) {
-          let cell: TopCell = self.tableView.cellForRowAtIndexPath(indexPath) as! TopCell
+          let cell: TopCell = self.tableView.cellForRowAtIndexPath(indexPath) as! TopCell   // crash
           if Post.sharedInstance.feedPosts.count * 2 > indexPath.row {
             cell.profileImage.sd_setImageWithURL(
               NSURL(string: Post.sharedInstance.feedPosts[getCellPostIndex(indexPath.row)].profileImageURL!),
               placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
               options: SDWebImageOptions.RefreshCached,
               completed:{
-                (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-                cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
-                // crash
+                (image: UIImage!, error: NSError!, _, _) -> Void in
+                if let image = image where error == nil {
+                  cell.profileImage.image = Toucan(image: image).resize(cell.profileImage.bounds.size, fitMode: .Clip).maskWithEllipse().image
+                }
               }
             )
           }

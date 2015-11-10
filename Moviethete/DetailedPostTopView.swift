@@ -11,19 +11,11 @@ import HCSStarRatingView
 
 
   
-//
-//  @IBOutlet weak var posterImage: UIImageView!
-//  @IBOutlet weak var movieName: UILabel!
-//  @IBOutlet weak var movieRating: HCSStarRatingView!
-//  @IBOutlet weak var segmentedControl: UISegmentedControl!
-//  @IBOutlet weak var addToWatched: UIButton!
-//  @IBOutlet weak var addToFav: UIButton!
-//  @IBAction func sectionChanged(sender: AnyObject) {
-//  }
+
   
-@IBDesignable class DetailedPostTopView: UIView
-{
-  var view:UIView!;
+@IBDesignable class DetailedPostTopView: UIView{
+  
+  var view:UIView!
   
   @IBOutlet weak var lblTitle: UILabel!
   
@@ -34,7 +26,7 @@ import HCSStarRatingView
     }
     set(lblTitleText)
     {
-      lblTitle.text = lblTitleText!;
+      lblTitle.text = lblTitleText!
     }
   }
   

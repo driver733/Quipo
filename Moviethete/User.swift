@@ -24,16 +24,22 @@ import ParseFacebookUtilsV4
 
 struct User {
   
-  
-  
+  static var sharedInstance = User()
   
   var username: String?
   var profileImageURL: String?
   var pfUser: PFUser?
   var isFollowed = false
   var isFollowedBy = false
+
   
   
+  init(){
+    username = (PFUser.currentUser()?.username)!
+    profileImageURL = PFUser.currentUser()!["smallProfileImage"] as! String
+    pfUser = PFUser.currentUser()!
+  }
+    
   init(theUsername: String, theProfileImageURL: String, thePfUser: PFUser) {
     username = theUsername
     profileImageURL = theProfileImageURL

@@ -10,10 +10,12 @@ import UIKit
 import Parse
 import SDWebImage
 import SlackTextViewController
+import Async
 
 class CommentsVC: SLKTextViewController {
 
   var passedReviewObject: PFObject!
+  var shouldContinueScrollingToBottom = false
   
   override init!(tableViewStyle style: UITableViewStyle) {
     super.init(tableViewStyle: UITableViewStyle.Plain)
@@ -32,18 +34,28 @@ class CommentsVC: SLKTextViewController {
     tableView.estimatedRowHeight = 44.0
     tableView.registerNib(UINib(nibName: "CommentCell", bundle: nil), forCellReuseIdentifier: "commentCell")
     tableView.tableFooterView = UIView(frame: CGRectZero)
+    
+    textInputbar.backgroundColor = UIColor.placeholderColor()
+    textInputbar.translucent = false
+    
     inverted = false
+    bounces = false
     
-    
+    self.tabBarController!.tabBar.translucent = false
+    clearCachedText()
     textView.placeholder = "Your comment..."
-    
+    textView.slk_clearText(true)
     
     
     Comment.sharedInstance.startLoadingCommentsForReview(passedReviewObject) { () -> Void in
       self.tableView.reloadData()
-     // print(UserReview.sharedInstance.commentsForSelectedReview)
+      self.shouldContinueScrollingToBottom = true
+      if self.tableView.numberOfRowsInSection(0) > 0 {
+        self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: UserReview.sharedInstance.commentsForSelectedReview.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
+      }
     }
-
+    
+    
     
   }
 
@@ -51,14 +63,60 @@ class CommentsVC: SLKTextViewController {
       super.didReceiveMemoryWarning()
       // Dispose of any resources that can be recreated.
   }
-    
-
   
+  
+
+  override func didPressRightButton(sender: AnyObject!) {
+    let currentUser = User(theUsername: User.sharedInstance.username!, theProfileImageURL: User.sharedInstance.profileImageURL!, thePfUser: User.sharedInstance.pfUser!)
+    let comment = Comment(theCreatedBy: currentUser, theText: textView.text)
+    Comment.sharedInstance.uploadComment(comment, forReviewWithPfObject: passedReviewObject).continueWithBlock { (task: BFTask!) -> AnyObject! in
+      if task.error == nil {
+        Async.main {
+          CATransaction.begin()
+          CATransaction.setCompletionBlock({ () -> Void in
+            self.shouldContinueScrollingToBottom = true
+            self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: UserReview.sharedInstance.commentsForSelectedReview.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
+          })
+          self.tableView.beginUpdates()
+          self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: UserReview.sharedInstance.commentsForSelectedReview.count - 1, inSection: 0)], withRowAnimation: .Automatic)
+          self.tableView.endUpdates()
+          CATransaction.commit()
+        }
+      }
+      return nil
+    }
+  }
+  
+
 
 }
 
 
 extension CommentsVC {
+  
+  override func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+    if shouldContinueScrollingToBottom {
+      
+      let scrollViewHeight = scrollView.frame.size.height;
+      let scrollViewContentSizeHeight = scrollView.contentSize.height;
+      let scrollOffset = scrollView.contentOffset.y;
+      
+      if (scrollOffset >= (scrollViewContentSizeHeight - scrollViewHeight) ) {
+        shouldContinueScrollingToBottom = false
+        scrollView.decelerationRate = UIScrollViewDecelerationRateNormal
+      } else {
+        scrollView.decelerationRate = UIScrollViewDecelerationRateFast
+        self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: UserReview.sharedInstance.commentsForSelectedReview.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
+      }
+
+      
+      
+      
+    }
+  }
+  
+  
+  
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let comment = UserReview.sharedInstance.commentsForSelectedReview[indexPath.row]

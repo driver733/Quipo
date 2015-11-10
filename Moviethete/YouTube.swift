@@ -20,7 +20,6 @@ struct YouTube {
   var currenVideoDuration: String!
   
   
-  
  private func getReformattedVideoDuration(rawVideoDuration: String) -> String {
     let dateFormatter = NSDateFormatter()
     if rawVideoDuration.characters.contains("M") {

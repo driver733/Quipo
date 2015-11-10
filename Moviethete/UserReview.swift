@@ -19,6 +19,17 @@ public struct UserReview {
   
   var movieReviewsForSelectedMovie = [UserReview]()
   var commentsForSelectedReview: [Comment]!
+  var userMediaInfoForSelectedMovie: UserMedia!
+  
+  
+  
+//  lazy var avgMovieRatingForSelectedMovie: Int! = {
+//    var ratingsSum: Int = 0
+//    for review in self.movieReviewsForSelectedMovie {
+//      ratingsSum += review.starRating!
+//    }
+//    return ratingsSum / self.movieReviewsForSelectedMovie.count
+//  }()
   
   
   var pfUser: PFUser?
@@ -93,8 +104,11 @@ public struct UserReview {
 
     return mainTask.task
 
-    
   }
+  
+  
+  
+
   
   
   

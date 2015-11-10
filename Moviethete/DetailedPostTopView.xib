@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15C31f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15C31f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -69,7 +69,7 @@
                     </variation>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="+fav" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8qJ-tx-O36">
-                    <rect key="frame" x="517" y="506" width="75" height="12"/>
+                    <rect key="frame" x="536" y="506" width="37" height="12"/>
                     <animations/>
                     <state key="normal" title="+ Fav"/>
                 </button>
@@ -94,25 +94,36 @@
                     </constraints>
                     <state key="normal" title="+ Watched"/>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="numberOfReviews" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5oS-Y3-fiv">
+                    <rect key="frame" x="464" y="538" width="42" height="12"/>
+                    <animations/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="bfx-2o-CbZ" firstAttribute="leading" secondItem="aTY-h8-mMt" secondAttribute="leading" constant="10" id="1Qm-hH-By2"/>
+                <constraint firstItem="5oS-Y3-fiv" firstAttribute="height" secondItem="TF7-GQ-R7d" secondAttribute="height" id="1yy-25-BZy"/>
                 <constraint firstItem="TF7-GQ-R7d" firstAttribute="leading" secondItem="PAU-6i-4pH" secondAttribute="leading" id="4hB-0m-myE"/>
                 <constraint firstItem="bfx-2o-CbZ" firstAttribute="top" secondItem="aTY-h8-mMt" secondAttribute="top" constant="5" id="6hq-G9-hZc"/>
                 <constraint firstAttribute="trailing" secondItem="IhD-Ff-gGJ" secondAttribute="trailing" constant="8" id="8aq-tm-q4r"/>
+                <constraint firstItem="5oS-Y3-fiv" firstAttribute="height" secondItem="IhD-Ff-gGJ" secondAttribute="height" id="AZG-JQ-uPY"/>
                 <constraint firstItem="8qJ-tx-O36" firstAttribute="width" secondItem="IhD-Ff-gGJ" secondAttribute="width" id="BCF-VP-U65"/>
                 <constraint firstAttribute="trailing" secondItem="bfx-2o-CbZ" secondAttribute="trailing" constant="50" id="JVb-aW-gBM"/>
                 <constraint firstItem="TF7-GQ-R7d" firstAttribute="bottom" secondItem="bfx-2o-CbZ" secondAttribute="bottom" id="LJu-34-hNu"/>
                 <constraint firstItem="8qJ-tx-O36" firstAttribute="centerX" secondItem="IhD-Ff-gGJ" secondAttribute="centerX" id="MZ4-6A-YyB"/>
                 <constraint firstAttribute="bottom" secondItem="Rr5-hF-Qae" secondAttribute="bottom" constant="10" id="OKl-eN-W18"/>
+                <constraint firstItem="5oS-Y3-fiv" firstAttribute="leading" secondItem="TF7-GQ-R7d" secondAttribute="trailing" constant="5" id="Q8i-NZ-MDx"/>
                 <constraint firstItem="TF7-GQ-R7d" firstAttribute="leading" secondItem="bfx-2o-CbZ" secondAttribute="trailing" constant="8" id="RJq-fi-KJP"/>
                 <constraint firstItem="8qJ-tx-O36" firstAttribute="height" secondItem="IhD-Ff-gGJ" secondAttribute="height" id="Wla-6y-qeB"/>
                 <constraint firstAttribute="trailing" secondItem="PAU-6i-4pH" secondAttribute="trailing" constant="5" id="fBN-91-B0d"/>
                 <constraint firstItem="TF7-GQ-R7d" firstAttribute="width" secondItem="PAU-6i-4pH" secondAttribute="width" id="fzb-Ac-u87"/>
                 <constraint firstItem="IhD-Ff-gGJ" firstAttribute="bottom" secondItem="bfx-2o-CbZ" secondAttribute="bottom" id="hP1-G2-PpG"/>
                 <constraint firstItem="PAU-6i-4pH" firstAttribute="top" secondItem="aTY-h8-mMt" secondAttribute="top" constant="5" id="mrn-5j-BnQ"/>
+                <constraint firstItem="5oS-Y3-fiv" firstAttribute="bottom" secondItem="bfx-2o-CbZ" secondAttribute="bottom" id="mye-Ew-2DS"/>
                 <constraint firstItem="IhD-Ff-gGJ" firstAttribute="leading" secondItem="bfx-2o-CbZ" secondAttribute="trailing" constant="257" id="ovM-Ic-jTZ"/>
                 <constraint firstItem="Rr5-hF-Qae" firstAttribute="top" secondItem="bfx-2o-CbZ" secondAttribute="bottom" constant="15" id="r4O-iW-QsO"/>
                 <constraint firstItem="IhD-Ff-gGJ" firstAttribute="leading" secondItem="TF7-GQ-R7d" secondAttribute="trailing" constant="8" id="rq7-gj-uZD"/>
@@ -125,6 +136,8 @@
                     <exclude reference="JVb-aW-gBM"/>
                     <exclude reference="RJq-fi-KJP"/>
                     <exclude reference="fzb-Ac-u87"/>
+                    <exclude reference="AZG-JQ-uPY"/>
+                    <exclude reference="BCF-VP-U65"/>
                     <exclude reference="ovM-Ic-jTZ"/>
                     <exclude reference="rq7-gj-uZD"/>
                 </mask>

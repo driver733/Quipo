@@ -21,6 +21,11 @@ class DetailedPostVC: UIViewController {
   var player: YouTubePlayerView!
   var movieTrailerURL: NSURL!
   
+  var numberOfReviews: UILabel!
+  var starred: UIButton!
+  var watched: UIButton!
+ // var avgMovieRating: HCSStarRatingView!
+  
   var tableView = UITableView()
   var selectedTableViewSection = 0
   var firstSectionContentOffset: CGPoint!
@@ -74,9 +79,46 @@ class DetailedPostVC: UIViewController {
     self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.placeholderColor(), size: (CGSizeMake(0.35, 0.35))))
     self.title = passedPost!.movieTitle!
     
-    let gesture = UITapGestureRecognizer(target: self, action: "didTapPlayer:")
+    let gesture = UITapGestureRecognizer(target: self, action: "didTapSuperview:")
     self.view.addGestureRecognizer(gesture)
     gesture.cancelsTouchesInView = false
+    
+    
+    
+    
+    BFTask(forCompletionOfAllTasks: [
+      Post.sharedInstance.loadMovieReviewsForMovie((passedPost?.trackID)!),
+      UserMedia.sharedInstance.startLoadingUserMediaInfoForMovie((passedPost?.trackID)!, andUser: PFUser.currentUser()!)
+      ]).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        
+        if self.userHasReviewForSelectedMovie() {
+          self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "addPost"), animated: false)
+        } else {
+          self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: "addPost"), animated: false)
+        }
+        self.numberOfReviews.text = "(\(UserReview.sharedInstance.movieReviewsForSelectedMovie.count))"
+        // self.avgMovieRating.value = CGFloat(UserReview.sharedInstance.avgMovieRatingForSelectedMovie)
+        
+        if UserReview.sharedInstance.userMediaInfoForSelectedMovie.isWatched {
+            self.watched.setTitle("Watched", forState: .Normal)
+            self.watched.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        }
+        if UserReview.sharedInstance.userMediaInfoForSelectedMovie.isStarred {
+          self.starred.setTitle("Starred", forState: .Normal)
+          self.starred.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        }
+        
+        self.putFeedReviewToTheBeginning()
+        self.tableView.reloadData()
+        
+        
+        
+        return nil
+
+    }
+    
+   
+    
     
   }
 
@@ -102,32 +144,6 @@ class DetailedPostVC: UIViewController {
       
     }
     
-    //   startLoginActivityIndicator()
-    
-    
-    
-    // do only after posting a review!
-    
-    if selectedTableViewSection == 0 {
-      
-      Post.sharedInstance.loadMovieReviewsForMovie((passedPost?.trackID)!).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-        if self.userHasReviewForSelectedMovie() {
-          self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "addPost"), animated: false)
-        } else {
-          self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: "addPost"), animated: false)
-        }
-        self.putFeedReviewToTheBeginning()
-        self.tableView.reloadData()
-        
-        
-        
-   //     Comment.sharedInstance.uploadComment(Comment(theCreatedBy: User(theUsername: "sdf", theProfileImageURL: "", thePfUser: PFUser.currentUser()!), theTimeSincePosted: "234", theText: "sdfsdfsdfsdf", thePfObject: PFUser.currentUser()!), forReviewWithPfObject: UserReview.sharedInstance.movieReviewsForSelectedMovie[0].pfObject!)
-        
-        
-        //     self.stopLoginActivityIndicator()
-        return nil
-      }
-    }
     
   }
   
@@ -188,11 +204,35 @@ class DetailedPostVC: UIViewController {
   
   
   func didTapFavButton(sender: UIButton) {
-    
+    if UserReview.sharedInstance.userMediaInfoForSelectedMovie.isStarred {
+      UserMedia.sharedInstance.markMovie((passedPost?.trackID)!, AsStarred: false, pfObject: UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        sender.setTitle("+ Starred", forState: .Normal)
+        sender.setTitleColor(UIColor.blueColor(), forState: .Normal)
+        return nil
+      }
+    } else {
+      UserMedia.sharedInstance.markMovie((passedPost?.trackID)!, AsStarred: true, pfObject: UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        sender.setTitle("Starred", forState: .Normal)
+        sender.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        return nil
+      }
+    }
   }
   
   func didTapWatchedButton(sender: UIButton) {
-    
+    if UserReview.sharedInstance.userMediaInfoForSelectedMovie.isWatched {
+      UserMedia.sharedInstance.markMovie((passedPost?.trackID)!, AsWatched: false, pfObject: UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        sender.setTitle("+ Watched", forState: .Normal)
+        sender.setTitleColor(UIColor.blueColor(), forState: .Normal)
+        return nil
+      }
+    } else {
+      UserMedia.sharedInstance.markMovie((passedPost?.trackID)!, AsWatched: true, pfObject: UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        sender.setTitle("Watched", forState: .Normal)
+        sender.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        return nil
+      }
+    }
   }
   
   
@@ -203,6 +243,8 @@ class DetailedPostVC: UIViewController {
       selectedTableViewSection = 0
       secondSectionContentOffset = tableView.contentOffset
       tableView.reloadData()
+      tableView.layoutIfNeeded()
+      setContentOffset()
     case 1:
       selectedTableViewSection = 1
       firstSectionContentOffset = tableView.contentOffset
@@ -225,11 +267,13 @@ class DetailedPostVC: UIViewController {
           self.player.loadVideoID(trailerId)
           
           self.tableView.reloadData()
-          
+                   
           return nil
         })
       } else {
         tableView.reloadData()
+        tableView.layoutIfNeeded()
+        setContentOffset()
       }
      
       
@@ -252,7 +296,7 @@ class DetailedPostVC: UIViewController {
     }
   }
 
-  func didTapPlayer(press: UITapGestureRecognizer) {
+  func didTapSuperview(press: UITapGestureRecognizer) {
     
     if press.state == .Ended {
       
@@ -285,6 +329,7 @@ class DetailedPostVC: UIViewController {
             case "+fav":
               let button = subView as! UIButton
               didTapFavButton(button)
+              
             case "+watched":
               let button = subView as! UIButton
               didTapWatchedButton(button)
@@ -305,13 +350,7 @@ class DetailedPostVC: UIViewController {
         
         
       
-    
-      
-      
-
-      
-      
-      
+ 
       let path = tableView.indexPathForRowAtPoint(location)
       if path?.row == 0  {
         if selectedTableViewSection == 1 {
@@ -354,22 +393,28 @@ class DetailedPostVC: UIViewController {
     for subView in headerContentView.subviews {
       
       switch subView.restorationIdentifier! {
+        
       case "moviePoster":
         let moviePoster = subView as! UIImageView
         moviePoster.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: moviePoster.frame.size))
-        
-//      case "segmCtrl":
-//        let segControl = subView as! UISegmentedControl
-//        segControl.addTarget(self, action: Selector("didChangeSection:"), forControlEvents: .AllEvents)
+
       case "movieTitle":
         let movieName = subView as! UILabel
         movieName.text = passedPost?.movieTitle
-//      case "+fav":
-//        let button = subView as! UIButton
-//        button.addTarget(self, action: Selector("didTapFavButton:"), forControlEvents: .TouchUpInside)
-//      case "+watched":
-//        let button = subView as! UIButton
-//        button.addTarget(self, action: Selector("didTapWatchedButton:"), forControlEvents: .TouchUpInside)
+        
+      case "+fav":
+        let button = subView as! UIButton
+        starred = button
+        
+      case "+watched":
+        let button = subView as! UIButton
+        watched = button
+        
+      case "numberOfReviews":
+        let label = subView as! UILabel
+        numberOfReviews = label
+        label.font = label.font.fontWithSize(12)
+        
       case "movieRating":
         let movieRating = subView as! HCSStarRatingView
         movieRating.backgroundColor = UIColor.clearColor()
@@ -552,8 +597,10 @@ extension DetailedPostVC: UITableViewDataSource {
           cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
           cell.profileImage.sd_setImageWithURL(NSURL(string: (review.pfUser!["smallProfileImage"] as! String)),
             placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
-            options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, erro: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
-              cell.profileImage.image = Toucan(image: image).maskWithEllipse().image      // crash
+            options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, error: NSError!, _, _) -> Void in
+              if let image = image where error == nil {
+                cell.profileImage.image = Toucan(image: image).maskWithEllipse().image      // crash
+              }
               
           })
           cell.userName.text = review.pfUser?.username
@@ -607,15 +654,14 @@ extension DetailedPostVC: UITableViewDelegate {
     let headerVisualEffectView = tableView.tableHeaderView?.subviews[0]
     let headerContentView = tableView.tableHeaderView?.subviews[2]
     
-    headerVisualEffectView?.frame.origin.y = offsetY + 64
-    headerContentView?.frame.origin.y = offsetY + 64
-  
+    headerVisualEffectView?.transform = CGAffineTransformMakeTranslation(0, offsetY + 64)
+    headerContentView?.transform = CGAffineTransformMakeTranslation(0, offsetY)
   }
   
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if indexPath.row == tableView.numberOfRowsInSection(indexPath.section) - 1 {
       cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
-      setContentOffset()
+      
     }
   }
   

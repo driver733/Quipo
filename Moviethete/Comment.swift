@@ -30,11 +30,16 @@ struct Comment {
   
   
   
+  init(theCreatedBy: User, theText: String) {
+    createdBy = theCreatedBy
+    timeSincePosted = "just now"
+    text = theText
+  }
   
   
   
-  
-  func uploadComment(comment: Comment, forReviewWithPfObject: PFObject) {
+  func uploadComment(comment: Comment, forReviewWithPfObject: PFObject) -> BFTask {
+    let mainTask = BFTaskCompletionSource()
     let commentObj = PFObject(className: "Comment")
     commentObj["text"] = comment.text
     commentObj["createdBy"] = PFUser.currentUser()!
@@ -49,12 +54,14 @@ struct Comment {
       }
       }.continueWithBlock { (task: BFTask!) -> AnyObject! in
         if task.error == nil {
+          UserReview.sharedInstance.commentsForSelectedReview.append(comment)
+          mainTask.setResult(nil)
           return nil
         } else {
           return nil
         }
     }
-    
+    return mainTask.task
   }
   
   
