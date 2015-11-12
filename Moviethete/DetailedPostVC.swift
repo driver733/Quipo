@@ -15,10 +15,11 @@ import DynamicBlurView
 import HCSStarRatingView
 import YouTubePlayer
 import Alamofire
+import XCDYouTubeKit
 
 class DetailedPostVC: UIViewController {
 
-  var player: YouTubePlayerView!
+//  var player: YouTubePlayerView!
   var movieTrailerURL: NSURL!
   
   var numberOfReviews: UILabel!
@@ -33,6 +34,11 @@ class DetailedPostVC: UIViewController {
   
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
+  
+  
+  var cellLoadingIndicator: UIActivityIndicatorView!
+  
+  
   
   var passedPost: Post? = nil
   var passedColor: UIColor? = nil
@@ -52,6 +58,28 @@ class DetailedPostVC: UIViewController {
     }
     return nil
   }()
+  
+  
+  func startLoginActivityIndicator() {
+    loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
+    loginActivityIndicatorBackgroundView.frame = self.view.frame
+    loginActivityIndicatorBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+    loginActivityIndicatorBackgroundView.center = self.view.center
+    loginActivityIndicator.center = self.view.center
+    loginActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+    loginActivityIndicatorBackgroundView.addSubview(loginActivityIndicator)
+    self.view.addSubview(loginActivityIndicatorBackgroundView)
+    loginActivityIndicator.startAnimating()
+  }
+  
+  func stopLoginActivityIndicator() {
+    if loginActivityIndicator != nil {
+      loginActivityIndicator.stopAnimating()
+      loginActivityIndicator.removeFromSuperview()
+      loginActivityIndicatorBackgroundView.removeFromSuperview()
+    }
+  }
+
   
   
   
@@ -83,7 +111,17 @@ class DetailedPostVC: UIViewController {
     self.view.addGestureRecognizer(gesture)
     gesture.cancelsTouchesInView = false
     
+
     
+    
+    
+   
+    
+    
+    
+    
+    
+  
     
     
     BFTask(forCompletionOfAllTasks: [
@@ -145,6 +183,15 @@ class DetailedPostVC: UIViewController {
     }
     
     
+  }
+  
+  
+  
+  override func viewWillDisappear(animated: Bool) {
+    YouTubePlayerView.sharedPlayerView.frame = CGRectZero
+    YouTubePlayerView.sharedPlayerView.webView.loadHTMLString("", baseURL: nil)
+    YouTubePlayerView.sharedPlayerView.webView.delegate = nil
+    NSURLCache.sharedURLCache().removeAllCachedResponses()
   }
   
   
@@ -250,7 +297,10 @@ class DetailedPostVC: UIViewController {
       firstSectionContentOffset = tableView.contentOffset
       tableView.contentSize.height += 20
 
-      if player == nil {
+      if YouTubePlayerView.sharedPlayerView.frame == CGRectZero {
+        
+        tableView.reloadData()
+        
         YouTube.sharedInstance.getMovieTrailerWithMovieTitle((passedPost?.movieTitle)!, releasedIn: (passedPost?.releaseYear)!).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
           
           let videoInfo = task.result as! [String]
@@ -261,10 +311,6 @@ class DetailedPostVC: UIViewController {
           YouTube.sharedInstance.currentTrailerId = trailerId
           YouTube.sharedInstance.currentThumbnailURL = thumbnailURL
           YouTube.sharedInstance.currenVideoDuration = videoDuration
-          
-          self.player = YouTubePlayerView(frame: self.view.frame)
-          self.player.delegate = self
-          self.player.loadVideoID(trailerId)
           
           self.tableView.reloadData()
                    
@@ -359,10 +405,10 @@ class DetailedPostVC: UIViewController {
           var viewPoint = cell.thumbnail.convertPoint(location, fromView: tableView)
           if cell.thumbnail.pointInside(viewPoint, withEvent: nil) {
             
-            if player.ready {
-              player.play()
-            }
-          
+            
+            let vc = XCDYouTubeVideoPlayerViewController(videoIdentifier: YouTube.sharedInstance.currentTrailerId!)
+            self.presentViewController(vc, animated: true, completion: nil)
+            
           }
 
           
@@ -533,22 +579,38 @@ extension DetailedPostVC: UITableViewDataSource {
       switch indexPath.row {
         
       case 0:
+        
+        if let _ = YouTube.sharedInstance.currentThumbnailURL {
+          
         let cell = tableView.dequeueReusableCellWithIdentifier("trailersCell") as! TrailersCell
         cell.selectionStyle = .None
         cell.videoLength.font = cell.videoLength.font.fontWithSize(13)
         cell.videoLength.text = YouTube.sharedInstance.currenVideoDuration
         cell.videoType.font = cell.videoType.font.fontWithSize(13)
-        cell.thumbnail.sd_setImageWithURL(NSURL(string: YouTube.sharedInstance.currentThumbnailURL), placeholderImage: self.getImageWithColor(UIColor.placeholderColor(), size: cell.bounds.size), completed: { (image: UIImage!, error: NSError!, _, _) -> Void in
-          if image != nil && error == nil {
-            let img = self.getImageWithColor(UIColor.redColor(), size: CGSizeMake(30, 30))
-            let view = UIImageView(frame: CGRectMake(0, 0, 30, 30))
-            view.image = img
-          }
-        })
+        if let currentThumbnailURL = YouTube.sharedInstance.currentThumbnailURL {
+          cell.thumbnail.sd_setImageWithURL(NSURL(string: currentThumbnailURL), placeholderImage: self.getImageWithColor(UIColor.placeholderColor(), size: cell.bounds.size), completed: { (image: UIImage!, error: NSError!, _, _) -> Void in
+            if image != nil && error == nil {
+              let img = self.getImageWithColor(UIColor.redColor(), size: CGSizeMake(30, 30))
+              let view = UIImageView(frame: CGRectMake(0, 0, 30, 30))
+              view.image = img
+            }
+          })
 
-        
+        }
         
         return cell
+          
+        } else {
+          
+          let cell = UITableViewCell(frame: CGRectMake(0, 0, self.view.bounds.width, 10))
+          cellLoadingIndicator = UIActivityIndicatorView(frame: CGRectMake(cell.center.x, cell.center.y, 10, 10)) as UIActivityIndicatorView
+          cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+          cell.addSubview(cellLoadingIndicator)
+          cellLoadingIndicator.startAnimating()
+
+          
+          return cell
+        }
         
       case 1:
         let cell = tableView.dequeueReusableCellWithIdentifier("plotCell") as! PlotCell
@@ -627,7 +689,11 @@ extension DetailedPostVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if selectedTableViewSection == 1 {
-      return 2
+      if let _ = YouTube.sharedInstance.currentThumbnailURL {   // check if youtube trailer info has been downloaded
+        return 2
+      } else {
+        return 1
+      }
     }
     return UserReview.sharedInstance.movieReviewsForSelectedMovie.count * 2
   }
@@ -670,10 +736,13 @@ extension DetailedPostVC: UITableViewDelegate {
 // MARK: - YouTubePlayerDelegate
 extension DetailedPostVC: YouTubePlayerDelegate {
   func playerReady(videoPlayer: YouTubePlayerView) {
-    
+    videoPlayer.play()
   }
   func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
-   
+    if playerState == .Paused {
+      
+  
+    }
   }
   func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {
     

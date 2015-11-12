@@ -736,11 +736,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "576"
-            endingLineNumber = "576"
+            startingLineNumber = "629"
+            endingLineNumber = "629"
             landmarkName = "tableView(_:cellForRowAtIndexPath:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -752,11 +752,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "559"
-            endingLineNumber = "559"
+            startingLineNumber = "612"
+            endingLineNumber = "612"
             landmarkName = "tableView(_:cellForRowAtIndexPath:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -768,11 +768,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "567"
-            endingLineNumber = "567"
+            startingLineNumber = "620"
+            endingLineNumber = "620"
             landmarkName = "tableView(_:cellForRowAtIndexPath:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -784,11 +784,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "251"
-            endingLineNumber = "251"
+            startingLineNumber = "289"
+            endingLineNumber = "289"
             landmarkName = "didChangeSection(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -800,11 +800,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
             landmarkName = "didChangeSection(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -832,13 +832,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "653"
-            endingLineNumber = "653"
-            landmarkName = "scrollViewDidScroll(_:)"
-            landmarkType = "5">
+            startingLineNumber = "710"
+            endingLineNumber = "710"
+            landmarkName = "DetailedPostVC"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -848,11 +848,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "315"
-            endingLineNumber = "315"
+            startingLineNumber = "352"
+            endingLineNumber = "352"
             landmarkName = "didTapSuperview(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -864,11 +864,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "310"
-            endingLineNumber = "310"
+            startingLineNumber = "347"
+            endingLineNumber = "347"
             landmarkName = "didTapSuperview(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -880,11 +880,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "320"
-            endingLineNumber = "320"
+            startingLineNumber = "357"
+            endingLineNumber = "357"
             landmarkName = "didTapSuperview(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -896,11 +896,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "327"
-            endingLineNumber = "327"
+            startingLineNumber = "364"
+            endingLineNumber = "364"
             landmarkName = "didTapSuperview(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -912,12 +912,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
-            landmarkName = "didChangeSection(_:)"
+            startingLineNumber = "278"
+            endingLineNumber = "278"
+            landmarkName = "didTapWatchedButton(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1008,13 +1008,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "649"
-            endingLineNumber = "649"
-            landmarkName = "scrollViewDidEndDragging(_:willDecelerate:)"
-            landmarkType = "5">
+            startingLineNumber = "706"
+            endingLineNumber = "706">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1024,12 +1022,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "664"
-            endingLineNumber = "664"
-            landmarkName = "tableView(_:willDisplayCell:forRowAtIndexPath:)"
+            startingLineNumber = "721"
+            endingLineNumber = "721"
+            landmarkName = "scrollViewDidScroll(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1104,12 +1102,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "209"
-            endingLineNumber = "209"
-            landmarkName = "didTapFavButton(_:)"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
+            landmarkName = "didTapMoreTextButton(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1120,12 +1118,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
-            landmarkName = "didTapFavButton(_:)"
+            startingLineNumber = "245"
+            endingLineNumber = "245"
+            landmarkName = "didTapMoreTextButton(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1136,11 +1134,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
             landmarkName = "didTapFavButton(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1168,11 +1166,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468831770.581926"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
             landmarkName = "viewDidLoad()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1216,11 +1214,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957358.724672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "329"
-            endingLineNumber = "329"
+            startingLineNumber = "366"
+            endingLineNumber = "366"
             landmarkName = "didTapSuperview(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1232,11 +1230,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832224.640013"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
             landmarkName = "viewDidLoad()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1248,12 +1246,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832433.133001"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "223"
-            endingLineNumber = "223"
-            landmarkName = "didTapWatchedButton(_:)"
+            startingLineNumber = "261"
+            endingLineNumber = "261"
+            landmarkName = "didTapFavButton(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1264,13 +1262,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832455.063454"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230"
-            landmarkName = "didTapWatchedButton(_:)"
-            landmarkType = "5">
+            startingLineNumber = "268"
+            endingLineNumber = "268"
+            landmarkName = "DetailedPostVC"
+            landmarkType = "3">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -1312,12 +1310,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832497.544266"
+            timestampString = "468957341.489737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
-            landmarkName = "didTapWatchedButton(_:)"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
+            landmarkName = "didTapFavButton(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1328,11 +1326,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/DetailedPostVC.swift"
-            timestampString = "468832747.690345"
+            timestampString = "468956414.100894"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
             landmarkName = "viewDidLoad()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1349,7 +1347,119 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "112"
             endingLineNumber = "112"
-            landmarkName = "startLoadingUserMediaInfoForMovie(_:andUser:)"
+            landmarkName = "UserMedia"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moviethete/DetailedPostVC.swift"
+            timestampString = "468957341.489737"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
+            landmarkName = "didChangeSection(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moviethete/DetailedPostVC.swift"
+            timestampString = "468957341.489737"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "294"
+            endingLineNumber = "294"
+            landmarkName = "didChangeSection(_:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Moviethete.DetailedPostVC.didChangeSection (Moviethete.DetailedPostVC)(__ObjC.UISegmentedControl) -&gt; ()"
+                  moduleName = "Moviethete"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikhailyakushin/Documents/xcode/Moviethete/Moviethete/DetailedPostVC.swift"
+                  timestampString = "468899440.038484"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "285"
+                  endingLineNumber = "285"
+                  offsetFromSymbolStart = "885">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Moviethete.DetailedPostVC.(didChangeSection (Moviethete.DetailedPostVC) -&gt; (__ObjC.UISegmentedControl) -&gt; ()).(closure #1)"
+                  moduleName = "Moviethete"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikhailyakushin/Documents/xcode/Moviethete/Moviethete/DetailedPostVC.swift"
+                  timestampString = "468899440.038886"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "287"
+                  endingLineNumber = "287"
+                  offsetFromSymbolStart = "30">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moviethete/DetailedPostVC.swift"
+            timestampString = "468957358.724672"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "734"
+            endingLineNumber = "734"
+            landmarkName = "DetailedPostVC"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pods/YouTubePlayer/YouTubePlayer/YouTubePlayer/YouTubePlayer.swift"
+            timestampString = "468918749.889124"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
+            landmarkName = "buildWebView(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moviethete/DetailedPostVC.swift"
+            timestampString = "468957358.724672"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "400"
+            endingLineNumber = "400"
+            landmarkName = "didTapSuperview(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

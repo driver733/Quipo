@@ -68,13 +68,19 @@ public func videoIDFromYouTubeURL(videoURL: NSURL) -> String? {
     return videoURL.queryStringComponents()["v"] as? String
 }
 
+
+
+
+
 /** Embed and control YouTube videos */
 public class YouTubePlayerView: UIView, UIWebViewDelegate {
 
     public typealias YouTubePlayerParameters = [String: AnyObject]
 
-    private var webView: UIWebView!
-
+    public var webView: UIWebView!
+  
+    public static var sharedPlayerView: YouTubePlayerView!
+  
     /** The readiness of the player */
     private(set) public var ready = false
 
@@ -116,11 +122,11 @@ public class YouTubePlayerView: UIView, UIWebViewDelegate {
     // MARK: Web view initialization
 
     private func buildWebView(parameters: [String: AnyObject]) {
-        webView = UIWebView()
-        webView.allowsInlineMediaPlayback = true
-        webView.mediaPlaybackRequiresUserAction = false
-        webView.delegate = self
-        webView.scrollView.scrollEnabled = false
+      webView = UIWebView()
+      webView.allowsInlineMediaPlayback = true
+      webView.mediaPlaybackRequiresUserAction = false
+      webView.delegate = self
+      webView.scrollView.scrollEnabled = false
     }
 
 

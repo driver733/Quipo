@@ -4,6 +4,7 @@ use_frameworks!
 workspace 'Moviethete'
 
 target 'Moviethete' do
+    pod "XCDYouTubeKit", "~> 2.3.2"
     pod 'YouTubePlayer'
     pod 'SlackTextViewController'
     pod "DynamicBlurView"

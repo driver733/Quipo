@@ -18,6 +18,7 @@ import SDWebImage
 import Parse
 import ParseFacebookUtilsV4
 import ParseTwitterUtils
+import YouTubePlayer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
@@ -28,7 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
       // Override point for customization after application launch.
     
-    
+    YouTubePlayerView.sharedPlayerView = YouTubePlayerView()
+      
       // [Optional] Power your app with Local Datastore. For more info, go to
       // https://parse.com/docs/ios_guide#localdatastore/iOS
       Parse.enableLocalDatastore()

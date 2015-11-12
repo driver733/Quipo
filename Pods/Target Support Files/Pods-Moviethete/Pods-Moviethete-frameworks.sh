@@ -109,6 +109,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-Moviethete/TLYShyNavBar.framework"
   install_framework "Pods-Moviethete/TPKeyboardAvoiding.framework"
   install_framework "Pods-Moviethete/VK_ios_sdk.framework"
+  install_framework "Pods-Moviethete/XCDYouTubeKit.framework"
   install_framework "Pods-Moviethete/YouTubePlayer.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -137,5 +138,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-Moviethete/TLYShyNavBar.framework"
   install_framework "Pods-Moviethete/TPKeyboardAvoiding.framework"
   install_framework "Pods-Moviethete/VK_ios_sdk.framework"
+  install_framework "Pods-Moviethete/XCDYouTubeKit.framework"
   install_framework "Pods-Moviethete/YouTubePlayer.framework"
 fi

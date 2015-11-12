@@ -15,9 +15,9 @@ import Alamofire
 struct YouTube {
   static var sharedInstance = YouTube()
   
-  var currentTrailerId: String!
-  var currentThumbnailURL: String!
-  var currenVideoDuration: String!
+  var currentTrailerId: String?
+  var currentThumbnailURL: String?
+  var currenVideoDuration: String?
   
   
  private func getReformattedVideoDuration(rawVideoDuration: String) -> String {
