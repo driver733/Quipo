@@ -1,15 +1,15 @@
 //
-//  MovietheteTests.swift
-//  MovietheteTests
+//  QuipoTests.swift
+//  QuipoTests
 //
-//  Created by Mike on 8/6/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 8/6/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import XCTest
-@testable import Moviethete
+@testable import Quipo
 
-class MovietheteTests: XCTestCase {
+class QuipoTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

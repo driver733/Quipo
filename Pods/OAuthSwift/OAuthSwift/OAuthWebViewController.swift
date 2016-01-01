@@ -8,7 +8,7 @@
 
 import Foundation
 
-#if os(iOS)
+#if os(iOS) || os(watchOS) || os(tvOS)
     import UIKit
     public typealias OAuthViewController = UIViewController
 #elseif os(OSX)
@@ -18,16 +18,25 @@ import Foundation
 
 public class OAuthWebViewController: OAuthViewController, OAuthSwiftURLHandlerType {
 
-    public func handle(url: NSURL){
-        #if os(iOS)
-          var topController = UIApplication.sharedApplication().keyWindow?.rootViewController
-          
-          while ((topController?.presentedViewController) != nil) {
-            topController = topController?.presentedViewController
-          }
-          
-          //   UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(self, animated: true, completion: nil)
-          topController?.presentViewController(self, animated: true, completion: nil)        #elseif os(OSX)
+    public func handle(url: NSURL) {
+        // do UI in main thread
+        if NSThread.isMainThread() {
+             doHandle(url)
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.doHandle(url)
+            }
+        }
+    }
+
+    public func doHandle(url: NSURL){
+        #if os(iOS) || os(watchOS) || os(tvOS)
+            #if !OAUTH_APP_EXTENSIONS
+                UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(
+                    self, animated: true, completion: nil)
+            #endif
+        #elseif os(OSX)
             if let p = self.parentViewController { // default behaviour if this controller affected as child controller
                 p.presentViewControllerAsModalWindow(self)
             } else if let window = self.view.window {
@@ -41,9 +50,9 @@ public class OAuthWebViewController: OAuthViewController, OAuthSwiftURLHandlerTy
         #if os(iOS)
             self.dismissViewControllerAnimated(true, completion: nil)
         #elseif os(OSX)
-            if let p = self.presentingViewController { // if presentViewControllerAsModalWindow
+            if self.presentingViewController != nil { // if presentViewControllerAsModalWindow
                 self.dismissController(nil)
-                if let p = self.parentViewController {
+                if self.parentViewController != nil {
                     self.removeFromParentViewController()
                 }
             }

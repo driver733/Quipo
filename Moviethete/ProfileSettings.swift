@@ -1,9 +1,9 @@
 //
 //  ProfileSettings.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 8/1/15.
-//  Copyright (c) 2015 Admin. All rights reserved.
+//  Created by Mikhail Yakushin on 8/1/15.
+//  Copyright (c) 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -22,8 +22,6 @@ import SwiftValidator
 import Parse
 import ParseFacebookUtilsV4
 
-
-
 let DID_SELECT_LINKED_ACCOUNTS_SETTINGS_CELL_SEGUE_IDENTIFIER = "linkedAccounts"
 let DID_SELECT_FOLLOW_FRIENDS_SETTINGS_CELL_SEGUE_IDENTIFIER = "followFriends"
 
@@ -33,7 +31,8 @@ class ProfileSettings: UIViewController {
   
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
-
+  
+  var loadingStateView: LoadingIndicatorView?
     
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -43,40 +42,26 @@ class ProfileSettings: UIViewController {
       tableView.rowHeight = UITableViewAutomaticDimension
       tableView.estimatedRowHeight = 44.0
       
-      
       tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
       
-      NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingLinkedAccountsData:", name: "didFinishLoadingLinkedAccountsData", object: nil)
+ //     NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingLinkedAccountsData:", name: "didFinishLoadingLinkedAccountsData", object: nil)
       
-      if UserSingelton.sharedInstance.shouldUpdateFollowFriends && UserSingelton.sharedInstance.allFriends.isEmpty {
-        UserSingelton.sharedInstance.loadFollowFriendsData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-          self.tableView.reloadData()
-          UserSingelton.sharedInstance.shouldUpdateFollowFriends = false
-          return nil
-        }
-      }
+//      if UserSingleton.getSharedInstance().allFriends.isEmpty {
+//        UserSingleton.getSharedInstance().loadLinkedAccountsFriends().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+//          self.tableView.reloadData()
+//          return nil
+//        }
+//      }
       
+      UserSingleton.getSharedInstance().followFriendsDelegate = self
     }
   
   
-  
 
-  
-  
-  
   override func viewWillAppear(animated: Bool) {
- //   startLoginActivityIndicator()
-    
+    self.title = "Settings"
   }
-  
-  
-  
-  
-  
-  func didFinishLoadingLinkedAccountsData(notif: NSNotification) {
-//    stopLoginActivityIndicator()
- //   tableView.reloadData()
-  }
+
   
   func startLoginActivityIndicator() {
     loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
@@ -114,33 +99,28 @@ class ProfileSettings: UIViewController {
   
   func logOut() {
     
-    
-    
-    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
-    
-    PFUser.logOutInBackground()   // causes freeze sometimes ONLY IN SIMULATOR - WORKDS FINE ON 8.4 DEVICE
-    InstagramEngine.sharedEngine().logout()  // this might cause freeze
+    PFUser.logOutInBackground()              // causes freeze sometimes ONLY IN SIMULATOR - WORKS FINE ON 8.4 DEVICE
+    InstagramEngine.sharedEngine().logout()  // might cause freeze
     VKSdk.forceLogout()
     FBSDKLoginManager().logOut()
     Twitter.sharedInstance().logOut()
     
-    UserSingelton.sharedInstance.linkedAccountsKeychain["instagram"] = nil
-    
+//    UserSingleton.getSharedInstance().linkedAccountsKeychain["instagram"] = nil
+    UserSingleton.getSharedInstance()
     
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-   
-    UIView.transitionWithView(appDelegate.window!,
-      duration: 0.2,
+    let loginVC = (appDelegate.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("login"))!
+    loginVC.view.layoutIfNeeded()
+    UIView.transitionFromView(
+      (appDelegate.window?.rootViewController?.view)!,
+      toView: loginVC.view,
+      duration: 0.5,
       options: UIViewAnimationOptions.TransitionCrossDissolve,
-      animations: { () -> Void in
-        appDelegate.window?.rootViewController? = (appDelegate.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("login"))!
-      },
-      completion: nil)
+      completion: { (_) -> Void in
+        appDelegate.window!.rootViewController! = loginVC
+      })
   }
   
-
-  
-
 }
 
 
@@ -209,23 +189,20 @@ extension ProfileSettings: UITableViewDelegate {
   
   
   
- 
-   
-  
-  
-  
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
     switch indexPath.section {
       
     case 0:
-      performSegueWithIdentifier(DID_SELECT_FOLLOW_FRIENDS_SETTINGS_CELL_SEGUE_IDENTIFIER, sender: nil)
-      
+      let vc = DetailedSettingsVC()
+      vc.cellIndexPath = indexPath
+      self.navigationController?.pushViewController(vc, animated: true)
       
     case 2:
       switch indexPath.row {
       case 0:
-        performSegueWithIdentifier(DID_SELECT_LINKED_ACCOUNTS_SETTINGS_CELL_SEGUE_IDENTIFIER, sender: nil)
+        
+        self.navigationController?.pushViewController(LinkedAccountsVC(), animated: true)
         
       default: break
       }
@@ -234,7 +211,7 @@ extension ProfileSettings: UITableViewDelegate {
     case 5:
       switch indexPath.row {
       case 0:
-            logOut()
+        logOut()
         
       default: break
       }
@@ -265,8 +242,8 @@ extension ProfileSettings: UITableViewDataSource {
     case 0:   // follow friends
       
       let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsFollowFriendsCell", forIndexPath: indexPath) as! ProfileSettingsFollowFriendsCell
-      cell.icon.image = UIImage(named: UserSingelton.sharedInstance.followFriendsData[indexPath.row].localIconName!)
-      cell.label.text = UserSingelton.sharedInstance.followFriendsData[indexPath.row].description
+      cell.icon.image = UIImage(named: UserSingleton.getSharedInstance().followFriendsData[indexPath.row].localIconName!)
+      cell.label.text = UserSingleton.getSharedInstance().followFriendsData[indexPath.row].description
       return cell
        
       case 1:
@@ -278,12 +255,10 @@ extension ProfileSettings: UITableViewDataSource {
           cell.setting.text = "Edit Profile"
           return cell
         
-            
         case 1:
           let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsCell", forIndexPath: indexPath) as! ProfileSettingsCell
           cell.setting.text = "Change Password"
           return cell
-            
             
         case 2:
           let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsCell", forIndexPath: indexPath) as! ProfileSettingsCell
@@ -314,8 +289,7 @@ extension ProfileSettings: UITableViewDataSource {
         
       }
       
-      
-      
+
       
     case 3:
       switch indexPath.row {
@@ -336,7 +310,7 @@ extension ProfileSettings: UITableViewDataSource {
         
       }
       
-      
+
     case 4:
       switch indexPath.row {
         
@@ -362,10 +336,6 @@ extension ProfileSettings: UITableViewDataSource {
       }
 
  
-      
-      
-      
-      
     case 5:  // Log Out and clear search
       switch indexPath.row {
         
@@ -373,14 +343,7 @@ extension ProfileSettings: UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsCell", forIndexPath: indexPath) as! ProfileSettingsCell
         cell.setting.text = "Log Out"
         return cell
-        
-        
-        
-        
-        
-        
-        
-        
+      
         
         default: break
       }
@@ -393,14 +356,14 @@ extension ProfileSettings: UITableViewDataSource {
   
   }
   
-  
+
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
     switch section {
       
     case 0:
-      return UserSingelton.sharedInstance.followFriendsData.count
+      return UserSingleton.getSharedInstance().followFriendsData.count
       
     case 1:
       //return 3
@@ -443,4 +406,38 @@ extension ProfileSettings: UITableViewDataSource {
   
   
 }
+
+
+
+
+
+
+extension ProfileSettings: LoadingStateDelegate {
+  
+  func didStartNetworingActivity() {
+    self.view.addSubview(LoadingIndicatorView())
+  }
+  
+  func didEndNetworingActivity() {
+    self.view.viewWithTag(LoadingIndicatorViewTag)?.removeFromSuperview()
+  }
+  
+}
+
+
+
+extension ProfileSettings: FollowFriendsDelegate {
+  func didUpdateFollowFriendsData() {
+    tableView.reloadData()
+  }
+}
+
+
+
+
+
+
+
+
+
 

@@ -2,8 +2,8 @@
 //  DetailedPostVC.swift
 //  Reviews
 //
-//  Created by Admin on 06/07/15.
-//  Copyright (c) 2015 Admin. All rights reserved.
+//  Created by Mikhail Yakushin on 06/07/15.
+//  Copyright (c) 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -11,23 +11,23 @@ import SDWebImage
 import Async
 import Bolts
 import Parse
-import DynamicBlurView
 import HCSStarRatingView
-import YouTubePlayer
 import Alamofire
 import XCDYouTubeKit
 
 class DetailedPostVC: UIViewController {
-
-//  var player: YouTubePlayerView!
-  var movieTrailerURL: NSURL!
+  
+  let kTableHeaderViewHeight: CGFloat = 64
   
   var numberOfReviews: UILabel!
   var starred: UIButton!
   var watched: UIButton!
  // var avgMovieRating: HCSStarRatingView!
   
-  var tableView = UITableView()
+  var reviews = [UserReview]!()
+  var userMediaInfo: UserMedia!
+  
+  var tableView: UITableView!
   var selectedTableViewSection = 0
   var firstSectionContentOffset: CGPoint!
   var secondSectionContentOffset: CGPoint!
@@ -35,30 +35,24 @@ class DetailedPostVC: UIViewController {
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
   
-  
   var cellLoadingIndicator: UIActivityIndicatorView!
   
+  var post: Post?
+  var navBarBackgroundColor: UIColor?
+  var navBarTextColor: UIColor?
   
   
-  var passedPost: Post? = nil
-  var passedColor: UIColor? = nil
-  var textColor: UIColor? = nil
   
-  lazy var currentUserReview: UserReview? = {
-    if !UserReview.sharedInstance.movieReviewsForSelectedMovie.isEmpty {
-      if (UserReview.sharedInstance.movieReviewsForSelectedMovie[0].pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
-        return UserReview.sharedInstance.movieReviewsForSelectedMovie[0]
-      } else {
-        if UserReview.sharedInstance.movieReviewsForSelectedMovie.count > 1 {
-          if (UserReview.sharedInstance.movieReviewsForSelectedMovie[0].pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
-            return UserReview.sharedInstance.movieReviewsForSelectedMovie[1]
-          }
-        }
-      }
-    }
-    return nil
-  }()
-  
+  init(thePost: Post, theNavBarBackgroundColor: UIColor, theNavBarTextColor: UIColor) {
+    super.init(nibName: nil, bundle: nil)
+    post = thePost
+    navBarBackgroundColor = theNavBarBackgroundColor
+    navBarTextColor = theNavBarTextColor
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+  }
   
   func startLoginActivityIndicator() {
     loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
@@ -79,13 +73,26 @@ class DetailedPostVC: UIViewController {
       loginActivityIndicatorBackgroundView.removeFromSuperview()
     }
   }
-
   
-  
+  func currentUserReview() -> UserReview? {
+    if !reviews.isEmpty {
+      if (reviews[0].pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+        return reviews[0]
+      } else {
+        if reviews.count > 1 {
+          if (reviews[0].pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+            return reviews[1]
+          }
+        }
+      }
+    }
+    return nil
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    tableView = UITableView()
+    self.view = tableView
     tableView.dataSource = self
     tableView.delegate = self
     tableView.registerNib(UINib(nibName: "DetailedPostMainCell", bundle: nil), forCellReuseIdentifier: "detailedPostCell")
@@ -95,110 +102,91 @@ class DetailedPostVC: UIViewController {
     tableView.registerNib(UINib(nibName: "PlotCell", bundle: nil), forCellReuseIdentifier: "plotCell")
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 44.0
-    
-    self.view = tableView
-    
-    self.automaticallyAdjustsScrollViewInsets = true
-
-    
+  
     setupTableHeaderView()
     tableView.tableFooterView = UIView(frame: CGRectZero)
     
     self.navigationController?.navigationBar.shadowImage = (getImageWithColor(UIColor.placeholderColor(), size: (CGSizeMake(0.35, 0.35))))
-    self.title = passedPost!.movieTitle!
+    self.title = post!.movieTitle!
     
     let gesture = UITapGestureRecognizer(target: self, action: "didTapSuperview:")
     self.view.addGestureRecognizer(gesture)
     gesture.cancelsTouchesInView = false
     
-
+    self.navigationController?.navigationBar.translucent = false  //   have yet to figure out how the contentInset
+    scrollViewDidScroll(tableView)                                //   of the tableView header works; using this workaround for now.
     
-    
-    
-   
-    
-    
-    
-    
-    
-  
-    
-    
-    BFTask(forCompletionOfAllTasks: [
-      Post.sharedInstance.loadMovieReviewsForMovie((passedPost?.trackID)!),
-      UserMedia.sharedInstance.startLoadingUserMediaInfoForMovie((passedPost?.trackID)!, andUser: PFUser.currentUser()!)
-      ]).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-        
-        if self.userHasReviewForSelectedMovie() {
+    BFTask(forCompletionOfAllTasksWithResults: [
+      UserMedia.userMediaInfoForMovieWithTrackID(post!.trackID!),
+      Post.sharedInstance.loadMovieReviewsForMovie((post!.trackID)!)
+      ]).continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
+        let results = task.result as! NSArray
+        self.userMediaInfo = results[0] as! UserMedia
+        self.reviews = results[1] as! [UserReview]
+        if self.currentUserHasReviewForSelectedMovie() {
           self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "addPost"), animated: false)
         } else {
           self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: "addPost"), animated: false)
         }
-        self.numberOfReviews.text = "(\(UserReview.sharedInstance.movieReviewsForSelectedMovie.count))"
+        self.numberOfReviews.text = "(\(self.reviews.count))"
         // self.avgMovieRating.value = CGFloat(UserReview.sharedInstance.avgMovieRatingForSelectedMovie)
         
-        if UserReview.sharedInstance.userMediaInfoForSelectedMovie.isWatched {
-            self.watched.setTitle("Watched", forState: .Normal)
-            self.watched.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        if self.userMediaInfo.isWatched {
+          self.watched.setTitle("Watched", forState: .Normal)
+          self.watched.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        } else {
+          self.watched.setTitle("Watched+", forState: .Normal)
+          self.watched.setTitleColor(UIColor.blueColor(), forState: .Normal)
         }
-        if UserReview.sharedInstance.userMediaInfoForSelectedMovie.isStarred {
-          self.starred.setTitle("Starred", forState: .Normal)
+        if self.userMediaInfo.isStarred {
+          self.starred.setTitle("Favorite", forState: .Normal)
           self.starred.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        } else {
+          self.starred.setTitle("Favorite+", forState: .Normal)
+          self.starred.setTitleColor(UIColor.blueColor(), forState: .Normal)
         }
-        
+     
         self.putFeedReviewToTheBeginning()
         self.tableView.reloadData()
-        
-        
-        
+          
         return nil
-
-    }
-    
+    })
    
     
     
   }
 
+  func currentUserHasReviewForSelectedMovie() -> Bool {
+    for review in reviews {
+      if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
+        return true
+      }
+    }
+    return false
+  }
   
   
   
   override func viewWillAppear(animated: Bool) {
-    
-    if passedColor != nil && textColor != nil {
       self.transitionCoordinator()?.animateAlongsideTransition({
         (context: UIViewControllerTransitionCoordinatorContext) -> Void in
-        if self.navigationController!.viewControllers[0].isKindOfClass(SearchVC) {
-          self.navigationController?.navigationBar.subviews[1].hidden = true           // hide search bar if it is present
-        }
-        self.navigationController?.navigationBar.barTintColor = self.passedColor
-        self.navigationController?.navigationBar.tintColor = self.textColor
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : self.textColor!]
+//        if self.navigationController!.viewControllers[0].isKindOfClass(SearchVC) {
+//          self.navigationController?.navigationBar.subviews[1].hidden = true           // hide search bar if it is present
+//        }
+        self.navigationController?.navigationBar.barTintColor = self.navBarBackgroundColor
+        self.navigationController?.navigationBar.tintColor = self.navBarTextColor
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : self.navBarTextColor!]
         },
         completion: { (completionContext: UIViewControllerTransitionCoordinatorContext) -> Void in
-          self.navigationController?.navigationBar.barTintColor = self.passedColor
-          self.navigationController?.navigationBar.tintColor = self.textColor
+          self.navigationController?.navigationBar.barTintColor = self.navBarBackgroundColor
+          self.navigationController?.navigationBar.tintColor = self.navBarTextColor
       })
-      
-    }
-    
-    
   }
-  
-  
-  
-  override func viewWillDisappear(animated: Bool) {
-    YouTubePlayerView.sharedPlayerView.frame = CGRectZero
-    YouTubePlayerView.sharedPlayerView.webView.loadHTMLString("", baseURL: nil)
-    YouTubePlayerView.sharedPlayerView.webView.delegate = nil
-    NSURLCache.sharedURLCache().removeAllCachedResponses()
-  }
-  
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if let vc = (segue.destinationViewController as? UINavigationController)?.viewControllers[0] as? AddMovieReviewVC {
-      vc.post = passedPost!
-      for review in UserReview.sharedInstance.movieReviewsForSelectedMovie {
+      vc.post = post!
+      for review in reviews {
         if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
           vc.passedReview = review
         }
@@ -230,7 +218,7 @@ class DetailedPostVC: UIViewController {
     let cell = parentView as! ReviewCell
     
     let vc = CommentsVC(tableViewStyle: .Plain)
-    vc.passedReviewObject = UserReview.sharedInstance.movieReviewsForSelectedMovie[getCellPostIndex((tableView.indexPathForCell(cell)?.row)!)].pfObject!
+    vc.passedReview = reviews[getCellPostIndex((tableView.indexPathForCell(cell)?.row)!)]
     
     
     self.navigationController?.pushViewController(vc, animated: true)
@@ -251,14 +239,14 @@ class DetailedPostVC: UIViewController {
   
   
   func didTapFavButton(sender: UIButton) {
-    if UserReview.sharedInstance.userMediaInfoForSelectedMovie.isStarred {
-      UserMedia.sharedInstance.markMovie((passedPost?.trackID)!, AsStarred: false, pfObject: UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+    if userMediaInfo.isStarred {
+      userMediaInfo.markMovie((post?.trackID)!, AsStarred: false, pfObject: userMediaInfo.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
         sender.setTitle("+ Starred", forState: .Normal)
         sender.setTitleColor(UIColor.blueColor(), forState: .Normal)
         return nil
       }
     } else {
-      UserMedia.sharedInstance.markMovie((passedPost?.trackID)!, AsStarred: true, pfObject: UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      userMediaInfo.markMovie((post?.trackID)!, AsStarred: true, pfObject: userMediaInfo.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
         sender.setTitle("Starred", forState: .Normal)
         sender.setTitleColor(UIColor.greenColor(), forState: .Normal)
         return nil
@@ -267,14 +255,14 @@ class DetailedPostVC: UIViewController {
   }
   
   func didTapWatchedButton(sender: UIButton) {
-    if UserReview.sharedInstance.userMediaInfoForSelectedMovie.isWatched {
-      UserMedia.sharedInstance.markMovie((passedPost?.trackID)!, AsWatched: false, pfObject: UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+    if userMediaInfo.isWatched {
+      userMediaInfo.markMovie((post?.trackID)!, AsWatched: false, pfObject: userMediaInfo.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
         sender.setTitle("+ Watched", forState: .Normal)
         sender.setTitleColor(UIColor.blueColor(), forState: .Normal)
         return nil
       }
     } else {
-      UserMedia.sharedInstance.markMovie((passedPost?.trackID)!, AsWatched: true, pfObject: UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      userMediaInfo.markMovie((post?.trackID)!, AsWatched: true, pfObject: userMediaInfo.pfObject).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
         sender.setTitle("Watched", forState: .Normal)
         sender.setTitleColor(UIColor.greenColor(), forState: .Normal)
         return nil
@@ -297,11 +285,13 @@ class DetailedPostVC: UIViewController {
       firstSectionContentOffset = tableView.contentOffset
       tableView.contentSize.height += 20
 
-      if YouTubePlayerView.sharedPlayerView.frame == CGRectZero {
-        
+      if let _ = YouTube.sharedInstance.currentThumbnailURL {
         tableView.reloadData()
+        tableView.layoutIfNeeded()
+        setContentOffset()
+      } else {
         
-        YouTube.sharedInstance.getMovieTrailerWithMovieTitle((passedPost?.movieTitle)!, releasedIn: (passedPost?.releaseYear)!).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+        YouTube.sharedInstance.getMovieTrailerWithMovieTitle((post?.movieTitle)!, releasedIn: (post?.releaseYear)!).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
           
           let videoInfo = task.result as! [String]
           let trailerId = videoInfo[0]
@@ -313,13 +303,10 @@ class DetailedPostVC: UIViewController {
           YouTube.sharedInstance.currenVideoDuration = videoDuration
           
           self.tableView.reloadData()
-                   
+          
           return nil
         })
-      } else {
-        tableView.reloadData()
-        tableView.layoutIfNeeded()
-        setContentOffset()
+
       }
      
       
@@ -346,18 +333,18 @@ class DetailedPostVC: UIViewController {
     
     if press.state == .Ended {
       
-      
       let location = press.locationInView(self.view)
-
-      let point = (tableView.tableHeaderView?.subviews[2])!.convertPoint(location, fromView: tableView)
-      if (tableView.tableHeaderView?.subviews[2])!.pointInside(point, withEvent: nil) {
-        for subView in (tableView.tableHeaderView?.subviews[2].subviews)! {
+      let tableViewHeaderContentView = (tableView.tableHeaderView?.subviews[2])!
+      let point = tableViewHeaderContentView.convertPoint(location, fromView: tableView)
+      if tableViewHeaderContentView.pointInside(point, withEvent: nil) {
+        for subView in tableViewHeaderContentView.subviews {
           
           let newPoint = subView.convertPoint(location, fromView: tableView)
           
           if subView.pointInside(newPoint, withEvent: nil) {
             
             switch subView.restorationIdentifier! {
+              
             case "moviePoster":
               let moviePoster = subView as! UIImageView
               // open high res poster image on touch
@@ -433,7 +420,7 @@ class DetailedPostVC: UIViewController {
     let headerContentView = UIView.loadFromNibNamed("DetailedPostTopView")!
     
     headerContentView.backgroundColor = UIColor.clearColor()
-    headerContentView.frame = CGRectMake(0, 64, self.view.frame.width, 180)
+    headerContentView.frame = CGRectMake(0, kTableHeaderViewHeight, self.view.frame.width, 180)
     headerContentView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
     
     for subView in headerContentView.subviews {
@@ -442,29 +429,33 @@ class DetailedPostVC: UIViewController {
         
       case "moviePoster":
         let moviePoster = subView as! UIImageView
-        moviePoster.sd_setImageWithURL(NSURL(string: (passedPost?.standardPosterImageURL)!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: moviePoster.frame.size))
+        moviePoster.sd_setImageWithURL(NSURL(string: (post?.standardPosterImageURL)!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: moviePoster.frame.size))
 
       case "movieTitle":
         let movieName = subView as! UILabel
-        movieName.text = passedPost?.movieTitle
+        movieName.text = post?.movieTitle
         
       case "+fav":
         let button = subView as! UIButton
+        button.setTitle("", forState: .Normal)
         starred = button
         
       case "+watched":
         let button = subView as! UIButton
+        button.setTitle("", forState: .Normal)
         watched = button
         
       case "numberOfReviews":
         let label = subView as! UILabel
         numberOfReviews = label
+        label.text = ""
         label.font = label.font.fontWithSize(12)
         
       case "movieRating":
         let movieRating = subView as! HCSStarRatingView
         movieRating.backgroundColor = UIColor.clearColor()
-        movieRating.value = CGFloat((passedPost?.rating)!) // change to average rating amongst friends
+        movieRating.value = 3
+   //     movieRating.value = CGFloat((post?.rating)!) // change to average rating amongst friends
         movieRating.userInteractionEnabled = false
         
       default:
@@ -480,17 +471,16 @@ class DetailedPostVC: UIViewController {
     
 
     tableView.tableHeaderView = visualEffectView
-    
   }
   
   
   func addPost() {
     let vc = AddMovieReviewVC()
-    vc.post = passedPost!
-    if let review = currentUserReview {
+    vc.post = post!
+    if let review = currentUserReview() {
       vc.passedReview = review
     }
-    for review in UserReview.sharedInstance.movieReviewsForSelectedMovie {
+    for review in reviews {
       if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
         vc.passedReview = review
       }
@@ -503,16 +493,8 @@ class DetailedPostVC: UIViewController {
   
   
   
-  // Move to Singleton
-  func userHasReviewForSelectedMovie() -> Bool {
-    for review in UserReview.sharedInstance.movieReviewsForSelectedMovie {
-      if (review.pfUser?.objectId)! == (PFUser.currentUser()?.objectId)! {
-        return true
-      }
-    }
-    return false
-  }
   
+
   
   
   
@@ -525,11 +507,11 @@ class DetailedPostVC: UIViewController {
   }
   
   func putFeedReviewToTheBeginning() {
-    if let passedPostObjectId = self.passedPost?.pfObject.objectId {
+    if let passedPostObjectId = self.post?.pfObject.objectId {
     
-      var feedReviewIndex: Int? = Int()
-      var currentUserReviewIndex: Int? = Int()
-      for (index, review) in UserReview.sharedInstance.movieReviewsForSelectedMovie.enumerate() {
+      var feedReviewIndex: Int?
+      var currentUserReviewIndex: Int?
+      for (index, review) in reviews.enumerate() {
         
         if (review.pfObject?.objectId)! == passedPostObjectId {
           feedReviewIndex = index
@@ -542,27 +524,19 @@ class DetailedPostVC: UIViewController {
       if let feedReviewIndex = feedReviewIndex {
         
         if let currentUserReviewIndex = currentUserReviewIndex {
-          UserReview.sharedInstance.movieReviewsForSelectedMovie.insert(UserReview.sharedInstance.movieReviewsForSelectedMovie.removeAtIndex(currentUserReviewIndex), atIndex: 0)
-        }
-        UserReview.sharedInstance.movieReviewsForSelectedMovie.insert(UserReview.sharedInstance.movieReviewsForSelectedMovie.removeAtIndex(feedReviewIndex), atIndex: 0)
+          reviews.insert(reviews.removeAtIndex(currentUserReviewIndex), atIndex: 0)
+        } // crash
+        reviews.insert(reviews.removeAtIndex(feedReviewIndex), atIndex: 0)
         
       } else {
         if let currentUserReviewIndex = currentUserReviewIndex {
-          UserReview.sharedInstance.movieReviewsForSelectedMovie.insert(UserReview.sharedInstance.movieReviewsForSelectedMovie.removeAtIndex(currentUserReviewIndex), atIndex: 0)
+          reviews.insert(reviews.removeAtIndex(currentUserReviewIndex), atIndex: 0)
         }
       }
       
 
     }
   }
-  
-  
-
-
-  
-  
-  
-
   
   
   
@@ -608,7 +582,6 @@ extension DetailedPostVC: UITableViewDataSource {
           cell.addSubview(cellLoadingIndicator)
           cellLoadingIndicator.startAnimating()
 
-          
           return cell
         }
         
@@ -617,7 +590,7 @@ extension DetailedPostVC: UITableViewDataSource {
         
         cell.selectionStyle = .None
         
-        cell.plot.text = passedPost?.longDescription
+        cell.plot.text = post?.longDescription
         cell.plot.font = UIFont.systemFontOfSize(13)
      
         let plotLabel = cell.plot
@@ -651,8 +624,8 @@ extension DetailedPostVC: UITableViewDataSource {
     }
     
   
-      if !UserReview.sharedInstance.movieReviewsForSelectedMovie.isEmpty {
-        let review = UserReview.sharedInstance.movieReviewsForSelectedMovie[getCellPostIndex(indexPath.row)]
+      if !reviews.isEmpty {
+        let review = reviews[getCellPostIndex(indexPath.row)]
         if indexPath.row % 2 == 0 {
           let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
           
@@ -684,9 +657,6 @@ extension DetailedPostVC: UITableViewDataSource {
       return UITableViewCell()
     }
   
-  
-  
-  
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if selectedTableViewSection == 1 {
       if let _ = YouTube.sharedInstance.currentThumbnailURL {   // check if youtube trailer info has been downloaded
@@ -695,21 +665,18 @@ extension DetailedPostVC: UITableViewDataSource {
         return 1
       }
     }
-    return UserReview.sharedInstance.movieReviewsForSelectedMovie.count * 2
+    if reviews != nil {
+      return reviews.count * 2
+    }
+    return 0
   }
-  
-  
-  
-  
   
 }
 
 
 
-
 // MARK: - UITableViewDelegate
 extension DetailedPostVC: UITableViewDelegate {
-  
   
   func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     scrollView.bounces = true
@@ -720,36 +687,26 @@ extension DetailedPostVC: UITableViewDelegate {
     let headerVisualEffectView = tableView.tableHeaderView?.subviews[0]
     let headerContentView = tableView.tableHeaderView?.subviews[2]
     
-    headerVisualEffectView?.transform = CGAffineTransformMakeTranslation(0, offsetY + 64)
-    headerContentView?.transform = CGAffineTransformMakeTranslation(0, offsetY)
+    headerVisualEffectView?.transform = CGAffineTransformMakeTranslation(0, offsetY)
+    headerContentView?.transform = CGAffineTransformMakeTranslation(0, offsetY - kTableHeaderViewHeight)
   }
+  
+  
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    if indexPath.row % 2 == 0 {
+      
+    }
+  }
+  
   
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if indexPath.row == tableView.numberOfRowsInSection(indexPath.section) - 1 {
       cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
-      
     }
   }
   
 }
-
-// MARK: - YouTubePlayerDelegate
-extension DetailedPostVC: YouTubePlayerDelegate {
-  func playerReady(videoPlayer: YouTubePlayerView) {
-    videoPlayer.play()
-  }
-  func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
-    if playerState == .Paused {
-      
-  
-    }
-  }
-  func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {
-    
-  }
-}
-
-
 
 
 

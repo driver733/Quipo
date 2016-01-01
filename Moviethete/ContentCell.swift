@@ -2,8 +2,8 @@
 //  CustomCell.swift
 //  Reviews
 //
-//  Created by Admin on 02/07/15.
-//  Copyright (c) 2015 Admin. All rights reserved.
+//  Created by Mikhail Yakushin on 02/07/15.
+//  Copyright (c) 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -30,7 +30,9 @@ class ContentCell: UITableViewCell {
     }
     
   override func prepareForReuse() {
-    posterImage.image = nil // put placeholder image - light gray color
+    super.prepareForReuse()
+    posterImage.sd_cancelCurrentImageLoad()
+    posterImage.image = nil
   }
 
     

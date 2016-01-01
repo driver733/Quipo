@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15C31f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15C31f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -10,15 +10,53 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContentCell" rowHeight="523" id="jGK-wq-BNJ" customClass="ContentCell" customModule="Moviethete" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="381" height="523"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContentCell" rowHeight="515" id="jGK-wq-BNJ" customClass="ContentCell" customModule="Moviethete" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="447" height="515"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jGK-wq-BNJ" id="fpZ-AK-0nx">
-                <rect key="frame" x="0.0" y="0.0" width="381" height="522"/>
+                <rect key="frame" x="0.0" y="0.0" width="447" height="514"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="501" translatesAutoresizingMaskIntoConstraints="NO" id="BAI-hM-hgz">
-                        <rect key="frame" x="24" y="8" width="133" height="200"/>
+                    <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="dlT-uX-vQM" customClass="HCSStarRatingView">
+                        <rect key="frame" x="105" y="29" width="100" height="20"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="NVd-aT-hSC"/>
+                            <constraint firstAttribute="width" constant="100" id="eZo-M8-cif"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                                <real key="value" value="5"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
+                                <integer key="value" value="5"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
+                                <real key="value" value="3"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                <real key="value" value="5"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="751" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1B-bz-eYY">
+                        <rect key="frame" x="105" y="49" width="334" height="75"/>
+                        <animations/>
+                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </string>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="16"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="749" text="reviewTitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MYO-Tc-d3A">
+                        <rect key="frame" x="105" y="8" width="334" height="21"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BAI-hM-hgz">
+                        <rect key="frame" x="8" y="8" width="76" height="116"/>
                         <animations/>
                         <constraints>
                             <constraint firstAttribute="height" constant="250" id="0u9-fH-F6h"/>
@@ -28,6 +66,7 @@
                             <constraint firstAttribute="height" constant="200" id="Ips-8G-ZLN"/>
                             <constraint firstAttribute="width" constant="200" id="KPD-tg-Opl"/>
                             <constraint firstAttribute="width" constant="200" id="XQa-Tw-bdC"/>
+                            <constraint firstAttribute="width" secondItem="BAI-hM-hgz" secondAttribute="height" multiplier="2:3" id="gtR-s8-Lru"/>
                             <constraint firstAttribute="width" constant="200" id="hzb-86-hfK"/>
                             <constraint firstAttribute="width" constant="196" id="kx5-1h-6rW"/>
                             <constraint firstAttribute="height" constant="270" id="nmN-lH-eRf"/>
@@ -38,6 +77,7 @@
                             <mask key="constraints">
                                 <exclude reference="0u9-fH-F6h"/>
                                 <exclude reference="47W-Uq-u6T"/>
+                                <exclude reference="6UL-hf-TyH"/>
                                 <exclude reference="Gzp-se-BqJ"/>
                                 <exclude reference="Ips-8G-ZLN"/>
                                 <exclude reference="KPD-tg-Opl"/>
@@ -50,83 +90,55 @@
                             </mask>
                         </variation>
                     </imageView>
-                    <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="501" verticalHuggingPriority="501" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="dlT-uX-vQM" customClass="HCSStarRatingView">
-                        <rect key="frame" x="24" y="208" width="133" height="44"/>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="spacing">
-                                <real key="value" value="5"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
-                                <integer key="value" value="5"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
-                                <real key="value" value="1"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="number" keyPath="value">
-                                <real key="value" value="5"/>
-                            </userDefinedRuntimeAttribute>
-                        </userDefinedRuntimeAttributes>
-                    </view>
-                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="501" verticalHuggingPriority="500" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1B-bz-eYY">
-                        <rect key="frame" x="24" y="252" width="329" height="242"/>
-                        <animations/>
-                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </string>
-                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                        <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="16"/>
-                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                    </textView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="501" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="reviewTitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MYO-Tc-d3A">
-                        <rect key="frame" x="162" y="219" width="82" height="21"/>
-                        <animations/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                 </subviews>
                 <animations/>
                 <constraints>
-                    <constraint firstItem="dlT-uX-vQM" firstAttribute="leading" secondItem="BAI-hM-hgz" secondAttribute="leading" id="11p-4t-DLl"/>
                     <constraint firstItem="L1B-bz-eYY" firstAttribute="top" secondItem="dlT-uX-vQM" secondAttribute="bottom" id="4tq-lz-APc"/>
-                    <constraint firstItem="dlT-uX-vQM" firstAttribute="width" secondItem="BAI-hM-hgz" secondAttribute="width" id="5L3-7u-jAB"/>
-                    <constraint firstAttribute="topMargin" secondItem="BAI-hM-hgz" secondAttribute="top" id="8Hr-de-waF"/>
                     <constraint firstItem="MYO-Tc-d3A" firstAttribute="leading" secondItem="dlT-uX-vQM" secondAttribute="leading" id="9cC-oJ-JLk"/>
                     <constraint firstItem="MYO-Tc-d3A" firstAttribute="leading" secondItem="dlT-uX-vQM" secondAttribute="trailing" id="A32-rg-twB"/>
-                    <constraint firstItem="dlT-uX-vQM" firstAttribute="top" secondItem="BAI-hM-hgz" secondAttribute="bottom" id="BW2-Cd-Ey2"/>
-                    <constraint firstItem="MYO-Tc-d3A" firstAttribute="centerY" secondItem="dlT-uX-vQM" secondAttribute="centerY" id="CkC-XR-FE0"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="L1B-bz-eYY" secondAttribute="trailing" constant="20" id="EUd-oZ-brB"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="L1B-bz-eYY" secondAttribute="bottom" constant="20" id="Ep5-1h-Oeq"/>
+                    <constraint firstItem="L1B-bz-eYY" firstAttribute="bottom" secondItem="BAI-hM-hgz" secondAttribute="bottom" id="G25-GJ-e4x"/>
+                    <constraint firstItem="dlT-uX-vQM" firstAttribute="trailing" secondItem="MYO-Tc-d3A" secondAttribute="trailing" id="HRd-WO-kmd"/>
                     <constraint firstItem="BAI-hM-hgz" firstAttribute="leading" secondItem="fpZ-AK-0nx" secondAttribute="leadingMargin" multiplier="3" id="Hs8-QF-gmh"/>
                     <constraint firstAttribute="trailingMargin" secondItem="dlT-uX-vQM" secondAttribute="trailing" constant="201" id="Hyw-S5-p8N"/>
                     <constraint firstItem="L1B-bz-eYY" firstAttribute="leading" secondItem="MYO-Tc-d3A" secondAttribute="leading" id="J7a-gD-sk5"/>
                     <constraint firstItem="BAI-hM-hgz" firstAttribute="width" secondItem="fpZ-AK-0nx" secondAttribute="width" multiplier="0.35" id="KPh-Ld-iqd"/>
                     <constraint firstItem="L1B-bz-eYY" firstAttribute="top" secondItem="MYO-Tc-d3A" secondAttribute="bottom" id="LXv-s5-YA6"/>
                     <constraint firstItem="MYO-Tc-d3A" firstAttribute="leading" secondItem="BAI-hM-hgz" secondAttribute="leading" id="LZJ-cp-WJ7"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="BAI-hM-hgz" secondAttribute="bottom" constant="50" id="Lnb-mT-3pJ"/>
+                    <constraint firstItem="BAI-hM-hgz" firstAttribute="leading" secondItem="fpZ-AK-0nx" secondAttribute="leadingMargin" constant="50" id="N1j-Br-nyn"/>
+                    <constraint firstItem="dlT-uX-vQM" firstAttribute="leading" secondItem="MYO-Tc-d3A" secondAttribute="leading" id="NdH-Xc-EUa"/>
+                    <constraint firstItem="MYO-Tc-d3A" firstAttribute="top" secondItem="BAI-hM-hgz" secondAttribute="top" id="Nt1-hl-2Wg"/>
                     <constraint firstAttribute="trailingMargin" secondItem="dlT-uX-vQM" secondAttribute="trailing" constant="202" id="OFj-1q-ZRL"/>
                     <constraint firstItem="BAI-hM-hgz" firstAttribute="centerX" secondItem="fpZ-AK-0nx" secondAttribute="centerX" id="P3U-4i-qM4"/>
+                    <constraint firstItem="dlT-uX-vQM" firstAttribute="top" secondItem="MYO-Tc-d3A" secondAttribute="bottom" id="P7P-h7-GRW"/>
+                    <constraint firstItem="MYO-Tc-d3A" firstAttribute="leading" secondItem="BAI-hM-hgz" secondAttribute="trailing" constant="20" id="Pns-J6-33p"/>
                     <constraint firstAttribute="trailingMargin" secondItem="BAI-hM-hgz" secondAttribute="trailing" constant="82" id="Tmm-L4-Kyn"/>
-                    <constraint firstItem="L1B-bz-eYY" firstAttribute="leading" secondItem="BAI-hM-hgz" secondAttribute="leading" id="Xa8-Fk-qvE"/>
-                    <constraint firstItem="MYO-Tc-d3A" firstAttribute="leading" secondItem="dlT-uX-vQM" secondAttribute="trailing" constant="5" id="cIE-Kd-Wml"/>
-                    <constraint firstItem="L1B-bz-eYY" firstAttribute="top" secondItem="dlT-uX-vQM" secondAttribute="bottom" id="czi-VD-3N5"/>
+                    <constraint firstItem="BAI-hM-hgz" firstAttribute="centerX" secondItem="fpZ-AK-0nx" secondAttribute="centerX" id="bdm-yd-QSa"/>
                     <constraint firstItem="BAI-hM-hgz" firstAttribute="leading" secondItem="fpZ-AK-0nx" secondAttribute="leadingMargin" constant="83" id="eH6-Vr-Hb9"/>
                     <constraint firstItem="MYO-Tc-d3A" firstAttribute="bottom" secondItem="dlT-uX-vQM" secondAttribute="bottom" id="fBO-z0-Zve"/>
+                    <constraint firstAttribute="topMargin" secondItem="BAI-hM-hgz" secondAttribute="top" id="gb6-Si-kl2"/>
                     <constraint firstItem="MYO-Tc-d3A" firstAttribute="leading" secondItem="dlT-uX-vQM" secondAttribute="trailing" constant="15" id="gkV-3I-qUK"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="MYO-Tc-d3A" secondAttribute="trailing" id="h6E-d0-oyv"/>
                     <constraint firstItem="MYO-Tc-d3A" firstAttribute="top" secondItem="dlT-uX-vQM" secondAttribute="bottom" id="hVN-kA-zT7"/>
+                    <constraint firstItem="BAI-hM-hgz" firstAttribute="width" secondItem="fpZ-AK-0nx" secondAttribute="width" multiplier="0.4" id="iVM-eb-PmZ"/>
+                    <constraint firstItem="L1B-bz-eYY" firstAttribute="top" secondItem="dlT-uX-vQM" secondAttribute="bottom" id="nMk-B2-WaO"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="L1B-bz-eYY" secondAttribute="trailing" id="wzH-xv-PJA"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="BAI-hM-hgz" secondAttribute="trailing" constant="50" id="xVP-IS-yip"/>
+                    <constraint firstItem="L1B-bz-eYY" firstAttribute="leading" secondItem="MYO-Tc-d3A" secondAttribute="leading" id="xXa-c3-AXV"/>
                     <constraint firstItem="dlT-uX-vQM" firstAttribute="leading" secondItem="fpZ-AK-0nx" secondAttribute="leadingMargin" constant="20" id="y6L-ow-ue4"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="BAI-hM-hgz" secondAttribute="leading" id="yhC-ys-Aay"/>
                     <constraint firstItem="MYO-Tc-d3A" firstAttribute="top" secondItem="BAI-hM-hgz" secondAttribute="bottom" constant="13" id="zBI-42-aun"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
+                        <exclude reference="Hs8-QF-gmh"/>
+                        <exclude reference="KPh-Ld-iqd"/>
+                        <exclude reference="N1j-Br-nyn"/>
                         <exclude reference="P3U-4i-qM4"/>
                         <exclude reference="Tmm-L4-Kyn"/>
+                        <exclude reference="bdm-yd-QSa"/>
                         <exclude reference="eH6-Vr-Hb9"/>
-                        <exclude reference="Hyw-S5-p8N"/>
-                        <exclude reference="OFj-1q-ZRL"/>
-                        <exclude reference="y6L-ow-ue4"/>
-                        <exclude reference="4tq-lz-APc"/>
-                        <exclude reference="J7a-gD-sk5"/>
-                        <exclude reference="LXv-s5-YA6"/>
+                        <exclude reference="xVP-IS-yip"/>
                         <exclude reference="9cC-oJ-JLk"/>
                         <exclude reference="A32-rg-twB"/>
                         <exclude reference="LZJ-cp-WJ7"/>
@@ -134,6 +146,13 @@
                         <exclude reference="gkV-3I-qUK"/>
                         <exclude reference="hVN-kA-zT7"/>
                         <exclude reference="zBI-42-aun"/>
+                        <exclude reference="HRd-WO-kmd"/>
+                        <exclude reference="Hyw-S5-p8N"/>
+                        <exclude reference="OFj-1q-ZRL"/>
+                        <exclude reference="y6L-ow-ue4"/>
+                        <exclude reference="4tq-lz-APc"/>
+                        <exclude reference="J7a-gD-sk5"/>
+                        <exclude reference="LXv-s5-YA6"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>
@@ -144,7 +163,7 @@
                 <outlet property="reviewText" destination="L1B-bz-eYY" id="B7N-TB-TLg"/>
                 <outlet property="reviewTitle" destination="MYO-Tc-d3A" id="PBQ-05-Uzf"/>
             </connections>
-            <point key="canvasLocation" x="-115.5" y="281.5"/>
+            <point key="canvasLocation" x="498.5" y="307.5"/>
         </tableViewCell>
     </objects>
 </document>

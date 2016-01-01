@@ -2,7 +2,7 @@
 //  ProfileSettingsFollowFriendsCell.swift
 //  
 //
-//  Created by Mike on 8/2/15.
+//  Created by Mikhail Yakushin on 8/2/15.
 //
 //
 
@@ -15,14 +15,13 @@ class ProfileSettingsFollowFriendsCell: UITableViewCell {
   @IBOutlet weak var account: UILabel!
   
     override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+      super.awakeFromNib()
+      account.text = ""
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+      super.setSelected(selected, animated: animated)
+      // Configure the view for the selected state
     }
   
     

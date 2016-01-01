@@ -2,8 +2,8 @@
 //  Cell.swift
 //  Reviews
 //
-//  Created by Admin on 17/07/15.
-//  Copyright (c) 2015 Admin. All rights reserved.
+//  Created by Mikhail Yakushin on 17/07/15.
+//  Copyright (c) 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit

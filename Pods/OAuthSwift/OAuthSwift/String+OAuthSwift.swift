@@ -32,14 +32,10 @@ extension String {
     }
 
     func urlEncodedStringWithEncoding(encoding: NSStringEncoding) -> String {
-        let charactersToBeEscaped = ":/?&=;+!@#$()',*" as CFStringRef
-        let charactersToLeaveUnescaped = "[]." as CFStringRef
-
-        let raw: NSString = self
-        
-        let result = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, raw, charactersToLeaveUnescaped, charactersToBeEscaped, CFStringConvertNSStringEncodingToEncoding(encoding))
-
-        return result as String
+        let originalString: NSString = self
+        let customAllowedSet =  NSCharacterSet(charactersInString:":/?&=;+!@#$()',*=\"#%/<>?@\\^`{|}").invertedSet
+        let escapedString = originalString.stringByAddingPercentEncodingWithAllowedCharacters(customAllowedSet)
+        return escapedString! as String
     }
 
     func parametersFromQueryString() -> Dictionary<String, String> {
@@ -66,7 +62,11 @@ extension String {
         
         return parameters
     }
-    //分割字符
+    
+    var safeStringByRemovingPercentEncoding: String {
+        return self.stringByRemovingPercentEncoding ?? self
+    }
+    
     func split(s:String)->[String]{
         if s.isEmpty{
             var x=[String]()
@@ -77,11 +77,9 @@ extension String {
         }
         return self.componentsSeparatedByString(s)
     }
-    //去掉左右空格
     func trim()->String{
         return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
-    //是否包含字符串
     func has(s:String)->Bool{
         if (self.rangeOfString(s) != nil) {
             return true
@@ -89,7 +87,6 @@ extension String {
             return false
         }
     }
-    //是否包含前缀
     func hasBegin(s:String)->Bool{
         if self.hasPrefix(s) {
             return true
@@ -97,7 +94,6 @@ extension String {
             return false
         }
     }
-    //是否包含后缀
     func hasEnd(s:String)->Bool{
         if self.hasSuffix(s) {
             return true
@@ -105,15 +101,12 @@ extension String {
             return false
         }
     }
-    //统计长度
     func length()->Int{
         return self.utf16.count
     }
-    //统计长度(别名)
     func size()->Int{
         return self.utf16.count
     }
-    //重复字符串
     func `repeat`(times: Int) -> String{
         var result = ""
         for _ in 0..<times {
@@ -121,7 +114,6 @@ extension String {
         }
         return result
     }
-    //反转
     func reverse()-> String{
         let s=Array(self.split("").reverse())
         var x=""

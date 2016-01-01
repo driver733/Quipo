@@ -2,8 +2,8 @@
 //  Login.swift
 //  Reviews
 //
-//  Created by Admin on 17/07/15.
-//  Copyright (c) 2015 Admin. All rights reserved.
+//  Created by Mikhail Yakushin on 17/07/15.
+//  Copyright (c) 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -21,11 +21,12 @@ import SwiftValidator
 import Parse
 import ParseFacebookUtilsV4
 import Async
-
-let DID_LOG_IN_SEGUE_IDENTIFIER = "didLogIn"
+import SwiftyTimer
+import Bolts
 
 class LogInVC: UIViewController {
    
+  @IBOutlet weak var backgroundImage: UIImageView!
   @IBOutlet weak var signInTableView: UITableView!
   @IBOutlet weak var signUpTableView: UITableView!
   @IBOutlet weak var signInOrUp: UIButton!
@@ -35,26 +36,18 @@ class LogInVC: UIViewController {
   @IBOutlet weak var signUpTriangle: UIView!
   @IBOutlet weak var signInTriangle: UIView!
   
-  
   var loginActivityIndicator: UIActivityIndicatorView!
   let loginActivityIndicatorBackgroundView = UIView()
   let validator = Validator()
   var tempArr: [Int] = [Int]()
-  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-  var textArray: NSMutableArray! = NSMutableArray()
-  
-  
-    
-    @IBAction func loginWithGoogle(sender: AnyObject) {
-    GIDSignIn.sharedInstance().allowsSignInWithBrowser = false
-    GIDSignIn.sharedInstance().uiDelegate = self
-    GIDSignIn.sharedInstance().clientID = "1095542523991-7s9j46knl20bhge5ggv6ctbn0be6bf0f.apps.googleusercontent.com"
-    GIDSignIn.sharedInstance().shouldFetchBasicProfile = true
-    GIDSignIn.sharedInstance().signIn()
-  }
-
-    @IBAction func didLogOut(segue: UIStoryboardSegue) {
-    }
+ 
+//    @IBAction func loginWithGoogle(sender: AnyObject) {
+//    GIDSignIn.sharedInstance().allowsSignInWithBrowser = false
+//    GIDSignIn.sharedInstance().uiDelegate = self
+//    GIDSignIn.sharedInstance().clientID = "1095542523991-7s9j46knl20bhge5ggv6ctbn0be6bf0f.apps.googleusercontent.com"
+//    GIDSignIn.sharedInstance().shouldFetchBasicProfile = true
+//    GIDSignIn.sharedInstance().signIn()
+//  }
     
     @IBAction func signUpButton(sender: AnyObject) {
       signInTableView.hidden = true
@@ -79,18 +72,8 @@ class LogInVC: UIViewController {
     }
     
     @IBAction func startLogin(sender: AnyObject) {
-        validator.validate(self)
+      validator.validate(self)
     }
-    
-  
-  
-  
-    
-
-  
-  override func viewWillAppear(animated: Bool) {
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
-  }
     
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -107,39 +90,29 @@ class LogInVC: UIViewController {
       signUpTableView.rowHeight = UITableViewAutomaticDimension;
       signUpTableView.estimatedRowHeight = 44.0;
       signUpTableView.hidden = true
-  
-      orLabel.font = UIFont(name: "Nanum Pen", size: orLabel.font.pointSize)
-      signInButton.titleLabel?.font = UIFont(name: "Nanum Pen", size: signInButton.titleLabel!.font.pointSize)
-      signUpButton.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
-
-      signInOrUp.titleLabel?.font = UIFont(name: "Nanum Pen", size: signUpButton.titleLabel!.font.pointSize)
       
-   //   shareThoughtsLabel.text = "Sign In \n  and start sharing your thoughts"
-  //    shareThoughtsLabel.font = UIFont(name: "Nanum Pen", size: shareThoughtsLabel.font.pointSize)
-//      shareThoughtsLabel.numberOfLines = 0
+   // shareThoughtsLabel.text = "Sign In \n  and start sharing your thoughts"
+  //  shareThoughtsLabel.font = UIFont(name: "Nanum Pen", size: shareThoughtsLabel.font.pointSize)
+//    shareThoughtsLabel.numberOfLines = 0
     
       signInTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
       signUpTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
       signUpTriangle.hidden = true
     
-      FBSDKProfile.enableUpdatesOnAccessTokenChange(true)
+    
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "instagramLoginWebViewWillDisappear:", name: "instagramLoginWebViewWillDisappear", object: nil)
       
+//    let path = NSBundle.mainBundle().pathForResource("loginBackground", ofType: "pdf")
+//    backgroundImage.image = UIImage(contentsOfFile: path!)
       
-      
-      
-
-      
-      
-      
+      UserSingleton.getSharedInstance().loginLoadingStateDelegate = self
   }
   
   
   func instagramLoginWebViewWillDisappear(notif: NSNotification) {
     startLoginActivityIndicator()
   }
-  
   
   func startLoginActivityIndicator() {
     loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
@@ -159,10 +132,6 @@ class LogInVC: UIViewController {
       loginActivityIndicator.removeFromSuperview()
       loginActivityIndicatorBackgroundView.removeFromSuperview()
     }
-  }
-  
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    NSNotificationCenter.defaultCenter().removeObserver(self)
   }
   
   func signUpTableViewUserInteraction(condition: Bool) {
@@ -194,7 +163,7 @@ class LogInVC: UIViewController {
       return true
   }
     
-  
+  // TODO: Move to Model
     func signIn(){
       
         let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
@@ -221,8 +190,22 @@ class LogInVC: UIViewController {
               block: {
                 (user: PFUser?, error: NSError?) -> Void in
                 if user != nil {
-                  UserSingelton.sharedInstance.checkUserLinkedAccounts()
-                  self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
+                  UserSingleton.getSharedInstance().checkUserLinkedAccounts()
+                  if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() == nil {
+                    NSNotificationCenter.defaultCenter().addObserver(self, name: FBSDKProfileDidChangeNotification, object: nil, handler: { (observer, notification) -> Void in
+                      BFTask(forCompletionOfAllTasks: [LinkedAccount.updateAll(), UserSingleton.getSharedInstance().loadLinkedAccountsFriends()])
+                        .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
+                        self.pushMainVC()
+                        return nil
+                      })
+                    })
+                  } else {
+                    BFTask(forCompletionOfAllTasks: [LinkedAccount.updateAll(), UserSingleton.getSharedInstance().loadLinkedAccountsFriends()])
+                    .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
+                      self.pushMainVC()
+                      return nil
+                    })
+                  }
                 } else {
                   switch error!.code {
                   case 101:
@@ -233,125 +216,85 @@ class LogInVC: UIViewController {
                   default: break
                   }
                 }
-                
             })
-
           }
-          
         return nil
-          
         })
-      
     }
     
-  
-  
-    func SignUp(){
-        let user = PFUser()
-        let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        if !(signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! Cell).textfield.text!.isEmpty {
-            user.username = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! Cell).textfield.text
-        }
-        else {
-            let arr: Array = ((signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text?.componentsSeparatedByString("@"))!
-         user.username = arr[0]
-        }
-        user.password = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! Cell).textfield.text
-        user.email = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text
-        user["smallProfileImage"] = "https://graph.facebook.com/133559250332613/picture?type=normal&width=100&height=100"
-        user["bigProfileImage"] = "https://graph.facebook.com/133559250332613/picture?type=normal&width=600&height=600"
-        user.signUpInBackground().continueWithBlock {
-          (task: BFTask!) -> AnyObject! in
-          if task.error == nil {
-            Async.main {
-              UserSingelton.sharedInstance.checkUserLinkedAccounts()
-              self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-            }
-          } else {
-            switch task.error.code {
-            case 202:
-              alert.title = "Username already taken"   // "Or email is already taken. Have trouble logging in? " -> Needs to take into account email too.
-              alert.message = "This username is already taken. Please use a different one."
-              Async.main {
-                self.presentViewController(alert, animated: true, completion: nil)
-              }
-            default: break
-            }
-
+    func signUp(){
+      let user = PFUser()
+      let alert = UIAlertController(title: "", message: "", preferredStyle: .Alert)
+      alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+      if !(signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! Cell).textfield.text!.isEmpty {
+        user.username = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! Cell).textfield.text
+      }
+      else {
+        let arr: Array = ((signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text?.componentsSeparatedByString("@"))!
+        user.username = arr[0]
+      }
+      user.password = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! Cell).textfield.text
+      user.email = (signUpTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! Cell).textfield.text
+      user["smallProfileImage"] = "https://graph.facebook.com/133559250332613/picture?type=normal&width=100&height=100"
+      user["bigProfileImage"] = "https://graph.facebook.com/133559250332613/picture?type=normal&width=600&height=600"
+      user.signUpInBackground().continueWithBlock {
+        (task: BFTask!) -> AnyObject! in
+        if task.error == nil {
+          Async.main {
+            UserSingleton.getSharedInstance()
+            self.pushMainVC()
           }
-          return nil
-        }
-    }
-  
-  
-    
-  
-    @IBAction func buttonTwitterLogin(sender: AnyObject) {
-        Twitter.sharedInstance().logInWithCompletion { session, error in
-            if (session != nil) {
-                self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-            } else {
-          
+        } else {
+          switch task.error!.code {
+          case 202:
+            alert.title = "Username already taken"   // "Or email is already taken. Have trouble logging in? " -> Needs to take into account email too.
+            alert.message = "This username is already taken. Please use a different one."
+            Async.main {
+              self.presentViewController(alert, animated: true, completion: nil)
             }
+          default: break
+          }
+
         }
-    }
-    
-    
-    @IBAction func loginWithInstagram(sender: AnyObject) {
-      UserSingelton.sharedInstance.loginWithInstagram().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-        self.stopLoginActivityIndicator()
-        self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
         return nil
       }
-    }
-    
-  
-    
-    @IBAction func loginWithFacebook(sender: AnyObject) {
-      let fbLoginManager = FBSDKLoginManager()
-      fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
-//      if UIApplication.sharedApplication().canOpenURL(NSURL(string: "fb://")!) {
-//        fbLoginManager.loginBehavior = FBSDKLoginBehavior.
-//      }
-      fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"],
-        fromViewController: self,
-        handler: {
-          (result: FBSDKLoginManagerLoginResult!, error: NSError!) -> Void in
-          if error == nil && result.token != nil {
-            // logged in
-          } else {
-        
-            // process error
-          }
-      })
-    }
-    
-    
-    
-    
-  func didReceiveFacebookProfile(notif: NSNotification){
-    startLoginActivityIndicator()
-    NSNotificationCenter.defaultCenter().removeObserver(self, name: FBSDKProfileDidChangeNotification, object: nil)
-    UserSingelton.sharedInstance.didReceiveFacebookProfile().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      Async.main {
-        self.stopLoginActivityIndicator()
-      }
-      self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-      return nil
-    }
   }
   
-    
-    @IBAction func loginWithVkontakte(sender: AnyObject) {
-        VKSdk.initializeWithDelegate(self, andAppId: "4991711")
-        VKSdk.authorize(["friends", "profile_info", "offline", "wall"])
+  @IBAction func buttonTwitterLogin(sender: AnyObject) {
+      Twitter.sharedInstance().logInWithCompletion { session, error in
+          if (session != nil) {
+              self.pushMainVC()
+          } else {
+        
+          }
+      }
+  }
+  
+  @IBAction func loginWithInstagram(sender: AnyObject) {
+    UserSingleton.getSharedInstance().loginWithInstagram()
+  }
+
+  @IBAction func loginWithFacebook(sender: AnyObject) {
+    UserSingleton.getSharedInstance().loginWithFacebook()
+  }
+  
+  @IBAction func loginWithVkontakte(sender: AnyObject) {
+    UserSingleton.getSharedInstance().loginWithVkontakte()
+  }
+  
+  func pushMainVC() {
+    let mainTabBarVC = self.storyboard!.instantiateViewControllerWithIdentifier("main") as! UITabBarController
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    mainTabBarVC.view.layoutIfNeeded()
+    UIView.transitionFromView((appDelegate.window?.rootViewController?.view)!,
+      toView: mainTabBarVC.view,
+      duration: 0.5,
+      options: UIViewAnimationOptions.TransitionCrossDissolve,
+      completion: { (_) -> Void in
+        appDelegate.window?.rootViewController? = mainTabBarVC
+      })
     }
-    
-
-
-}
-
+  }
 
 // MARK: - UITextFieldDelegate
 extension LogInVC: UITextFieldDelegate {
@@ -429,28 +372,24 @@ extension LogInVC: UITableViewDataSource, UITableViewDelegate {
   }
   
   
-  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return 1
-  }
+//  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+//    return 1
+//  }
 
   
 }
 
 
-
-
 // MARK: - Validation Delegate
 extension LogInVC: ValidationDelegate {
-  
   
   func validationSuccessful() {
     if orLabel.text == "or Sign In with:" {
       signIn()
     } else {
-      SignUp()
+      signUp()
     }
   }
-  
   
   func validationFailed(errors:[UITextField:ValidationError]) {
 
@@ -500,7 +439,7 @@ extension LogInVC: ValidationDelegate {
         tempArr = [Int]()
         return
       }
-      SignUp()
+      signUp()
     }
     
     tempArr = [Int]()
@@ -511,85 +450,57 @@ extension LogInVC: ValidationDelegate {
 
 
 
-// MARK: - VKSdkDelegate
-extension LogInVC: VKSdkDelegate {
+extension LogInVC: LoadingStateDelegate {
   
-  func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
-    self.startLoginActivityIndicator()
-    UserSingelton.sharedInstance.didReceiveNewVKToken().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      self.stopLoginActivityIndicator()
-      self.performSegueWithIdentifier(DID_LOG_IN_SEGUE_IDENTIFIER, sender: nil)
-      return nil
+  func didEndNetworingActivity() {
+    if let loadingView = self.view.viewWithTag(LoadingIndicatorViewTag) as? LoadingIndicatorView {
+      loadingView.toggleTickWithTimeIntervalExpirationBlock({ () -> Void in
+          self.pushMainVC()
+      })
+    } else {
+      let loadingStateView = LoadingIndicatorView()
+      self.view.addSubview(loadingStateView)
+      NSTimer.after(0.5.second) {
+        loadingStateView.toggleTickWithTimeIntervalExpirationBlock({ () -> Void in
+          self.pushMainVC()
+        })
+      }
     }
-  }
-
-    
-  
-  func vkSdkIsBasicAuthorization() -> Bool {
-    return false
-  }
-  
-  func vkSdkTokenHasExpired(expiredToken: VKAccessToken!) {
-    VKSdk.getAccessToken()
-  }
-  
-  func vkSdkUserDeniedAccess(authorizationError: VKError!) {
-    
-  }
-  
-  func vkSdkShouldPresentViewController(controller: UIViewController!) {
-    self.presentViewController(controller, animated: true, completion: nil)
-  }
-  
-  func vkSdkNeedCaptchaEnter(captchaError: VKError!) {
-    let vc = VKCaptchaViewController.captchaControllerWithError(captchaError)
-    self.presentViewController(vc, animated: true, completion: nil)
   }
   
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
 // MARK: - GIDSignInDelegate
-extension LogInVC: GIDSignInUIDelegate {
- 
-  func signInWillDispatch (signIn: GIDSignIn, error: NSError){
-    if signIn.hasAuthInKeychain() {
-    }
-    
-  }
-  
-  
-  func signIn(signIn: GIDSignIn!, dismissViewController viewController: UIViewController!) {
-    viewController.dismissViewControllerAnimated(true, completion: nil)
-    if signIn.currentUser != nil {
-    
-    }
-    // performSegueWithIdentifier("did_log_in", sender: nil)
-  }
-  
-  
-  
-  
-  
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//extension LogInVC: GIDSignInUIDelegate {
+// 
+//  func signInWillDispatch (signIn: GIDSignIn, error: NSError){
+//    if signIn.hasAuthInKeychain() {
+//      
+//    }
+//    
+//  }
+//  
+//  func signIn(signIn: GIDSignIn!, dismissViewController viewController: UIViewController!) {
+//    viewController.dismissViewControllerAnimated(true, completion: nil)
+//    if signIn.currentUser != nil {
+//    
+//    }
+//    // self.pushMainVC()
+//  }
+//
+//}
 
 
 

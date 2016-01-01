@@ -1,9 +1,9 @@
 //
 //  iTunesAPI.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 10/13/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 10/13/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import Foundation
@@ -25,134 +25,73 @@ import ITunesSwift
 import Async
 
 
-struct ITunes {
-  
+public enum Region: String {
+  case UnitedStates = "us"
+  case Russia       = "ru"
+}
+
+
+class ITunes {
   
   /// ITunesAPI singleton
   static var sharedInstance = ITunes()
   
-  
-    
-  func startLoadingItunesDataFor(postsQuery: PFQuery, completionHandler: ((posts: [Post]) -> Void)) {
-    postsQuery.includeKey("createdBy")
-    
-    var newPosts = [Post]()
-    
-    postsQuery.findObjectsInBackground().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-      var tasks = [BFTask]()
-    
-      if let result = task.result {
-        let posts = result as! [PFObject]
-        
-        for post in posts {
-          let postReview = post["userReview"] as! NSArray
-          let postAuthor = post["createdBy"] as! PFUser
-          
-          let tempPost = Post(
-            thePFObject: post,
-            theUserName: postAuthor.username!,
-            theTimeSincePosted: Post.sharedInstance.getTimeSincePostedfromDate(post.createdAt!),
-            theProfilImageURL: postAuthor["smallProfileImage"] as! String,
-            theTrackID: post["trackID"] as! Int,
-            theRating: postReview[0] as! Int,
-            theReviewTitle: postReview[1] as! String,
-            theReview: postReview[2] as! String
-          )
-          newPosts.append(tempPost)
-          tasks.append(self.getMovieInfoByITunesID(post["trackID"] as! Int))
-        }
-        
-      }
-      
-
-      return BFTask(forCompletionOfAllTasksWithResults: tasks)
-    }).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-      
-      let results = task.result as! NSArray
-      
-      for (index, postData) in results.enumerate() {
-        let json = JSON(data: postData as! NSData)
-        newPosts[index].bigPosterImageURL = self.getBigPosterImageURL(json["artworkUrl100"].stringValue)
-        newPosts[index].standardPosterImageURL = self.getStandardPosterImageURL(json["artworkUrl100"].stringValue)
-        newPosts[index].movieTitle = json["trackName"].stringValue
-        newPosts[index].releaseDate = self.getReformattedReleaseDate(json["releaseDate"].stringValue)
-        newPosts[index].releaseYear = self.getReleaseYear(json["releaseDate"].stringValue)
-        newPosts[index].longDescription = json["longDescription"].stringValue
-      }
-      
-      completionHandler(posts: newPosts)
-      
-      return nil
-    })
-    
+  private func processPost(post: Post, json: JSON) -> Post {
+    post.bigPosterImageURL = self.bigPosterImageURL(json["artworkUrl100"].stringValue)
+    post.standardPosterImageURL = self.standardPosterImageURL(json["artworkUrl100"].stringValue)
+    post.movieTitle = json["trackName"].stringValue
+    post.releaseDate = self.formattedReleaseDate(json["releaseDate"].stringValue)
+    post.releaseYear = self.releaseYear(json["releaseDate"].stringValue)
+    post.longDescription = json["longDescription"].stringValue
+    return post
   }
   
-  
-  
-  
-
-  
-  
-  
-  
-  func getMovieInfoByITunesID(iTunesID: Int) -> BFTask {
+  func movieInfoByITunesID(iTunesID: Int, post: Post) -> BFTask {
     let mainTask = BFTaskCompletionSource()
     ITunesApi.lookup(iTunesID).request({ (responseString: String?, error: NSError?) -> Void in
       if
         //        error == nil,
         let responseString = responseString, let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-          let json = JSON(data: dataFromString)
-          
-          do {
-            try mainTask.setResult(json["results"][0].rawData())
-          }
-          catch {
-            
-          }
-          
-          //  task.setResult(json["results"].arrayObject)
+          let json = JSON(data: dataFromString)["results"][0]
+          let processedPost = self.processPost(post, json: json)
+          mainTask.setResult(processedPost)
       } else {
         // process error
       }
     })
     return mainTask.task
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  func getMovieInfoByTitleAtCountry(movieTitle: String, country: String) -> BFTask {
-    let task = BFTaskCompletionSource()
+
+  func movieInfoByTitleAtCountry(movieTitle: String, country: String, completionHandler: ((searchResults: [Post]) -> Void)) {
     ITunesApi.find(Entity.Movie).by(movieTitle).at(country).request({ (responseString: String?, error: NSError?) -> Void in
+      var searchResults = [Post]()
       if
         //     error == nil,
         let responseString = responseString,
         let dataFromString = responseString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
           let json = JSON(data: dataFromString)
-          do {
-            try  task.setResult(json["results"].rawData())
+          for (_, subJSON) in json["results"] {
+            let foundMovie = Post(
+              theTrackID: subJSON["trackId"].numberValue.integerValue,
+              theMovieTitle: subJSON["trackName"].stringValue,
+              theLocalizedMovieTitle: subJSON["trackName"].stringValue,
+              theMovieGenre: subJSON["primaryGenreName"].stringValue,
+              theMovieReleaseDate: ITunes.sharedInstance.formattedReleaseDate(subJSON["releaseDate"].stringValue),
+              theMovieReleaseYear: ITunes.sharedInstance.releaseYear(subJSON["releaseDate"].stringValue),
+              theSmallPosterImageURL: ITunes.sharedInstance.smallPosterImageURL(subJSON["artworkUrl100"].stringValue),
+              theStandardPosterImageURL: ITunes.sharedInstance.standardPosterImageURL(subJSON["artworkUrl100"].stringValue),
+              theLongDescription: subJSON["longDescription"].stringValue
+            )
+            searchResults.append(foundMovie)
           }
-          catch {
-            
-          }
+          completionHandler(searchResults: searchResults)
       } else {
-        task.setError(error)
         
       }
     })
-    return task.task
   }
   
-  
-  
-  
-  
-   func getReformattedReleaseDate(rawReleaseDate: String) -> String {
+  func formattedReleaseDate(rawReleaseDate: String) -> String {
     let dateFormatter = NSDateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm::ssZ"
     let date = dateFormatter.dateFromString(rawReleaseDate)
@@ -161,7 +100,7 @@ struct ITunes {
     return ("\(comp.day) \(dateFormatter.monthSymbols[comp.month-1]), \(comp.year)")
   }
   
-  private func getReleaseYear(rawReleaseDate: String) -> String {
+  private func releaseYear(rawReleaseDate: String) -> String {
     let dateFormatter = NSDateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm::ssZ"
     let date = dateFormatter.dateFromString(rawReleaseDate)
@@ -170,43 +109,30 @@ struct ITunes {
     return ("\(comp.year)")
   }
   
-  
-  
-  
-  
-  func getTinyPosterImageURL(defaultPosterImageURL: String) -> String {
-    var str = defaultPosterImageURL
+  func tinyPosterImageURL(initialPosterImageURL: String) -> String {
+    var str = initialPosterImageURL
     str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "50x50-75")
     return str
   }
   
-  func getSmallPosterImageURL(defaultPosterImageURL: String) -> String {
-    var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
+  func smallPosterImageURL(initialPosterImageURL: String) -> String {
+    var str = initialPosterImageURL
+    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "200x200-85")
     return str
   }
   
-  func getStandardPosterImageURL(defaultPosterImageURL: String) -> String {
-    var str = defaultPosterImageURL
-    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "400x400-75")
+  func standardPosterImageURL(initialPosterImageURL: String) -> String {
+    var str = initialPosterImageURL
+    str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "400x400-85")
     return str
   }
   
-  func getBigPosterImageURL(defaultPosterImageURL: String) -> String {
-    var str = defaultPosterImageURL
+  func bigPosterImageURL(initialPosterImageURL: String) -> String {
+    var str = initialPosterImageURL
     str.replaceRange(Range<String.Index>(start: str.endIndex.advancedBy(-13), end: str.endIndex.advancedBy(-4)), with: "600x600-85")
     return str
   }
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
 }
+

@@ -1,9 +1,9 @@
 //
 //  YouTube.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 11/4/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 11/4/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import Foundation
@@ -33,6 +33,7 @@ struct YouTube {
       let date = dateFormatter.dateFromString(rawVideoDuration)
       let calendar = NSCalendar.currentCalendar()
       let comp = calendar.components([.Second], fromDate: date!)
+      
       return ("0:\(comp.second)")
     }
   }
@@ -50,26 +51,29 @@ struct YouTube {
       "q" : movieName + " " + releasedIn + "trailer"
       ]
       ).responseJSON { (response: Response<AnyObject, NSError>) -> Void in
-      let json = JSON(response.result.value!)           // crash
-      let trailerId = json["items"][0]["id"]["videoId"].stringValue
-      let thumbnailURL = json["items"][0]["snippet"]["thumbnails"]["default"]["url"].stringValue
+        if let responseValue = response.result.value {
+          let json = JSON(responseValue)
+          let trailerId = json["items"][0]["id"]["videoId"].stringValue
+          let thumbnailURL = json["items"][0]["snippet"]["thumbnails"]["default"]["url"].stringValue
       
-      Alamofire.request(.GET, "https://www.googleapis.com/youtube/v3/videos", parameters: [
-        "key": "AIzaSyDRxPGszcdOWx4BgtzSUhQ0F31_CqT4bXY",
-        "part" : "contentDetails",
-        "maxResults" : 1,
-        "type" : "video",
-        "videoCategoryId" : "44",
-        "regionCode" : "US",
-        "id" : trailerId
-        ]
-        ).responseJSON { (response: Response<AnyObject, NSError>) -> Void in
-         let contentDetailsJSON = JSON(response.result.value!)
-         let videoDuration = contentDetailsJSON["items"][0]["contentDetails"]["duration"].stringValue
-         let reformattedVideoDuration = self.getReformattedVideoDuration(videoDuration)
-         mainTask.setResult([trailerId, thumbnailURL, reformattedVideoDuration])
-      }
-      
+          Alamofire.request(.GET, "https://www.googleapis.com/youtube/v3/videos", parameters: [
+            "key": "AIzaSyDRxPGszcdOWx4BgtzSUhQ0F31_CqT4bXY",
+            "part" : "contentDetails",
+            "maxResults" : 1,
+            "type" : "video",
+            "videoCategoryId" : "44",
+            "regionCode" : "US",
+            "id" : trailerId
+            ]
+            ).responseJSON { (response: Response<AnyObject, NSError>) -> Void in
+              if let responseValue = response.result.value {
+                let contentDetailsJSON = JSON(responseValue)
+                let videoDuration = contentDetailsJSON["items"][0]["contentDetails"]["duration"].stringValue
+                let reformattedVideoDuration = self.getReformattedVideoDuration(videoDuration)
+                mainTask.setResult([trailerId, thumbnailURL, reformattedVideoDuration])
+                }
+              }
+        }
       
 
     }

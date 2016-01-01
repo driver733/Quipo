@@ -1,19 +1,18 @@
 //
 //  Comment.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 11/8/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 11/8/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import Foundation
 import Parse
 
 
-struct Comment {
+class Comment {
   
-  static var sharedInstance = Comment()
-  
+   
   init() {}
   
   var createdBy: User!
@@ -38,10 +37,10 @@ struct Comment {
   
   
   
-  func uploadComment(comment: Comment, forReviewWithPfObject: PFObject) -> BFTask {
+  func uploadForReviewPFObject(forReviewWithPfObject: PFObject) -> BFTask {
     let mainTask = BFTaskCompletionSource()
     let commentObj = PFObject(className: "Comment")
-    commentObj["text"] = comment.text
+    commentObj["text"] = self.text
     commentObj["createdBy"] = PFUser.currentUser()!
     commentObj.saveInBackground().continueWithBlock { (task: BFTask!) -> AnyObject! in
       if task.error == nil {
@@ -54,8 +53,7 @@ struct Comment {
       }
       }.continueWithBlock { (task: BFTask!) -> AnyObject! in
         if task.error == nil {
-          UserReview.sharedInstance.commentsForSelectedReview.append(comment)
-          mainTask.setResult(nil)
+          mainTask.setResult(self)
           return nil
         } else {
           return nil
@@ -67,32 +65,7 @@ struct Comment {
   
   
   
-  func startLoadingCommentsForReview(reviewPfObject: PFObject, completionHandler: (() -> Void)) {
-    let commentsQuery = reviewPfObject.relationForKey("comments").query()!
-    commentsQuery.includeKey("createdBy")
-    commentsQuery.addAscendingOrder("createdAt")
-    commentsQuery.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
-  
-      if let results = results where error == nil {
-        var comments = [Comment]()
-        
-        for commentObj in results {
-          let commentAuthor = commentObj["createdBy"] as! PFUser
-          let user = User(theUsername: commentAuthor.username!, theProfileImageURL: commentAuthor["smallProfileImage"] as! String, thePfUser: commentAuthor)
-          let createdAt = commentObj.createdAt
-          let timeSincePosted = Post.sharedInstance.getTimeSincePostedfromDate(createdAt!)
-          let text = commentObj["text"] as! String
-          let comment = Comment(theCreatedBy: user, theTimeSincePosted: timeSincePosted, theText: text, thePfObject: commentObj)
-          
-          comments.append(comment)
-        }
-        UserReview.sharedInstance.commentsForSelectedReview = comments
-        completionHandler()
-      }
-
-    })
-  }
-  
+    
   
   
 }

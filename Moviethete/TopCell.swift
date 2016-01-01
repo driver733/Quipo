@@ -2,8 +2,8 @@
 //  TopCell.swift
 //  Reviews
 //
-//  Created by Admin on 05/07/15.
-//  Copyright (c) 2015 Admin. All rights reserved.
+//  Created by Mikhail Yakushin on 05/07/15.
+//  Copyright (c) 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -28,6 +28,8 @@ class TopCell: UITableViewCell {
     }
   
   override func prepareForReuse() {
+    super.prepareForReuse()
+    profileImage.sd_cancelCurrentImageLoad()
     profileImage.image = nil
     userName.text = nil
     timeSincePosted.text = nil

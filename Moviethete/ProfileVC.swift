@@ -2,8 +2,8 @@
 //  ProfileVC.swift
 //  Reviews
 //
-//  Created by Admin on 29/06/15.
-//  Copyright (c) 2015 Admin. All rights reserved.
+//  Created by Mikhail Yakushin on 29/06/15.
+//  Copyright (c) 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -23,85 +23,81 @@ import Parse
 import SDWebImage
 import Async
 
+ enum viewType {
+  case userReviews
+  case watched
+  case favorite
+  case watchlist
+  case followers
+  case following
+}
 
-
-class ProfileVC: UIViewController {
+ class ProfileVC: UIViewController {
   
+  var tableView = UITableView()
   
-  
-  @IBOutlet weak var tableView: UITableView!
-  var posterCollectionView: UICollectionView!
+  var posterCollectionView : UICollectionView!
   var refreshControl = UIRefreshControl()
   
+  var isDataLoaded = false
+  
   var textArray: NSMutableArray! = NSMutableArray()
-  var viewSelected = ""
+  var selectedView = viewType.userReviews
   var loginActivityIndicator: UIActivityIndicatorView!
   var loginActivityIndicatorBackgroundView = UIView()
-  
   
   var kPosterCollectionViewCellWidth = CGFloat()
   var kPosterCollectionViewCellHeight = CGFloat()
   
-  var tableViewContentSizeWithPosterCollectionView = CGSize()
+  var user: User!
   
-//  func startLoginActivityIndicator() {
-//    loginActivityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 10, 10)) as UIActivityIndicatorView
-//    loginActivityIndicatorBackgroundView =  UIView(frame: self.view.frame)
-//    loginActivityIndicatorBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
-//    loginActivityIndicatorBackgroundView.center = self.view.center
-//    //  loadingIndicatorBackgroundView.layer.cornerRadius = 10
-//    loginActivityIndicator.center = self.view.center
-//    loginActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
-//    self.view.addSubview(loginActivityIndicatorBackgroundView)
-//    self.view.addSubview(loginActivityIndicator)
-//    loginActivityIndicator.startAnimating()
-//  }
-//  
-//  func stopLoginActivityIndicator() {
-//    if loginActivityIndicator != nil {
-//      loginActivityIndicator.stopAnimating()
-//      loginActivityIndicator.removeFromSuperview()
-//      loginActivityIndicatorBackgroundView.removeFromSuperview()
-//    }
-//  }
-  
-  
-  func setupCollectionView() {
-    
-    kPosterCollectionViewCellWidth = (self.view.frame.width - 3) / 4
-    kPosterCollectionViewCellHeight = kPosterCollectionViewCellWidth * 1.5
-    
-    let layout = UICollectionViewFlowLayout()
-    layout.sectionInset = UIEdgeInsetsMake(0, 0, 10, 0)
-    
-    layout.minimumInteritemSpacing = 1
-    layout.minimumLineSpacing = 1
-    
-    layout.itemSize = CGSizeMake(kPosterCollectionViewCellWidth, kPosterCollectionViewCellHeight)
-    
-    
-    let numberOfCellsInRow = 4
-    let numberOfRows = ceil(((CGFloat(Post.sharedInstance.allUserPosts.count) / CGFloat(numberOfCellsInRow))))
-    let posterCollectionViewHeight = kPosterCollectionViewCellHeight * CGFloat(numberOfRows)
-    
-    
-    self.posterCollectionView = UICollectionView(frame: CGRectMake(0, tableView.rectForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)).maxY, self.view.frame.width, posterCollectionViewHeight), collectionViewLayout: layout)
-    posterCollectionView.scrollEnabled = false
-    posterCollectionView.dataSource = self
-    posterCollectionView.delegate = self
-    posterCollectionView.registerClass(PosterCollectionViewCell.self, forCellWithReuseIdentifier: "posterCell")
-    posterCollectionView.backgroundColor = UIColor.clearColor()
-    posterCollectionView.hidden = true
-    self.view.addSubview(posterCollectionView)
-    
+  init(theUser: User) {
+    user = theUser
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
   }
   
+  override func awakeFromNib() {
+    user = UserSingleton.getSharedInstance()
+  }
+  
+  func setupPosterCollectionView() {
+    kPosterCollectionViewCellWidth = (self.view.frame.width - 3) / 4
+    kPosterCollectionViewCellHeight = kPosterCollectionViewCellWidth * 1.5
+    let layout = UICollectionViewFlowLayout()
+    layout.sectionInset = UIEdgeInsetsMake(0, 0, 10, 0)
+    layout.minimumInteritemSpacing = 1
+    layout.minimumLineSpacing = 1
+    layout.itemSize = CGSizeMake(kPosterCollectionViewCellWidth, kPosterCollectionViewCellHeight)
+    var posterCollectionViewHeight: CGFloat = 0
+    let numberOfCellsInRow = 4
+    let numberOfRows = ceil(((CGFloat(user.userPosts.count) / CGFloat(numberOfCellsInRow))))
+    posterCollectionViewHeight = kPosterCollectionViewCellHeight * CGFloat(numberOfRows)
+    posterCollectionView = UICollectionView(
+      frame: CGRectMake(0, tableView.rectForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)).maxY, self.view.frame.width, posterCollectionViewHeight),
+      collectionViewLayout: layout)
+    posterCollectionView.scrollEnabled = false
+    posterCollectionView.delegate = self
+    posterCollectionView.dataSource = self
+    posterCollectionView.registerClass(PosterCollectionViewCell.self, forCellWithReuseIdentifier: "posterCell")
+    posterCollectionView.backgroundColor = UIColor.clearColor()
+    self.view.addSubview(posterCollectionView)
+  }
+  
+  func updatePosterCollectionViewFrame() {
+    let numberOfCellsInRow = 4
+    let numberOfRows = ceil(((CGFloat(user.userPosts.count) / CGFloat(numberOfCellsInRow))))
+    let posterCollectionViewHeight = kPosterCollectionViewCellHeight * CGFloat(numberOfRows)
+    posterCollectionView.frame = CGRectMake(0, tableView.rectForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)).maxY, self.view.frame.width, posterCollectionViewHeight)
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingStartupData:", name: "didFinishLoadingStartupData", object: nil)
-    
+    tableView = UITableView()
+    self.view = tableView
     tableView.registerNib(UINib(nibName: "ProfileTopCell", bundle: nil), forCellReuseIdentifier: "ProfileTopCell")
     tableView.registerNib(UINib(nibName: "ProfileUserReviews", bundle: nil), forCellReuseIdentifier: "ProfileUserReviews")
     tableView.registerNib(UINib(nibName: "ProfileFollowerCell", bundle: nil), forCellReuseIdentifier: "ProfileFollowerCell")
@@ -110,86 +106,51 @@ class ProfileVC: UIViewController {
     tableView.rowHeight = UITableViewAutomaticDimension;
     tableView.estimatedRowHeight = 44.0;
     
+//    if let topItem = self.navigationController?.navigationBar.topItem {
+//      topItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, target: nil, action: nil)
+//    }
+    
     let gesture = UITapGestureRecognizer(target: self, action: "cellPressed:")
     self.view.addGestureRecognizer(gesture)
     gesture.cancelsTouchesInView = false
     
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Settings", style: UIBarButtonItemStyle.Plain, target: self, action: "settings:")
     
-    viewSelected = "following"
-    
     tableView.tableFooterView = UIView(frame: CGRectZero)
-    
-    
+
     refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
-    tableView?.addSubview(refreshControl)
+    tableView.addSubview(refreshControl)
+    
+  //  refreshControl.beginRefreshing()
+    if self.navigationController?.viewControllers.count > 1 {
+      refresh(nil)
+    } else {
+      self.title = self.user.username
+    }
   }
   
   func refresh(sender: AnyObject?) {
-    UserSingelton.sharedInstance.updateData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+    user.updateAllProfileData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       Async.main {
-        if self.refreshControl.refreshing {
-          self.refreshControl.endRefreshing()
-          self.posterCollectionView.reloadData()
-          self.tableView.reloadData()
-          if !self.posterCollectionView.hidden {
-            self.tableView.contentSize = self.tableViewContentSizeWithPosterCollectionView
-          }
-        }
+        self.title = self.user.username
+        self.refreshControl.endRefreshing()
+        self.tableView.reloadData()
+        self.updatePosterCollectionViewFrame()
+        self.posterCollectionView.reloadData()
       }
       return nil
     }
   }
   
-  func didFinishLoadingStartupData(notif: NSNotification) {
-    tableView.reloadData()
-    posterCollectionView.reloadData()
-  }
-  
-  
   override func viewWillAppear(animated: Bool) {
     self.navigationController?.navigationBar.barTintColor = UIColor.quipoColor()
     self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
-    self.title = "Profile"
-    
-    
-    
-    
-    
-//    UserSingelton.sharedInstance.hasLoadedStartupData = false
-//    startLoginActivityIndicator()
-//    UserSingelton.sharedInstance.updateData().continueWithBlock { (task: BFTask!) -> AnyObject! in
-//      
-//      self.tableView.reloadData()
-//      if let posterCollectionView = self.posterCollectionView {
-//        posterCollectionView.reloadData()
-//        //   self.tableView.contentSize = self.tableViewContentSizeWithPosterCollectionView
-//      }
-//      self.stopLoginActivityIndicator()
-//      
-//      return nil
-//    }
-//    
   }
-  
-  
-  
-  override func viewDidAppear(animated: Bool) {
-    if let posterView = posterCollectionView where tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) != nil {
-      if !posterView.hidden {
-          tableView.contentSize = tableViewContentSizeWithPosterCollectionView
-      }
-    }
-    
-    
-  }
+
   func settings(sender: UIBarButtonItem) {
     performSegueWithIdentifier("profileSettings", sender: nil)
   }
-  
-  
-  
   
   func cellPressed(press: UITapGestureRecognizer) {
     
@@ -201,51 +162,46 @@ class ProfileVC: UIViewController {
         
         var viewPoint = newCell.awaitedView.convertPoint(location, fromView: tableView)
         if newCell.awaitedView.pointInside(viewPoint, withEvent: nil) {
-          
-          viewSelected = "reviews"
-          
-          //       posterCollectionView.hidden = true
-          tableView.reloadData()
-          
+           posterCollectionView.hidden = false
         }
         
         viewPoint = newCell.favouriteView.convertPoint(location, fromView: tableView)
-        if newCell.favouriteView.pointInside(viewPoint, withEvent: nil){
-          
-          viewSelected = ""
-          //      posterCollectionView.hidden = true
-          tableView.reloadData()
+        if newCell.favouriteView.pointInside(viewPoint, withEvent: nil) {
+          selectedView = viewType.favorite
+          posterCollectionView.hidden = false
         }
         
         viewPoint = newCell.watchedView.convertPoint(location, fromView: tableView)
-        if newCell.watchedView.pointInside(viewPoint, withEvent: nil){
-          
-        }
-        
-        viewPoint = newCell.followingView.convertPoint(location, fromView: tableView)
-        if newCell.followingView.pointInside(viewPoint, withEvent: nil) {
-          viewSelected = "following"
-          posterCollectionView.hidden = true
-          tableView.reloadData()
-        }
-        
-        viewPoint = newCell.followersView.convertPoint(location, fromView: tableView)
-        if newCell.followersView.pointInside(viewPoint, withEvent: nil) {
-          viewSelected = "followers"
-          Async.main {
-            self.posterCollectionView.hidden = true
-            self.tableView.reloadData()
-          }
+        if newCell.watchedView.pointInside(viewPoint, withEvent: nil) {
+          selectedView = viewType.watched
+           posterCollectionView.hidden = false
         }
         
         viewPoint = newCell.userReviewsView.convertPoint(location, fromView: tableView)
         if newCell.userReviewsView.pointInside(viewPoint, withEvent: nil) {
-          viewSelected = "userReviews"
-          tableView.reloadData()
-          posterCollectionView.reloadData()
-        //  tableView.contentSize = tableViewContentSizeWithPosterCollectionView
+          selectedView = viewType.userReviews
+          posterCollectionView.hidden = false
         }
         
+        viewPoint = newCell.followingView.convertPoint(location, fromView: tableView)
+        if newCell.followingView.pointInside(viewPoint, withEvent: nil) {
+          selectedView = viewType.following
+          posterCollectionView.hidden = true
+        }
+        
+        viewPoint = newCell.followersView.convertPoint(location, fromView: tableView)
+        if newCell.followersView.pointInside(viewPoint, withEvent: nil) {
+          selectedView = viewType.followers
+          posterCollectionView.hidden = true
+        }
+        
+        Async.main {
+          let offset = self.tableView.contentOffset
+          self.tableView.reloadData()
+          self.tableView.layoutIfNeeded()
+          self.tableView.setContentOffset(offset, animated: false)
+          self.posterCollectionView.reloadData()
+        }
         
       }
       
@@ -254,40 +210,23 @@ class ProfileVC: UIViewController {
     
     
   }
-  
-  
-  
-  
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
   
-  
-  
-  
-  
-  
-  
 }
 
 
+// MARK: - UITableViewDataSource
 
 extension ProfileVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
-    if posterCollectionView != nil {
-      if viewSelected != "userReviews" {
-        posterCollectionView.hidden = true
-      } else {
-        posterCollectionView.hidden = false
-      }
-    }
-    
-    
     if indexPath.row == 0 {
+      
       let cell = tableView.dequeueReusableCellWithIdentifier("ProfileTopCell", forIndexPath: indexPath) as! ProfileTopCell
       cell.awaitedView.layer.cornerRadius = 8
       cell.awaitedView.layer.masksToBounds = true
@@ -301,24 +240,37 @@ extension ProfileVC: UITableViewDataSource {
       cell.watchedView.layer.masksToBounds = true
       cell.userReviewsView.layer.cornerRadius = 8
       cell.userReviewsView.layer.masksToBounds = true
-      
-      
       cell.selectionStyle = .None
       
       if let profileImage = PFUser.currentUser()?["bigProfileImage"] as? String {
-        cell.profileImageView.sd_setImageWithURL(NSURL(string: profileImage), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImageView.bounds.size), options: SDWebImageOptions.RefreshCached, completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
+        cell.profileImageView.sd_setImageWithURL(NSURL(string: profileImage), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImageView.bounds.size), options: SDWebImageOptions.RefreshCached,
+          completed: {
+          (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
           if let image = image where error == nil {
             cell.profileImageView.image = Toucan(image: image).maskWithEllipse().image
           }
         })
       }
       
+     // if isDataLoaded {
+      
+        cell.userReviewsCount.text = String(user.userPosts.count)
+        cell.followersCount.text = String(user.followers.count)
+        cell.followingCount.text = String(user.following.count)
+        cell.watchedCount.text = String(user.watchedPosts.count)
+        cell.favouriteCount.text = String(user.favoritePosts.count)
+        cell.awaitedCount.text = "0" // to be implemented
       
       
-      cell.userReviewsCount.text = String(Post.sharedInstance.allUserPosts.count)
-      cell.followingCount.text = String(UserSingelton.sharedInstance.following.count)
-      cell.followersCount.text = String(UserSingelton.sharedInstance.followers.count)
-      
+      //  cell.awaitedCount.text = String(user.)
+//      } else {
+//        cell.userReviewsCount.text = ""
+//        cell.followersCount.text = ""
+//        cell.followingCount.text = ""
+//        cell.watchedCount.text = ""
+//        cell.favouriteCount.text = ""
+//        cell.awaitedCount.text = ""
+//      }
       
       return cell
     }
@@ -326,25 +278,23 @@ extension ProfileVC: UITableViewDataSource {
     else {
       
       
-      switch viewSelected {
+      switch selectedView {
         
         
-      case "following":
+      case .following:
         
         let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
         
-        cell.userInteractionEnabled = false
+        let theUser = (user.following)[indexPath.row - 1]
         
-        let user = (UserSingelton.sharedInstance.following)[indexPath.row - 1]
-        
-        cell.userName.text = user.username
+        cell.userName.text = theUser.username
         cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
-        if user.isFollowed {
+        if theUser.isFollowed {
           cell.followButton.setTitle("following", forState: .Normal)
           cell.followButton.setTitleColor(.greenColor(), forState: .Normal)
         }
         cell.profileImage.sd_setImageWithURL(
-          NSURL(string: user.profileImageURL!),
+          NSURL(string: theUser.profileImageURL!),
           placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
           options: SDWebImageOptions.RefreshCached,
           completed:{
@@ -358,24 +308,21 @@ extension ProfileVC: UITableViewDataSource {
         
         return cell
         
-        
-        
-      case "followers":
+      case .followers:
         
         let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
+       
         
-        cell.userInteractionEnabled = false
+        let theUser = (user.followers)[indexPath.row - 1]
         
-        let user = (UserSingelton.sharedInstance.followers)[indexPath.row - 1]
-        
-        cell.userName.text = user.username
+        cell.userName.text = theUser.username
         cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
-        if user.isFollowed == true {
+        if theUser.isFollowed {
           cell.followButton.setTitle("following", forState: .Normal)
           cell.followButton.setTitleColor(.greenColor(), forState: .Normal)
         }
         cell.profileImage.sd_setImageWithURL(
-          NSURL(string: user.profileImageURL!),
+          NSURL(string: theUser.profileImageURL!),
           placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
           options: SDWebImageOptions.RefreshCached,
           completed:{
@@ -386,13 +333,8 @@ extension ProfileVC: UITableViewDataSource {
           }
         )
         
-        
         return cell
-        
-        
-        
-        
-        
+      
       default:
         return UITableViewCell()
       }
@@ -402,113 +344,122 @@ extension ProfileVC: UITableViewDataSource {
   }
   
   
+  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    switch selectedView {
+    case .following:
+      return user.following.count + 1
+    case .followers:
+      return user.followers.count + 1
+    default:
+      return 1
+    }
+  }
+
+  
 }
 
 
 
 
 
-
+// MARK: - UITableViewDelegate
 
 extension ProfileVC: UITableViewDelegate {
   
   
   
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    if indexPath.row == 0 {
-      if posterCollectionView == nil {
-        setupCollectionView()
-      }
+    if indexPath.row == 0 && posterCollectionView == nil {
+        setupPosterCollectionView()
     }
     if indexPath.row == tableView.numberOfRowsInSection(indexPath.section) - 1 {
-      cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+      cell.separatorInset = UIEdgeInsetsZero
     }
-    
-    
   }
   
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    if indexPath.row != 0 {
+      switch selectedView {
+      case .followers:
+        let selectedUser = user.followers[indexPath.row - 1]
+        let vc = ProfileVC(theUser: selectedUser)
+        self.navigationController?.pushViewController(vc, animated: true)
+      case .following:
+        let selectedUser = user.following[indexPath.row - 1]
+        let vc = ProfileVC(theUser: selectedUser)
+        self.navigationController?.pushViewController(vc, animated: true)
+      default:
+        break
+      }
+    }
     tableView.deselectRowAtIndexPath(indexPath, animated: false)
   }
   
-  
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    
-    switch viewSelected {
-      
-    case "userReviews":
-      return 1
-      
-    case "following":
-      return UserSingelton.sharedInstance.following.count + 1
-      
-    case "followers":
-      return UserSingelton.sharedInstance.followers.count + 1
-      
-    default: break
-    }
-    
-    
-    return 1
-  }
-  
-  
-  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return 1
-  }
   
   
 }
 
 
 
-
+// MARK: - UICollectionViewDataSource
 
 extension ProfileVC: UICollectionViewDataSource {
   
   func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return Post.sharedInstance.allUserPosts.count
+    switch selectedView {
+      
+    case .userReviews:
+      return user.userPosts.count
+      
+    default:
+      return 0
+    }
   }
   
   func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     let cell = posterCollectionView.dequeueReusableCellWithReuseIdentifier("posterCell", forIndexPath: indexPath) as! PosterCollectionViewCell
-    
-    if indexPath.row == 1 {
-      cell.backgroundColor = UIColor.blackColor()
-    }
-    
     let imgView = UIImageView(frame: CGRectMake(0, 0, kPosterCollectionViewCellWidth, kPosterCollectionViewCellHeight))
     cell.addSubview(imgView)
+    switch selectedView {
+    case .userReviews:
+      imgView.sd_setImageWithURL(NSURL(string: user.userPosts[indexPath.row].standardPosterImageURL!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.frame.size))
+    case .watched:
+      imgView.sd_setImageWithURL(NSURL(string: user.watchedPosts[indexPath.row].standardPosterImageURL!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.frame.size))
+    case .favorite:
+      imgView.sd_setImageWithURL(NSURL(string: user.favoritePosts[indexPath.row].standardPosterImageURL!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.frame.size))
+    default:
+      break
+    }
     
-    imgView.sd_setImageWithURL(NSURL(string: Post.sharedInstance.allUserPosts[indexPath.row].standardPosterImageURL!), placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.frame.size))
     return cell
   }
   
 }
 
 
-
+// MARK: - UICollectionViewDelegate
 extension ProfileVC: UICollectionViewDelegate {
   
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    let vc = DetailedPostVC()
-    vc.passedPost = Post.sharedInstance.allUserPosts[indexPath.row]
-    let posterImage = ((posterCollectionView.cellForItemAtIndexPath(indexPath) as! PosterCollectionViewCell).subviews[1] as! UIImageView).image!
-    let resizedPosterImage = Toucan(image: posterImage).resize(CGSizeMake(50, 50), fitMode: Toucan.Resize.FitMode.Scale).image
-    let colors = getPrimaryPosterImageColorAndtextColor(resizedPosterImage)
-    vc.passedColor = colors[1]
-    vc.textColor = colors[0]
-    self.navigationController?.pushViewController(vc, animated: true)
+    let posterImage = (posterCollectionView.cellForItemAtIndexPath(indexPath)!.subviews[1] as! UIImageView).image!
+    let colors = primaryPosterImageColorAndtextColor(posterImage)
+    if selectedView == .userReviews {
+      let post = user.userPosts[indexPath.row]
+      let vc = DetailedPostVC(thePost: post, theNavBarBackgroundColor: colors.primaryColor, theNavBarTextColor: colors.inferredTextColor)
+      self.navigationController?.pushViewController(vc, animated: true)
+    } else if selectedView == .watched {
+      let post = user.watchedPosts[indexPath.row]
+      let vc = DetailedPostVC(thePost: post, theNavBarBackgroundColor: colors.primaryColor, theNavBarTextColor: colors.inferredTextColor)
+      self.navigationController?.pushViewController(vc, animated: true)
+    }
   }
   
   func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-    if indexPath.row == Post.sharedInstance.allUserPosts.count - 1  {
+    if indexPath.row == user.userPosts.count - 1 {
       let topTableViewCellHeight = tableView.rectForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)).height
-      tableViewContentSizeWithPosterCollectionView = CGSizeMake(self.view.frame.width, topTableViewCellHeight + posterCollectionView.frame.height)
-      if !posterCollectionView.hidden {
+      let tableViewContentSizeWithPosterCollectionView = CGSizeMake(self.view.frame.width, topTableViewCellHeight + posterCollectionView.frame.height)
         tableView.contentSize = tableViewContentSizeWithPosterCollectionView
-      }
     }
     
   }
@@ -519,22 +470,17 @@ extension ProfileVC: UICollectionViewDelegate {
 
 
 
-
-
-extension ProfileVC: UICollectionViewDelegateFlowLayout {
+extension ProfileVC: LoadingStateDelegate {
   
+  func didStartNetworingActivity() {
+    refreshControl.beginRefreshing()
+  }
   
-  
-  
-  
+  func didEndNetworingActivity() {
+    refreshControl.endRefreshing()
+  }
   
 }
-
-
-
-
-
-
 
 
 

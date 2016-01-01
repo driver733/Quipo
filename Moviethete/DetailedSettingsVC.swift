@@ -1,9 +1,9 @@
 //
 //  DetailedSettingsVC.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 9/7/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 9/7/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -22,49 +22,47 @@ import Parse
 import ParseFacebookUtilsV4
 import SDWebImage
 
+
+
+
+
 class DetailedSettingsVC: UIViewController {
-   
   
-
-  @IBOutlet var tableView: UITableView!
+  var shouldUpdateLinkedAccounts = false
   
-  var cellIndexPath = NSIndexPath()
+  var tableView = UITableView()
+  var cellIndexPath: NSIndexPath!
   
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    self.view = tableView
+    
+//    loadingStateDelegate = self.navigationController?.viewControllers.first as! ProfileSettings // ProfileSettingsVC
+    
+    tableView.registerNib(UINib(nibName: "ProfileFollowerCell", bundle: nil), forCellReuseIdentifier: "ProfileFollowerCell")
+    tableView.registerNib(UINib(nibName: "ProfileSettingsFollowFriendsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsFollowFriendsCell")
+    tableView.delegate = self
+    tableView.dataSource = self
+    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.estimatedRowHeight = 44.0
+    tableView.tableFooterView = UIView(frame: CGRectZero)
+  }
   
-    override func viewDidLoad() {
-      super.viewDidLoad()
-      
-      
-      tableView.registerNib(UINib(nibName: "ProfileFollowerCell", bundle: nil), forCellReuseIdentifier: "ProfileFollowerCell")
-      tableView.registerNib(UINib(nibName: "ProfileSettingsFollowFriendsCell", bundle: nil), forCellReuseIdentifier: "ProfileSettingsFollowFriendsCell")
-      tableView.delegate = self
-      tableView.dataSource = self
-      
-      tableView.rowHeight = UITableViewAutomaticDimension
-      tableView.estimatedRowHeight = 44.0
-    }
-  
-  
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-  
-  
-  
-  
+  override func didReceiveMemoryWarning() {
+      super.didReceiveMemoryWarning()
+      // Dispose of any resources that can be recreated.
+  }
   
   override func viewWillDisappear(animated: Bool) {
-   
-      // second if => "self" is being shown because of a "back" button.
-    if UserSingelton.sharedInstance.shouldUpdateLinkedAccounts {
-      UserSingelton.sharedInstance.updateUserSubscriptions(
-        UserSingelton.sharedInstance.followedUsers,
-        unfollowedUsersObjectIDs: UserSingelton.sharedInstance.unfollowedUsers
+    // second if => "self" is being shown because of a "back" button.
+    if shouldUpdateLinkedAccounts {
+      UserSingleton.getSharedInstance().updateUserSubscriptions(
+                                  UserSingleton.getSharedInstance().followedUsers,
+        unfollowedUsersObjectIDs: UserSingleton.getSharedInstance().unfollowedUsers
         )
         .continueWithBlock({ (task: BFTask!) -> AnyObject! in
-          UserSingelton.sharedInstance.shouldUpdateLinkedAccounts = false
+          
+          self.shouldUpdateLinkedAccounts = false
           return nil
         })
     }
@@ -83,21 +81,20 @@ class DetailedSettingsVC: UIViewController {
   
   
   func didTapFollowButton(sender: UIButton) {
-    
       let indexPath = checkButtonTapped(sender)
-      let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row].pfUser!
+      let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row].pfUser!
       let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
     if sender.titleLabel?.text == "+ follow" {
-      UserSingelton.sharedInstance.followedUsers.append(user.objectId!)
+      UserSingleton.getSharedInstance().followedUsers.append(user.objectId!)
       cell.followButton.setTitle("following", forState: .Normal)
       cell.followButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
     } else {
-      let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row].pfUser!
-      UserSingelton.sharedInstance.unfollowedUsers.append(user.objectId!)
+      let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row].pfUser!
+      UserSingleton.getSharedInstance().unfollowedUsers.append(user.objectId!)
       cell.followButton.setTitle("+ follow", forState: .Normal)
       cell.followButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
     }
-    UserSingelton.sharedInstance.shouldUpdateLinkedAccounts = true
+    shouldUpdateLinkedAccounts = true
   }
 
   
@@ -115,11 +112,13 @@ extension DetailedSettingsVC: UITableViewDataSource {
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
     let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
-    let user = UserSingelton.sharedInstance.allFriends[cellIndexPath.row][indexPath.row]
+   
+    let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row]
+    
     
     cell.userName.text = user.username
     cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
-    if user.isFollowed == true {
+    if user.isFollowed {
       cell.followButton.setTitle("following", forState: .Normal)
       cell.followButton.setTitleColor(.greenColor(), forState: .Normal)
     }
@@ -141,11 +140,8 @@ extension DetailedSettingsVC: UITableViewDataSource {
   
   
   
-  
-  
-  
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return UserSingelton.sharedInstance.allFriends[cellIndexPath.row].count
+      return UserSingleton.getSharedInstance().allFriends[cellIndexPath.row].count
   }
   
   

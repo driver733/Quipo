@@ -1,9 +1,9 @@
 //
 //  CommentsVC.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 11/8/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 11/8/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -14,7 +14,7 @@ import Async
 
 class CommentsVC: SLKTextViewController {
 
-  var passedReviewObject: PFObject!
+  var passedReview: UserReview!
   var shouldContinueScrollingToBottom = false
   
   override init!(tableViewStyle style: UITableViewStyle) {
@@ -46,15 +46,16 @@ class CommentsVC: SLKTextViewController {
     textView.placeholder = "Your comment..."
     textView.slk_clearText(true)
     
-    
-    Comment.sharedInstance.startLoadingCommentsForReview(passedReviewObject) { () -> Void in
+    passedReview.loadComments().continueWithBlock { (task: BFTask) -> AnyObject? in
       self.tableView.reloadData()
       self.shouldContinueScrollingToBottom = true
       if self.tableView.numberOfRowsInSection(0) > 0 {
-        self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: UserReview.sharedInstance.commentsForSelectedReview.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
+        self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.passedReview.comments.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
       }
+      return nil
     }
     
+   
     
     
   }
@@ -67,18 +68,18 @@ class CommentsVC: SLKTextViewController {
   
 
   override func didPressRightButton(sender: AnyObject!) {
-    let currentUser = User(theUsername: User.sharedInstance.username!, theProfileImageURL: User.sharedInstance.profileImageURL!, thePfUser: User.sharedInstance.pfUser!)
+    let currentUser = UserSingleton.getSharedInstance()
     let comment = Comment(theCreatedBy: currentUser, theText: textView.text)
-    Comment.sharedInstance.uploadComment(comment, forReviewWithPfObject: passedReviewObject).continueWithBlock { (task: BFTask!) -> AnyObject! in
+    comment.uploadForReviewPFObject(passedReview.pfObject).continueWithBlock { (task: BFTask!) -> AnyObject! in
       if task.error == nil {
         Async.main {
           CATransaction.begin()
           CATransaction.setCompletionBlock({ () -> Void in
             self.shouldContinueScrollingToBottom = true
-            self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: UserReview.sharedInstance.commentsForSelectedReview.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
+            self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.passedReview.comments.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
           })
           self.tableView.beginUpdates()
-          self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: UserReview.sharedInstance.commentsForSelectedReview.count - 1, inSection: 0)], withRowAnimation: .Automatic)
+          self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.passedReview.comments.count - 1, inSection: 0)], withRowAnimation: .Automatic)
           self.tableView.endUpdates()
           CATransaction.commit()
         }
@@ -106,7 +107,7 @@ extension CommentsVC {
         scrollView.decelerationRate = UIScrollViewDecelerationRateNormal
       } else {
         scrollView.decelerationRate = UIScrollViewDecelerationRateFast
-        self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: UserReview.sharedInstance.commentsForSelectedReview.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
+        self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: passedReview.comments.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: true)
       }
 
       
@@ -119,7 +120,7 @@ extension CommentsVC {
   
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let comment = UserReview.sharedInstance.commentsForSelectedReview[indexPath.row]
+    let comment = passedReview.comments[indexPath.row]
     let cell = tableView.dequeueReusableCellWithIdentifier("commentCell") as! CommentCell
     cell.selectionStyle = .None
     cell.comment.text = comment.text
@@ -136,8 +137,8 @@ extension CommentsVC {
   
   
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if let comments = UserReview.sharedInstance.commentsForSelectedReview {
-      return comments.count
+    if passedReview.comments != nil {
+      return passedReview.comments.count
     } else {
       return 0
     }
@@ -149,27 +150,6 @@ extension CommentsVC {
   
   
 }
-
-
-
-extension CommentsVC {
-  
-  
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,74 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15C27e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="ProfileSettingsFollowFriendsCell" customModule="Moviethete" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="62" id="KGk-i7-Jjw" customClass="ProfileSettingsFollowFriendsCell" customModule="Moviethete" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="382" height="62"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <rect key="frame" x="0.0" y="0.0" width="382" height="61"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NSx-UD-Sj4">
-                        <rect key="frame" x="8" y="8" width="30" height="30"/>
-                        <animations/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="30" id="Nht-wE-dZJ"/>
-                            <constraint firstAttribute="width" secondItem="NSx-UD-Sj4" secondAttribute="height" multiplier="1:1" id="aAI-W1-NLC"/>
-                            <constraint firstAttribute="width" constant="30" id="cKX-t5-7J1"/>
-                        </constraints>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Facebook Friends" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwg-os-oRY">
-                        <rect key="frame" x="55" y="11" width="207" height="21"/>
-                        <animations/>
+                        <rect key="frame" x="58" y="20" width="136" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="207" id="RjP-Fh-Gux"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="RjP-Fh-Gux"/>
+                            </mask>
+                        </variation>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iTM-tn-fed">
-                        <rect key="frame" x="297" y="22" width="0.0" height="0.0"/>
-                        <animations/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="John Appleseed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iTM-tn-fed">
+                        <rect key="frame" x="250" y="20" width="124" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NSx-UD-Sj4">
+                        <rect key="frame" x="8" y="16" width="30" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="e6V-9t-a5n"/>
+                            <constraint firstAttribute="width" constant="30" id="hED-yJ-DRf"/>
+                            <constraint firstAttribute="height" constant="30" id="hSX-0A-uHh"/>
+                            <constraint firstAttribute="width" constant="30" id="ke8-qd-bwH"/>
+                            <constraint firstAttribute="width" secondItem="NSx-UD-Sj4" secondAttribute="height" multiplier="1:1" id="mnY-e9-dfz"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="hED-yJ-DRf"/>
+                                <exclude reference="hSX-0A-uHh"/>
+                                <exclude reference="mnY-e9-dfz"/>
+                            </mask>
+                        </variation>
+                    </imageView>
                 </subviews>
-                <animations/>
                 <constraints>
-                    <constraint firstAttribute="trailingMargin" secondItem="bwg-os-oRY" secondAttribute="trailing" constant="50" id="9KZ-SI-H1C"/>
+                    <constraint firstItem="NSx-UD-Sj4" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="0Sn-Ra-9Mv"/>
+                    <constraint firstItem="iTM-tn-fed" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="H8e-Nn-n7Q"/>
                     <constraint firstItem="iTM-tn-fed" firstAttribute="centerY" secondItem="bwg-os-oRY" secondAttribute="centerY" constant="-15" id="HEl-4k-WwH"/>
-                    <constraint firstItem="iTM-tn-fed" firstAttribute="centerY" secondItem="bwg-os-oRY" secondAttribute="centerY" id="JxA-19-3db"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="NSx-UD-Sj4" secondAttribute="bottom" id="Jfz-Ze-OPS"/>
+                    <constraint firstAttribute="topMargin" secondItem="NSx-UD-Sj4" secondAttribute="topMargin" id="Jzm-7m-hQF"/>
                     <constraint firstAttribute="bottomMargin" secondItem="bwg-os-oRY" secondAttribute="bottom" constant="3" id="RHY-IX-A5B"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="iTM-tn-fed" secondAttribute="trailing" constant="15" id="TQh-ma-JoL"/>
-                    <constraint firstItem="NSx-UD-Sj4" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="UbQ-P1-TaU"/>
-                    <constraint firstItem="bwg-os-oRY" firstAttribute="leading" secondItem="NSx-UD-Sj4" secondAttribute="trailing" constant="17" id="ZlO-hZ-FVf"/>
-                    <constraint firstItem="bwg-os-oRY" firstAttribute="centerY" secondItem="NSx-UD-Sj4" secondAttribute="centerY" constant="-1.5" id="ba2-uv-7tm"/>
-                    <constraint firstItem="NSx-UD-Sj4" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="cZg-Kg-K6i"/>
-                    <constraint firstItem="NSx-UD-Sj4" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" constant="3" id="f7Q-Gs-Pao"/>
+                    <constraint firstAttribute="topMargin" secondItem="NSx-UD-Sj4" secondAttribute="top" id="WQY-70-lZI"/>
+                    <constraint firstItem="iTM-tn-fed" firstAttribute="centerY" secondItem="NSx-UD-Sj4" secondAttribute="centerY" id="XEq-sp-uT1"/>
+                    <constraint firstItem="NSx-UD-Sj4" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="aLB-R0-oYA"/>
                     <constraint firstItem="bwg-os-oRY" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="3" id="fWY-94-15U"/>
+                    <constraint firstItem="bwg-os-oRY" firstAttribute="leading" secondItem="NSx-UD-Sj4" secondAttribute="trailing" constant="20" id="jNq-FU-1um"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="NSx-UD-Sj4" secondAttribute="leading" id="q1P-73-kNX"/>
+                    <constraint firstItem="bwg-os-oRY" firstAttribute="centerY" secondItem="NSx-UD-Sj4" secondAttribute="centerY" id="yVS-dg-aKC"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="iTM-tn-fed" secondAttribute="trailing" id="yWq-97-XiT"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
+                        <exclude reference="Jfz-Ze-OPS"/>
+                        <exclude reference="Jzm-7m-hQF"/>
+                        <exclude reference="WQY-70-lZI"/>
+                        <exclude reference="aLB-R0-oYA"/>
                         <exclude reference="RHY-IX-A5B"/>
                         <exclude reference="fWY-94-15U"/>
+                        <exclude reference="H8e-Nn-n7Q"/>
                         <exclude reference="HEl-4k-WwH"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>
-            <animations/>
             <connections>
                 <outlet property="account" destination="iTM-tn-fed" id="f5t-1a-jkd"/>
                 <outlet property="icon" destination="NSx-UD-Sj4" id="OZk-VV-ymf"/>
                 <outlet property="label" destination="bwg-os-oRY" id="vys-dD-K0z"/>
             </connections>
-            <point key="canvasLocation" x="65" y="285"/>
+            <point key="canvasLocation" x="103" y="364"/>
         </tableViewCell>
     </objects>
 </document>

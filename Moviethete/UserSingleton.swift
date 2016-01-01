@@ -1,9 +1,9 @@
 //
 //  UserSingleton.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 9/6/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 9/6/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import Foundation
@@ -24,20 +24,60 @@ import ParseFacebookUtilsV4
 import Bolts
 import KeychainAccess
 
-extension UserSingelton {
-  
-  
+protocol LoadingStateDelegate {
+  func didStartNetworingActivity()
+  func didEndNetworingActivity()
 }
 
+protocol FollowFriendsDelegate {
+  func didUpdateFollowFriendsData()
+}
 
-
-public struct UserSingelton {
+class UserSingleton: User {
   
-  static var sharedInstance = UserSingelton()
+  private static var sharedInstance: UserSingleton!
   
-  var allFriends = [[User]]()
+  var loginLoadingStateDelegate: LoadingStateDelegate?
+  var followFriendsDelegate: FollowFriendsDelegate?
+  
+  override private init(thePfUser: PFUser) {
+    super.init(thePfUser: thePfUser)
+  }
+  
+  class func getSharedInstance() -> UserSingleton {
+    if sharedInstance == nil {
+      if let currentUser = PFUser.currentUser() {
+        sharedInstance = UserSingleton(thePfUser: currentUser)
+      } else {
+        let tempPFUser = PFUser()
+        tempPFUser.username = ""
+        tempPFUser["smallProfileImage"] = ""
+        sharedInstance = UserSingleton(thePfUser: tempPFUser)
+      }
+    }
+    return sharedInstance
+  }
+  
+  private class func resetSharedInstance() {
+    sharedInstance = nil
+  }
+  
+  /// All users linked through social networks (in other words, friends in linked social networks). Users are split into arrays each represeinting a linked social network, such as [Facebook], [Instagram], etc.
+  var allFriends: [[User]] {
+    var friends = [[User]]()
+    if self.facebookFriends.count > 0 {
+      friends.append(self.facebookFriends)
+    }
+    if self.instagramFriends.count > 0 {
+      friends.append(instagramFriends)
+    }
+    if vkontakteFriends.count > 0 {
+      friends.append(vkontakteFriends)
+    }
+    return friends
+  }
   var followFriendsData = [FollowFriends]()
-  var linkedAccountsKeychain = Keychain(server: "https://api.instagram.com/oauth/authorize", protocolType: .HTTPS)
+  var linkedAccountsKeychain = Keychain()
   var facebookFriends = [User]()
   var vkontakteFriends = [User]()
   var instagramFriends = [User]()
@@ -45,77 +85,61 @@ public struct UserSingelton {
   var followedUsers = [String]()
   var unfollowedUsers = [String]()
   
-  
-  var followers = [User]()
-  var following = [User]()
-  
-  
-  var isFromDetailedVC = false
-  var hasLoadedStartupData = false
-  var shouldUpdateLinkedAccounts = false
-  var shouldUpdateFollowFriends = true
+// ======================================================= //
+// MARK: - Parse
+// ======================================================= //
 
-  // MARK: - Parse
-  
   func checkUserLinkedAccounts() {
     checkIfFacebookAccessTokenIsPresent()
     checkIfInstagramAccessTokenIsPresent()
     checkIfVkontakteAccessTokenIsPresent()
   }
   
-  
   func checkIfFacebookAccessTokenIsPresent() {
-      if let facebookAccessToken = PFUser.currentUser()?["FBAccessToken"] as? String, fbUserID = PFUser.currentUser()?["FBID"] as? String {
-        let fbAccessToken = FBSDKAccessToken(
-          tokenString: facebookAccessToken,
-          permissions: ["email", "public_profile", "user_friends"],
-          declinedPermissions: nil,
-          appID: "122664868071644",
-          userID: fbUserID,
-          expirationDate: nil,
-          refreshDate: nil
-        )
-        FBSDKAccessToken.setCurrentAccessToken(fbAccessToken)
-      }
+    if let facebookAccessToken = PFUser.currentUser()?["FBAccessToken"] as? String, fbUserID = PFUser.currentUser()?["FBID"] as? String {
+      let fbAccessToken = FBSDKAccessToken(
+        tokenString: facebookAccessToken,
+        permissions: ["email", "public_profile", "user_friends"],
+        declinedPermissions: nil,
+        appID: "122664868071644",
+        userID: fbUserID,
+        expirationDate: nil,
+        refreshDate: nil
+      )
+      FBSDKAccessToken.setCurrentAccessToken(fbAccessToken)
+    }
   }
-  
-  
+
   func checkIfInstagramAccessTokenIsPresent() {
     if linkedAccountsKeychain["instagram"] == nil {
       if let instagramAccessToken = PFUser.currentUser()?["INSTMAccessToken"] as? String {
-        UserSingelton.sharedInstance.linkedAccountsKeychain["instagram"] = instagramAccessToken
+        self.linkedAccountsKeychain["instagram"] = instagramAccessToken
         let engine = InstagramEngine.sharedEngine()
         engine.accessToken = instagramAccessToken
       }
     }
   }
   
-  
   func checkIfVkontakteAccessTokenIsPresent() {
-    if let vkAccessToken = PFUser.currentUser()?["VKAccessToken"] as? String, vkUserID = PFUser.currentUser()?["VKID"] as? String  {
-      let vkAccessToken = VKAccessToken(token: vkAccessToken, secret: "PuLAVPrHRvxkl24PWKDm", userId: vkUserID)
+    if let token = PFUser.currentUser()?["VKAccessToken"] as? String, vkUserID = PFUser.currentUser()?["VKID"] as? String  {
+      let vkAccessToken = VKAccessToken(token: token, secret: "PuLAVPrHRvxkl24PWKDm", userId: vkUserID)
+      vkAccessToken.saveTokenToDefaults("VKAccessToken")
       VKSdk.setAccessToken(vkAccessToken)
     }
   }
-  
-  
-  
-  
-  
-
   
   func updateUserSubscriptions(followedUsersObjectIDs: [String], unfollowedUsersObjectIDs: [String]) -> BFTask {
     let mainTask = BFTaskCompletionSource()
     if followedUsersObjectIDs.count != 0 || unfollowedUsersObjectIDs.count != 0 {
       PFCloud.callFunctionInBackground("updateUserSubscriptions", withParameters:
         ["currentUserObjectId" :      (PFUser.currentUser()?.objectId)!,
-         "followedUsersObjectIDs" :   UserSingelton.sharedInstance.followedUsers,
-         "unFollowedUsersObjectIDs" : UserSingelton.sharedInstance.unfollowedUsers]
+         "followedUsersObjectIDs" :   self.followedUsers,
+         "unFollowedUsersObjectIDs" : self.unfollowedUsers]
         ).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-            return UserSingelton.sharedInstance.updateData()
+            return self.updateAllProfileData()
         }.continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-            UserSingelton.sharedInstance.followedUsers.removeAll(keepCapacity: false)
-            UserSingelton.sharedInstance.unfollowedUsers.removeAll(keepCapacity: false)
+            self.followedUsers.removeAll(keepCapacity: false)
+            self.unfollowedUsers.removeAll(keepCapacity: false)
             mainTask.setResult(nil)
             return nil
       }
@@ -125,174 +149,185 @@ public struct UserSingelton {
     return mainTask.task
   }
   
-  
-  
-  
-  
-  
-  
-  func checkCurrentUserFollowingUsers() -> BFTask {
+  override func loadFollowingUsers() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     let query = PFQuery(className: "Follow")
+    query.includeKey("to")
     query.whereKey("from", equalTo: PFUser.currentUser()!)
     query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
-      
       if let results = results {
-        
-        
-      
-      var followersPfUserObjectIDs = [String]()
-      for follow in results {
-        followersPfUserObjectIDs.append((follow["to"] as! PFUser).objectId!)
-      }
-      
-  //    followersPfUserObjectIDs = Array(Set(followersPfUserObjectIDs))
-        
-        
-      for var i = 0; i < UserSingelton.sharedInstance.allFriends.count; i++ {
-        for var j = 0; j < UserSingelton.sharedInstance.allFriends[i].count; j++ {
-          
-          if (followersPfUserObjectIDs.contains((UserSingelton.sharedInstance.allFriends[i][j].pfUser?.objectId!)!)) {
-            UserSingelton.sharedInstance.allFriends[i][j].isFollowed = true
-          } else {
-            UserSingelton.sharedInstance.allFriends[i][j].isFollowed = false
-          }
-          
+        self.following.removeAll(keepCapacity: false)
+        for follow in results {
+          let followerObj = follow["to"] as! PFUser
+          self.following.append(User(thePfUser: followerObj))
         }
-      }
-      mainTask.setResult(nil)
+        self.checkIfFollowedUsersFollowBack()
+        mainTask.setResult(nil)
       }
     }
     return mainTask.task
   }
   
-  
-  func checkCurrentUsersFollowers() -> BFTask {
+  override func loadFollowers() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     let query = PFQuery(className: "Follow")
+    query.includeKey("from")
     query.whereKey("to", equalTo: PFUser.currentUser()!)
     query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
-      
       if let results = results {
-        
-      var followersPfUserObjectIDs = [String]()
-      for follow in results {
-        followersPfUserObjectIDs.append((follow["from"] as! PFUser).objectId!)
-      }
-        
-     //  followersPfUserObjectIDs = Array(Set(followersPfUserObjectIDs))
-        
-      for (socIndex, socialNetwork) in UserSingelton.sharedInstance.allFriends.enumerate() {
-        for (userIndex, _) in socialNetwork.enumerate() {
-          
-          if followersPfUserObjectIDs.contains((UserSingelton.sharedInstance.allFriends[socIndex][userIndex].pfUser?.objectId)!) {
-            UserSingelton.sharedInstance.allFriends[socIndex][userIndex].isFollowedBy = true
-          } else {
-            UserSingelton.sharedInstance.allFriends[socIndex][userIndex].isFollowedBy = false
-          }
-          
+        self.followers.removeAll(keepCapacity: false)
+        for follow in results {
+          let followerObj = follow["from"] as! PFUser
+          let follower = User(thePfUser: followerObj)
+          self.followers.append(follower)
         }
+        var followersPfUserObjectIDs = [String]()
+        for follow in results {
+          followersPfUserObjectIDs.append((follow["from"] as! PFUser).objectId!)
+        }
+        for (socIndex, socialNetwork) in self.allFriends.enumerate() {
+          for (userIndex, _) in socialNetwork.enumerate() {
+            if followersPfUserObjectIDs.contains((self.allFriends[socIndex][userIndex].pfUser?.objectId)!) {
+              self.allFriends[socIndex][userIndex].isFollowedBy = true
+            } else {
+              self.allFriends[socIndex][userIndex].isFollowedBy = false
+            }
+          }
       }
-        
-        
+//      self.followers.removeAll(keepCapacity: false)
+//      for socialNetwork in self.allFriends {
+//        for friend in socialNetwork {
+//          if friend.isFollowedBy {
+//            self.followers.append(friend)
+//          }
+//        }
+//      }
       mainTask.setResult(nil)
       }
     }
     return mainTask.task
   }
 
-  
-  
-  
-  
-  
-// MARK: - Linked accounts Log In
 
-func loginWithFacebook(fromViewController: UIViewController) {
+// ======================================================= //
+// MARK: - Linked accounts - Log In
+// ======================================================= //
+  
+
+func loginWithFacebook() -> BFTask {
+  let mainTask = BFTaskCompletionSource()
+  
   let fbLoginManager = FBSDKLoginManager()
+  fbLoginManager.loginBehavior = FBSDKLoginBehavior.Web
   fbLoginManager.logInWithReadPermissions(["email", "public_profile", "user_friends"],
-    fromViewController: fromViewController,
+    fromViewController: UIViewController.currentViewController(),
     handler: {
       (result: FBSDKLoginManagerLoginResult!, error: NSError!) -> Void in
       if error == nil && result.token != nil {
-        // logged in
-      } else {
-        // process error
+        // logged in -> wait for profile to arrive
         
+        self.loginLoadingStateDelegate?.didStartNetworingActivity()
+        NSNotificationCenter.defaultCenter().addObserver(self, name: FBSDKProfileDidChangeNotification, object: nil) { (observer, notification) -> Void in
+          if PFUser.currentUser() == nil {
+            UserSingleton.resetSharedInstance()
+          }
+          self.didReceiveFacebookProfile().continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
+            return UserSingleton.getSharedInstance().loadFacebookFriends()
+          }).continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
+            if let error = task.error {
+              mainTask.setError(error)
+            } else {
+              self.loginLoadingStateDelegate?.didEndNetworingActivity()
+              mainTask.setResult(nil)
+            }
+            return nil
+          })
+        }
+        
+      } else if let error = error {
+        // process error
+        mainTask.setError(error)
       }
   })
-  
-}
-
-
-
-mutating func didReceiveFacebookProfile() -> BFTask {
-  
-  let mainTask = BFTaskCompletionSource()
-  if PFUser.currentUser() == nil {                      // Link FB or log in through it?
-    if FBSDKAccessToken.currentAccessToken() != nil {               // Did FB log in or log out?
-      
-      PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken()).continueWithBlock({
-        (task: BFTask!) -> AnyObject! in
-        if let user = task.result as? PFUser {
-          if user.isNew {
-            
-            let smallProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
-            let bigProfileImage = FBSDKProfile.currentProfile().imagePathForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(600, 600))
-            
-            user.username = "\(FBSDKProfile.currentProfile().firstName.lowercaseString)_\(FBSDKProfile.currentProfile().lastName.lowercaseString)"
-            user["smallProfileImage"] = "https://graph.facebook.com/\(smallProfileImage)"
-            user["bigProfileImage"] = "https://graph.facebook.com/\(bigProfileImage)"
-            user["FBID"] = FBSDKProfile.currentProfile().userID
-            user["authID"] = "FB" + FBSDKProfile.currentProfile().userID
-            user["FBAccessToken"] = FBSDKAccessToken.currentAccessToken().tokenString
-            
-    
-            PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken()).continueWithBlock({
-              (task: BFTask!) -> AnyObject! in
-              if task.error == nil {
-                // successfully linked user
-                mainTask.setResult(nil)
-              } else {
-                switch task.error.code {
-                case 202:
-                  let userID = FBSDKProfile.currentProfile().userID
-                  user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
-                  PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken())
-                  mainTask.setResult(nil)
-                default: break
-                }
-              }
-              return nil
-            })
-          }
-          mainTask.setResult(nil)
-        }
-        return nil
-      })
-    } else {
-      print("Uh oh. There was an error logging in.")
-    }
-    
-    
-  } else if FBSDKAccessToken.currentAccessToken() != nil {  // Linking or unlinking FB?
-    PFUser.currentUser()?["FBID"] = FBSDKProfile.currentProfile().userID
-    PFUser.currentUser()?["FBAccessToken"] = FBSDKAccessToken.currentAccessToken().tokenString
-    PFUser.currentUser()?.saveInBackground()
-    loadFacebookFriends().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-      return UserSingelton.sharedInstance.updateData()
-    }).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-      mainTask.setResult(nil)
-      return nil
-    })
-  }
   return mainTask.task
 }
 
 
 
+private func didReceiveFacebookProfile() -> BFTask {
+  
+  let mainTask = BFTaskCompletionSource()
+  if FBSDKAccessToken.currentAccessToken() != nil {   // Did FB log in or log out?  (FBSDKProfile.enableUpdatesOnAccessTokenChange(true) triggers for login and logout)
+    if PFUser.currentUser() == nil {                  // Link FB if current user is present or log in if nil
+      PFFacebookUtils.logInInBackgroundWithAccessToken(FBSDKAccessToken.currentAccessToken()).continueWithBlock({
+        (task: BFTask!) -> AnyObject! in
+        if let user = task.result as? PFUser {
+          if user.isNew {
+           return self.registerWithFacebook(user)
+          } else {
+            // successfully logged in
+            mainTask.setResult(nil)
+            return nil
+          }
+        }
+        return nil
+      }).continueWithBlock({ (task: BFTask) -> AnyObject? in
+        mainTask.setResult(nil)
+        return nil
+      })
+    } else {  // Linking FB profile to currently logged user
+        PFUser.currentUser()?["FBID"] = FBSDKProfile.currentProfile().userID
+        PFUser.currentUser()?["FBAccessToken"] = FBSDKAccessToken.currentAccessToken().tokenString
+        PFUser.currentUser()?.saveInBackground().continueWithBlock({ (task: BFTask) -> AnyObject? in
+          if task.error == nil {
+            // successfully linked FB profile to currently logged user
+            mainTask.setResult(nil)
+          }
+          return nil
+        })
+      }
+  }
+  return mainTask.task
+}
 
-mutating func loginWithInstagram() -> BFTask {
+  
+  
+  private func registerWithFacebook(user: PFUser) -> BFTask {
+    let mainTask = BFTaskCompletionSource()
+    let smallProfileImage = FBSDKProfile.currentProfile().imageURLForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(100, 100))
+    let bigProfileImage = FBSDKProfile.currentProfile().imageURLForPictureMode(FBSDKProfilePictureMode.Normal, size: CGSizeMake(600, 600))
+    
+    user.username = "\(FBSDKProfile.currentProfile().firstName.lowercaseString)_\(FBSDKProfile.currentProfile().lastName.lowercaseString)"
+    user["smallProfileImage"] = "https://graph.facebook.com/\(smallProfileImage)"
+    user["bigProfileImage"] = "https://graph.facebook.com/\(bigProfileImage)"
+    user["FBID"] = FBSDKProfile.currentProfile().userID
+    user["authID"] = "FB" + FBSDKProfile.currentProfile().userID
+    user["FBAccessToken"] = FBSDKAccessToken.currentAccessToken().tokenString
+    
+    PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken()).continueWithBlock({
+      (task: BFTask!) -> AnyObject! in
+      if task.error == nil {
+        // successfully linked user
+        mainTask.setResult(nil)
+      } else {
+        if task.error!.code == 202 {
+          // user with created username(lowercase(first_name)_lowercase(last_name)) already exists. Registering user with appended facebook userID.
+          let userID = FBSDKProfile.currentProfile().userID
+          user.username?.appendContentsOf(userID.substringWithRange(Range<String.Index>(start: userID.endIndex.advancedBy(-3), end: (userID.endIndex))))
+          PFFacebookUtils.linkUserInBackground(user, withAccessToken: FBSDKAccessToken.currentAccessToken()).continueWithBlock({ (task: BFTask) -> AnyObject? in
+            mainTask.setResult(nil)
+            return nil
+          })
+        }
+      }
+      return nil
+    })
+    
+    return mainTask.task
+  }
+
+
+func loginWithInstagram() -> BFTask {
   let mainTask = BFTaskCompletionSource()
   
   let instagramConsumerKey = "1c2e2066145342c3a841bdbdca8e53ae"
@@ -314,10 +349,12 @@ mutating func loginWithInstagram() -> BFTask {
     state:"INSTAGRAM",
     success: {
       credential, response, parameters in
-      
+      NSNotificationCenter.defaultCenter().addObserver(self, name: INSTAGRAM_SDK_LOGIN_WEBVIEW_DIDDISAPPEAR, object: nil, handler: { (observer, notification) -> Void in
+        self.loginLoadingStateDelegate?.didStartNetworingActivity()
+      })
       let engine = InstagramEngine.sharedEngine()
       engine.accessToken = credential.oauth_token
-      UserSingelton.sharedInstance.linkedAccountsKeychain["instagram"] = credential.oauth_token
+      self.linkedAccountsKeychain["instagram"] = credential.oauth_token
       
       engine.getSelfUserDetailsWithSuccess({
         (user: InstagramUser!) -> Void in
@@ -329,16 +366,22 @@ mutating func loginWithInstagram() -> BFTask {
           let smallPhoto = user.profilePictureURL
           let bigPhoto =   user.profilePictureURL
           
-          self.getUsernameifRegistered("INSTM\(userID)").continueWithBlock({
+          PFQuery.usernameIfRegistered("INSTM\(userID)").continueWithBlock({
             (task: BFTask!) -> AnyObject! in
             if task.error == nil, let username = task.result as? String {
-       
+              
               PFUser.logInWithUsernameInBackground(username, password: "").continueWithBlock({
                 (task: BFTask!) -> AnyObject! in
                 if task.error == nil {
-                  PFUser.currentUser()?["INSTMAccessToken"] = credential.oauth_token
-                  PFUser.currentUser()?.saveInBackground()
-                  mainTask.setResult(nil)
+                  self.pfUser["INSTMAccessToken"] = credential.oauth_token
+                  self.pfUser.saveEventually()
+                  UserSingleton.resetSharedInstance()
+                  BFTask(forCompletionOfAllTasks: [LinkedAccount.updateInstagram(), self.loadInstagramFriends()])
+                    .continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+                      self.loginLoadingStateDelegate?.didEndNetworingActivity()
+                      mainTask.setResult(nil)
+                      return nil
+                    })
                 } else {
                   // process error
                 }
@@ -359,10 +402,12 @@ mutating func loginWithInstagram() -> BFTask {
               user.signUpInBackground().continueWithBlock({
                 (task: BFTask!) -> AnyObject! in
                 if task.error == nil {
+                  UserSingleton.resetSharedInstance()
                   mainTask.setResult(nil)
                 } else {
-                  switch task.error.code {
+                  switch task.error!.code {
                   case 202:   // parse: "username already taken"
+                    UserSingleton.resetSharedInstance()
                     self.register("\(userID)", AndUser: user)
                   default: break
                   }
@@ -380,18 +425,16 @@ mutating func loginWithInstagram() -> BFTask {
           
           PFUser.currentUser()?["INSTMID"] = user.Id
           PFUser.currentUser()?["INSTMAccessToken"] = credential.oauth_token
-          PFUser.currentUser()?.saveInBackground()
-          self.loadInstagramFriends().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-            return UserSingelton.sharedInstance.updateData()
-          }).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+          PFUser.currentUser()?.saveEventually()
+          BFTask(forCompletionOfAllTasks: [LinkedAccount.updateInstagram(), self.loadInstagramFriends()])
+          .continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+            self.loginLoadingStateDelegate?.didEndNetworingActivity()
             mainTask.setResult(nil)
             return nil
           })
           
           
         }
-        
-        
         
         }, failure: { (error: NSError!, errorCode: Int) -> Void in
           
@@ -401,172 +444,95 @@ mutating func loginWithInstagram() -> BFTask {
       
   })
   
-  
-  
-  
   return mainTask.task
 }
 
-
-mutating func didReceiveNewVKToken() -> BFTask {
+  
+func loginWithVkontakte() -> BFTask {
   let mainTask = BFTaskCompletionSource()
-  if VKSdk.isLoggedIn() {
-    let vkReq = VKApi.users().get(["fields" : "photo_100, photo_200_orig"])
-    vkReq.executeWithResultBlock({
-      (response: VKResponse!) -> Void in
-      let json = JSON(response.json)
-      
-      if let
-        firstName =  json[0]["first_name"].string,
-        lastName =   json[0]["last_name"].string,
-        userID =     json[0]["id"].number,
-        smallPhoto = json[0]["photo_100"].string,
-        bigPhoto   = json[0]["photo_200_orig"].string {
-      
+  if !VKSdk.vkAppMayExists() {
+    NSNotificationCenter.defaultCenter().addObserver(self, name: VKSDK_ACCESS_AUTHORIZATION_STARTED, object: nil) { (observer, notification) -> Void in
       if PFUser.currentUser() == nil {
-        
-            self.getUsernameifRegistered("VK\(userID)").continueWithBlock({
-              (task: BFTask!) -> AnyObject! in
-              if task.error == nil, let username = task.result as? String {
-                
-                PFUser.logInWithUsernameInBackground(username, password: "").continueWithBlock({
-                  (task: BFTask!) -> AnyObject! in
-                  if task.error == nil {
-                    mainTask.setResult(nil)
-                  } else {
-                    // process error
-                  }
-                  return nil
-                })
-                
-              } else {
-                
-                let user = PFUser()
-                user.username = "\(firstName)_\(lastName)".lowercaseString
-                user.password = ""
-                user["authID"] = "VK\(userID)"
-                user["VKID"] = "\(userID)"
-                user["smallProfileImage"] = smallPhoto
-                user["bigProfileImage"] = bigPhoto
-                user["VKAccessToken"] = VKSdk.getAccessToken().accessToken
-                user.signUpInBackground().continueWithBlock({
-                  (task: BFTask!) -> AnyObject! in
-                  if task.error == nil {
-                    mainTask.setResult(nil)
-                  } else {
-                    switch task.error {
-                    case 202:   // parse: "username already taken"
-                      self.register("\(userID)", AndUser: user)
-                    default: break
-                    }
-                  }
-                  return nil
-                })
-                
-              }
-              
-              return nil
-            })
-        
-        
-        
-      } else {
-        PFUser.currentUser()?["VKID"] = "\(userID)"
-        PFUser.currentUser()?["VKAccessToken"] = VKSdk.getAccessToken().accessToken
-        PFUser.currentUser()?.saveInBackground()
-        self.loadVkontakteFriends().continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-          return UserSingelton.sharedInstance.updateData()
-        }).continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
-          mainTask.setResult(nil)
-          return nil
-        })
-        
+        UserSingleton.resetSharedInstance()
       }
-          
+      self.loginLoadingStateDelegate?.didStartNetworingActivity()
+      NSNotificationCenter.defaultCenter().addObserver(self, name: VKSDK_ACCESS_AUTHORIZATION_SUCCEEDED, object: nil) { (observer, notification) -> Void in
+        BFTask(forCompletionOfAllTasks: [LinkedAccount.updateVkontakte(), self.loadVkontakteFriends()])
+        .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
+            self.loginLoadingStateDelegate?.didEndNetworingActivity()
+            mainTask.setResult(nil)
+            return nil
+          })
       }
-      
-      
-      },  errorBlock: {
-        (error: NSError!) -> Void in
-        
-    })
+    }
+  } else {
+    NSNotificationCenter.defaultCenter().addObserver(self, name: VKSDK_ACCESS_AUTHORIZATION_SUCCEEDED, object: nil) { (observer, notification) -> Void in
+      if PFUser.currentUser() == nil {
+        UserSingleton.resetSharedInstance()
+      }
+      BFTask(forCompletionOfAllTasks: [LinkedAccount.updateVkontakte(), self.loadVkontakteFriends()])
+      .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
+
+        self.loginLoadingStateDelegate?.didEndNetworingActivity()
+        mainTask.setResult(nil)
+        return nil
+      })
+    }
   }
+  VKSdk.authorize(VKSDK_AUTH_PERMISSIONS)
   return mainTask.task
-}
+  }
 
 
-
-
-
-// MARK: - Linked accounts Log Out
-  
+// ======================================================= //
+// MARK: - Linked accounts - Log Out
+// ======================================================= //
 
   
-  
-  func logoutFromFacebook() -> BFTask {
-    let mainTask = BFTaskCompletionSource()
+  func logoutFromFacebook() {
     FBSDKLoginManager().logOut()
-    UserSingelton.sharedInstance.sortAllFriends()
-    PFUser.currentUser()?["FBID"] = ""
-    PFUser.currentUser()?["FBAccessToken"] = ""
-    PFUser.currentUser()?.saveInBackground()
-    UserSingelton.sharedInstance.updateData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      mainTask.setResult(nil)
-      return nil
-    }
-    
-    return mainTask.task
+    pfUser["FBID"] = NSNull()
+    pfUser["FBAccessToken"] = NSNull()
+    pfUser.saveEventually()
+    facebookFriends.removeAll(keepCapacity: false)
+    self.updateFollowFriendsCells()
   }
   
-  func logoutFromVkontakte() -> BFTask {
-    let mainTask = BFTaskCompletionSource()
+  func logoutFromVkontakte() {
     VKSdk.forceLogout()
-    UserSingelton.sharedInstance.sortAllFriends()
-    PFUser.currentUser()?["VKID"] = ""
-    PFUser.currentUser()?["VKAccessToken"] = ""
-    PFUser.currentUser()?.saveEventually()
-    UserSingelton.sharedInstance.updateData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      mainTask.setResult(nil)
-      return nil
-    }
-    
-    return mainTask.task
+    pfUser["VKID"] = NSNull()
+    pfUser["VKAccessToken"] = NSNull()
+    pfUser.saveEventually()
+    vkontakteFriends.removeAll(keepCapacity: false)
+    LinkedAccount.updateVkontakte()
+    updateFollowFriendsCells()
   }
   
-  func logoutFromInstagram() -> BFTask {
-    let mainTask = BFTaskCompletionSource()
+  func logoutFromInstagram() {
     InstagramEngine.sharedEngine().logout()
-    UserSingelton.sharedInstance.linkedAccountsKeychain["instagram"] = nil
-    PFUser.currentUser()?["INSTMID"] = ""
-    PFUser.currentUser()?["INSTMAccessToken"] = ""
-    PFUser.currentUser()?.saveInBackground()
-    UserSingelton.sharedInstance.sortAllFriends()
-    UserSingelton.sharedInstance.updateData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      mainTask.setResult(nil)
-      return nil
-    }
-    
-    return mainTask.task
+    self.linkedAccountsKeychain["instagram"] = nil
+    pfUser["INSTMID"] = NSNull()
+    pfUser["INSTMAccessToken"] = NSNull()
+    pfUser.saveEventually()
+    instagramFriends.removeAll(keepCapacity: false)
+    LinkedAccount.updateInstagram()
+    updateFollowFriendsCells()
   }
   
   
-// MARK: - Loading linked accounts friends`
+// ======================================================= //
+// MARK: - Loading linked accounts` friends
+// ======================================================= //
   
-  
-  
-  
-  
-  
-  mutating func loadInstagramFriends() -> BFTask {
+  func loadInstagramFriends() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     let instmEngine = InstagramEngine.sharedEngine()
-    let instmKeychain = UserSingelton.sharedInstance.linkedAccountsKeychain
+    let instmKeychain = self.linkedAccountsKeychain
     if instmKeychain["instagram"] != nil {
     instmEngine.accessToken = instmKeychain["instagram"]
     instmEngine.getSelfUserDetailsWithSuccess({ (currentUser: InstagramUser!) -> Void in
       instmEngine.getUsersFollowedByUser(currentUser.Id, withSuccess: {(
-        media: [AnyObject]!, pageInfo:InstagramPaginationInfo!) -> Void in
-        if let users = media as? [InstagramUser] {
+        users: [InstagramUser], pageInfo:InstagramPaginationInfo) -> Void in
           var userIDs = [String]()
           for user in users {
             userIDs.append(user.Id)
@@ -576,17 +542,14 @@ mutating func didReceiveNewVKToken() -> BFTask {
           query?.whereKey("INSTMID", notEqualTo: currentUser.Id)
           query?.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
             let foundUsers = results as! [PFUser]
-            UserSingelton.sharedInstance.instagramFriends.removeAll(keepCapacity: false)
+            self.instagramFriends.removeAll(keepCapacity: false)
             for user in foundUsers {
-              let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String, thePfUser: user)
-              UserSingelton.sharedInstance.instagramFriends.append(follower)
+              let follower = User(thePfUser: user)
+              self.instagramFriends.append(follower)
             }
-            if UserSingelton.sharedInstance.instagramFriends.count > 0 {
-              UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.instagramFriends)
-            }
+            self.updateFollowFriendsCells()
             mainTask.setResult(nil)
           })
-        }
         }, failure: { (error: NSError!, errorCode: Int) -> Void in
       })
       }) { (error: NSError!, errorCode: Int) -> Void in
@@ -599,14 +562,10 @@ mutating func didReceiveNewVKToken() -> BFTask {
   
   
   
-  
-  mutating func loadVkontakteFriends() -> BFTask {
+  func loadVkontakteFriends() -> BFTask {
     let mainTask = BFTaskCompletionSource()
-    
-    if VKSdk.wakeUpSession() {
-  
+    if VKSdk.isLoggedIn() {
       let vkReq = VKApi.requestWithMethod("friends.getAppUsers", andParameters: nil, andHttpMethod: "GET")
-        
       self.getVKUserID().continueWithBlock({ (task: BFTask!) -> AnyObject! in
         if task.error == nil  {
           let vkUserID = task.result as! String
@@ -622,35 +581,33 @@ mutating func didReceiveNewVKToken() -> BFTask {
             query?.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
               if error == nil {
                 let foundUsers = results as! [PFUser]
-                UserSingelton.sharedInstance.vkontakteFriends.removeAll(keepCapacity: false)
+                self.vkontakteFriends.removeAll(keepCapacity: false)
                 for user in foundUsers {
-                  let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String, thePfUser: user)
-                  UserSingelton.sharedInstance.vkontakteFriends.append(follower)
+                  let follower = User(thePfUser: user)
+                  self.vkontakteFriends.append(follower)
                 }
-                if UserSingelton.sharedInstance.vkontakteFriends.count > 0 {
-                  UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.vkontakteFriends)
-                }
+                
+                self.updateFollowFriendsCells()
                 mainTask.setResult(nil)
               }
             })
               }, errorBlock: { (error: NSError!) -> Void in
             })
           }
-          return nil
+        return nil
         })
     } else {
       mainTask.setResult(nil)
     }
-     return mainTask.task
+      return mainTask.task
   }
-  
-  
-  mutating func loadFacebookFriends() -> BFTask {
+
+  func loadFacebookFriends() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     
     if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() != nil {
       
-      let graphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: ["fields" : "friends"], HTTPMethod: "GET")
+      let graphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: nil, HTTPMethod: "GET")
       
       graphRequest.startWithCompletionHandler({
         (connection:FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
@@ -668,13 +625,10 @@ mutating func didReceiveNewVKToken() -> BFTask {
       
           query?.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
             if error == nil, let foundUsers = results as? [PFUser] {
-              UserSingelton.sharedInstance.facebookFriends.removeAll(keepCapacity: false)
+              self.facebookFriends.removeAll(keepCapacity: false)
               for user in foundUsers {
-                let follower = User(theUsername: user.username!, theProfileImageURL: user["smallProfileImage"] as! String, thePfUser: user)
-                UserSingelton.sharedInstance.facebookFriends.append(follower)
-              }
-              if UserSingelton.sharedInstance.facebookFriends.count > 0 {
-                UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.facebookFriends)
+                let follower = User(thePfUser: user)
+                self.facebookFriends.append(follower)
               }
               mainTask.setResult(nil)
             }
@@ -692,9 +646,9 @@ mutating func didReceiveNewVKToken() -> BFTask {
   }
   
   
+// ======================================================= //
 // MARK: - VK SDK
-
-
+// ======================================================= //
 
 func getVKUserID() -> BFTask {
   let task = BFTaskCompletionSource()
@@ -711,8 +665,6 @@ func getVKUserID() -> BFTask {
   return task.task
 }
 
-
-
 func getVKUsername() -> BFTask {
   let task = BFTaskCompletionSource()
   let vkReq = VKApi.users().get()
@@ -722,79 +674,31 @@ func getVKUsername() -> BFTask {
       let username: String = firstName + " " + lastName
       task.setResult(username)
     } else {
-      task.setResult(nil)
+      task.setResult("")
     }
-    
     }) { (error: NSError!) -> Void in
-      task.setResult(nil)
+      task.setError(error)
   }
   return task.task
 }
-
   
-  
+// ======================================================= //
 // MARK: - Instagram SDK
-  
+// ======================================================= //
   
   func instagramGetSelfUserDetailsWithSuccess() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     InstagramEngine.sharedEngine().getSelfUserDetailsWithSuccess({ (currentUser: InstagramUser!) -> Void in
       mainTask.setResult(currentUser)
       }) { (error: NSError!, errorCode: Int) -> Void in
-        mainTask.setResult(error)
+        mainTask.setError(error)
     }
     return mainTask.task
   }
   
-  
-  
-  
-  
+// ======================================================= //
 // MARK: - Convenience
-  
-  
-  
-  func updateFollowers() {
-    UserSingelton.sharedInstance.followers.removeAll(keepCapacity: false)
-    for socialNetwork in UserSingelton.sharedInstance.allFriends {
-      for friend in socialNetwork {
-        if friend.isFollowedBy {
-          UserSingelton.sharedInstance.followers.append(friend)
-        }
-      }
-    }
-  }
-  
-  
-  
-  func updateFollowing() {
-    UserSingelton.sharedInstance.following.removeAll(keepCapacity: false)
-    for socialNetwork in UserSingelton.sharedInstance.allFriends {
-      for friend in socialNetwork {
-        if friend.isFollowed {
-          UserSingelton.sharedInstance.following.append(friend)
-        }
-      }
-    }
-  }
-  
-  
-  func getUsernameifRegistered(ID: String) -> BFTask {
-    let task = BFTaskCompletionSource()
-    let query = PFUser.query()
-    query?.whereKey("authID", equalTo: ID)
-    query?.getFirstObjectInBackgroundWithBlock({
-      (foundUser: PFObject?, error: NSError?) -> Void in
-      if error == nil, let user = foundUser as? PFUser {
-        task.setResult(user.username!)
-      }
-      else {
-        task.setResult(nil)
-      }
-    })
-    return task.task
-  }
-  
+// ======================================================= //
   
   func register(WithUserID: String, AndUser: PFUser) -> BFTask {
     let mainTask = BFTaskCompletionSource()
@@ -809,125 +713,89 @@ func getVKUsername() -> BFTask {
     return mainTask.task
   }
   
-  
-  mutating func loadFollowFriendsCells() {
-    
-    UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
-    
-    if FBSDKAccessToken.currentAccessToken() != nil {
-      if UserSingelton.sharedInstance.facebookFriends.count != 0 {
-        let fbFriends = FollowFriends(
-          theLocalIconName: "facebook",
-          theNumberOfFriends: UserSingelton.sharedInstance.facebookFriends.count,
-          theServiceName: "Facebook"
-        )
-        UserSingelton.sharedInstance.followFriendsData.append(fbFriends)
+  func checkLinkedAccountsFollowingFriends() {
+    var followersPfUserObjectIDs = [String]()
+    for follow in following {
+      followersPfUserObjectIDs.append(follow.pfUser.objectId!)
+    }
+    for (socIndex, socialNetwork) in allFriends.enumerate() {
+      for (userIndex, _) in socialNetwork.enumerate() {
+        if followersPfUserObjectIDs.contains(allFriends[socIndex][userIndex].pfUser.objectId!) {
+          allFriends[socIndex][userIndex].isFollowed = true
+        } else {
+          allFriends[socIndex][userIndex].isFollowed = false
+        }
       }
     }
-    
-    
-    if InstagramEngine.sharedEngine().accessToken != nil {
-      if UserSingelton.sharedInstance.instagramFriends.count != 0 {
-        let instagramFriends = FollowFriends(
-          theLocalIconName: "instagram",
-          theNumberOfFriends: UserSingelton.sharedInstance.instagramFriends.count,
-          theServiceName: "Instagram"
-        )
-        UserSingelton.sharedInstance.followFriendsData.append(instagramFriends)
-      }
-    }
-    
-    
-    if VKSdk.isLoggedIn() {
-      if UserSingelton.sharedInstance.vkontakteFriends.count != 0 {
-        let vkFriends = FollowFriends(
-          theLocalIconName: "vk",
-          theNumberOfFriends: UserSingelton.sharedInstance.vkontakteFriends.count,
-          theServiceName: "VKontakte"
-        )
-        UserSingelton.sharedInstance.followFriendsData.append(vkFriends)
-      }
-    }
-    
-    
     
   }
   
+  func updateFollowFriendsCells() {
+    self.followFriendsData.removeAll(keepCapacity: false)
+    self.checkLinkedAccountsFollowingFriends()
+    if self.facebookFriends.count != 0 {
+      let fbFriends = FollowFriends(
+        theLocalIconName: "facebook",
+        theServiceName: "Facebook",
+        theNumberOfFriends: self.facebookFriends.count
+      )
+      self.followFriendsData.append(fbFriends)
+    }
+    if self.instagramFriends.count != 0 {
+      let instagramFriends = FollowFriends(
+        theLocalIconName: "instagram",
+        theServiceName: "Instagram",
+        theNumberOfFriends: self.instagramFriends.count
+      )
+      self.followFriendsData.append(instagramFriends)
+    }
+    if self.vkontakteFriends.count != 0 {
+      let vkFriends = FollowFriends(
+        theLocalIconName: "vk",
+        theServiceName: "VKontakte",
+        theNumberOfFriends: self.vkontakteFriends.count
+      )
+      self.followFriendsData.append(vkFriends)
+    }
+    followFriendsDelegate?.didUpdateFollowFriendsData()
+  }
   
-  mutating func loadFollowFriendsData() -> BFTask {
+  func loadLinkedAccountsFriends() -> BFTask {
     let mainTask = BFTaskCompletionSource()
-    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: false)
-    let tasks = BFTask(forCompletionOfAllTasks: [loadVkontakteFriends(), loadFacebookFriends(), loadInstagramFriends()])
-    tasks.continueWithBlock { (task: BFTask!) -> AnyObject! in
-      
-      UserSingelton.sharedInstance.followFriendsData.removeAll(keepCapacity: false)
-      return UserSingelton.sharedInstance.updateData()
-      }.continueWithBlock({ (task: BFTask!) -> AnyObject! in
-        mainTask.setResult(nil)
-        NSNotificationCenter.defaultCenter().postNotificationName("didFinishLoadingLinkedAccountsData", object: nil)
-        return nil
-      })
-    
-    return mainTask.task
+    return BFTask(forCompletionOfAllTasks: [loadVkontakteFriends(), loadFacebookFriends(), loadInstagramFriends()])
+    .continueWithBlock { (task: BFTask!) -> AnyObject! in
+      NSNotificationCenter.defaultCenter().postNotificationName("didFinishLoadingLinkedAccountsData", object: nil)
+      mainTask.setResult(nil)
+      return nil
+    }
   }
   
-  
-  func sortAllFriends() {
- 
-    UserSingelton.sharedInstance.allFriends.removeAll(keepCapacity: true)
-    
-    if FBSDKAccessToken.currentAccessToken() != nil {
-      if UserSingelton.sharedInstance.facebookFriends.count > 0 {
-        UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.facebookFriends)
-      }
-    }
-    
-    if InstagramEngine.sharedEngine().accessToken != nil {
-      if UserSingelton.sharedInstance.instagramFriends.count > 0 {
-        UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.instagramFriends)
-      }
-    }
-    
-    
-    if VKSdk.isLoggedIn() {
-      if UserSingelton.sharedInstance.vkontakteFriends.count > 0 {
-        UserSingelton.sharedInstance.allFriends.append(UserSingelton.sharedInstance.vkontakteFriends)
-      }
-    }
-
- 
-  }
-  
-  
-  
-  
-   func updateData() -> BFTask {
+  override func updateAllProfileData() -> BFTask {
     let mainTask = BFTaskCompletionSource()
-    UserSingelton.sharedInstance.sortAllFriends()
-    UserSingelton.sharedInstance.loadFollowFriendsCells()
-    return BFTask(
-      forCompletionOfAllTasks: [
-        UserSingelton.sharedInstance.checkCurrentUserFollowingUsers(),
-        UserSingelton.sharedInstance.checkCurrentUsersFollowers(),
-        FollowFriends.sharedInstance.loadLinkedAccountsData(),
-        Post.sharedInstance.startLoadingAllUserPosts()
-      ]
-      ).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-        UserSingelton.sharedInstance.updateFollowers()
-        UserSingelton.sharedInstance.updateFollowing()
-        UserSingelton.sharedInstance.hasLoadedStartupData = true
-        NSNotificationCenter.defaultCenter().postNotificationName("didFinishLoadingStartupData", object: nil)
-        mainTask.setResult(nil)
-        return nil
+    return BFTask(forCompletionOfAllTasks: [
+              loadLinkedAccountsFriends(),
+              loadFollowingUsers(),
+              loadFollowers(),
+              loadUserPosts(),
+              loadWatchedPosts()
+            ])
+    .continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+      self.checkLinkedAccountsFollowingFriends()
+      self.updateFollowFriendsCells()
+      NSNotificationCenter.defaultCenter().postNotificationName("didFinishLoadingStartupData", object: nil)
+      mainTask.setResult(nil)
+      return nil
     }
-  }
-  
-  
-  
-
-  
-  
+  }  
 }
+
+
+
+
+
+
+
+
 
 
 

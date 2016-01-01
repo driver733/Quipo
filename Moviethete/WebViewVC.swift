@@ -5,6 +5,8 @@ import InstagramKit
 import OAuthSwift
 import KeychainAccess
 
+let INSTAGRAM_SDK_LOGIN_WEBVIEW_DIDDISAPPEAR = "INSTAGRAM_SDK_LOGIN_WEBVIEW_DIDDISAPPEAR"
+
 class WebVC: OAuthWebViewController, UIWebViewDelegate {
     
     let kNavBarHeight = CGFloat(64)
@@ -80,7 +82,7 @@ class WebVC: OAuthWebViewController, UIWebViewDelegate {
   
   override func viewDidDisappear(animated: Bool) {
     if !isLoginCancelled {
-      NSNotificationCenter.defaultCenter().postNotificationName("instagramLoginWebViewWillDisappear", object: nil)
+      NSNotificationCenter.defaultCenter().postNotificationName(INSTAGRAM_SDK_LOGIN_WEBVIEW_DIDDISAPPEAR, object: nil)
       isLoginCancelled = false
     }
   }

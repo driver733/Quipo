@@ -1,9 +1,9 @@
 //
 //  SearchResultCell.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 8/16/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 8/16/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
@@ -28,7 +28,9 @@ class SearchResultCell: UITableViewCell {
     }
   
   override func prepareForReuse() {
+    super.prepareForReuse()
     posterImage.image = nil
+    posterImage.sd_cancelCurrentImageLoad()
   }
     
 }

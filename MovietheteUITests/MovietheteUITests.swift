@@ -1,14 +1,14 @@
 //
-//  MovietheteUITests.swift
-//  MovietheteUITests
+//  QuipoUITests.swift
+//  QuipoUITests
 //
-//  Created by Mike on 8/6/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 8/6/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import XCTest
 
-class MovietheteUITests: XCTestCase {
+class QuipoUITests: XCTestCase {
         
     override func setUp() {
         super.setUp()
@@ -38,12 +38,12 @@ class MovietheteUITests: XCTestCase {
       app.secureTextFields["Facebook Password"].typeText("18Sasobu\r")
       app.buttons["OK"].tap()
       app.tabBars.childrenMatchingType(.Button).matchingIdentifier("Item").elementBoundByIndex(0).tap()
-      app.navigationBars["Moviethete.ProfileVC"].buttons["Settings"].tap()
+      app.navigationBars["Quipo.ProfileVC"].buttons["Settings"].tap()
       
       let tablesQuery = app.tables
       tablesQuery.staticTexts["2 facebook friends"].tap()
       
-      let backButton = app.navigationBars["Moviethete.DetailedSettingsVC"].childrenMatchingType(.Button).matchingIdentifier("Back").elementBoundByIndex(0)
+      let backButton = app.navigationBars["Quipo.DetailedSettingsVC"].childrenMatchingType(.Button).matchingIdentifier("Back").elementBoundByIndex(0)
       backButton.tap()
   //    app.childrenMatchingType(.Window).elementBoundByIndex(0).childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Other).element.childrenMatchingType(.Table).element.swipeUp()
       tablesQuery.staticTexts["Linked Accounts"].tap()

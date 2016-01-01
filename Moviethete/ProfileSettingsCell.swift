@@ -1,9 +1,9 @@
 //
 //  ProfileSettingsCell.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 8/1/15.
-//  Copyright (c) 2015 Admin. All rights reserved.
+//  Created by Mikhail Yakushin on 8/1/15.
+//  Copyright (c) 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit

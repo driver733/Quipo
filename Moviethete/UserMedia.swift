@@ -1,19 +1,16 @@
 //
 //  UserMedia.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 11/9/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 11/9/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import Foundation
 import Parse
 
 
-struct UserMedia {
-  
-  static var sharedInstance = UserMedia()
-  
+class UserMedia {
 
   var isWatched = false
   var isStarred = false
@@ -46,8 +43,8 @@ struct UserMedia {
     obj["by"] = PFUser.currentUser()!
     obj.saveInBackgroundWithBlock { (result: Bool, error: NSError?) -> Void in
       if result && error == nil {
-        UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject = obj
-        UserReview.sharedInstance.userMediaInfoForSelectedMovie.isWatched = AsWatched
+        self.pfObject = obj
+        self.isWatched = AsWatched
         mainTask.setResult(nil)
       }
     }
@@ -68,8 +65,8 @@ struct UserMedia {
     obj["by"] = PFUser.currentUser()!
     obj.saveInBackgroundWithBlock { (result: Bool, error: NSError?) -> Void in
       if result && error == nil {
-        UserReview.sharedInstance.userMediaInfoForSelectedMovie.pfObject = obj
-        UserReview.sharedInstance.userMediaInfoForSelectedMovie.isStarred = AsStarred
+        self.pfObject = obj
+        self.isStarred = AsStarred
         mainTask.setResult(nil)
       }
     }
@@ -77,12 +74,18 @@ struct UserMedia {
   }
   
   
-  
-  func startLoadingUserMediaInfoForMovie(withTrackID: Int, andUser: PFUser) -> BFTask {
+  /**
+   Asyncronously initilizes UserMedia instance based on the provided trackID
+   
+   - parameter trackID: iTunes trackID of the movie
+   
+   - returns: BFTask with the resulting UserMedia instance set as the result of the task
+   */
+  class func userMediaInfoForMovieWithTrackID(trackID: Int) -> BFTask {
     let mainTask = BFTaskCompletionSource()
     let query = PFQuery(className: "UserMedia")
-    query.whereKey("by", equalTo: PFUser.currentUser()!)
-    query.whereKey("trackID", equalTo: withTrackID)
+    query.whereKey("by", equalTo: UserSingleton.getSharedInstance().pfUser)
+    query.whereKey("trackID", equalTo: trackID)
     query.limit = 1
     query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
       if let results = results where error == nil {
@@ -96,15 +99,14 @@ struct UserMedia {
             IsStarred = starred.boolValue
           }
           let userMedia = UserMedia(theIsWatched: IsWatched, theIsStarred: IsStarred, thePfObject: results[0])
-          UserReview.sharedInstance.userMediaInfoForSelectedMovie = userMedia
-          mainTask.setResult(nil)
+          mainTask.setResult(userMedia)
         } else {
-          UserReview.sharedInstance.userMediaInfoForSelectedMovie = UserMedia(theIsWatched: false, theIsStarred: false)
-          mainTask.setResult(nil)
+          let userMedia = UserMedia(theIsWatched: false, theIsStarred: false)
+          mainTask.setResult(userMedia)
         }
       } else {
-        UserReview.sharedInstance.userMediaInfoForSelectedMovie = UserMedia(theIsWatched: false, theIsStarred: false)
-        mainTask.setResult(nil)
+        let userMedia = UserMedia(theIsWatched: false, theIsStarred: false)
+        mainTask.setResult(userMedia)
       }
     }
     return mainTask.task

@@ -1,26 +1,24 @@
 //
 //  UserReview.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 9/4/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 9/4/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import Foundation
 import Parse
 
 
-public struct UserReview {
+public class UserReview {
   
   static var sharedInstance = UserReview()
   
-  
-  var pfObject: PFObject?
-  
-  var movieReviewsForSelectedMovie = [UserReview]()
-  var commentsForSelectedReview: [Comment]!
-  var userMediaInfoForSelectedMovie: UserMedia!
-  
+  var pfObject: PFObject!
+//  
+//  var movieReviewsForSelectedMovie = [UserReview]()
+//  var commentsForSelectedReview: [Comment]!
+//  var userMediaInfoForSelectedMovie: UserMedia!
   
   
 //  lazy var avgMovieRatingForSelectedMovie: Int! = {
@@ -65,8 +63,6 @@ public struct UserReview {
   
   
   
-
-  
   func uploadReview(post: Post, rating: Int, reviewTitle: String, review: String) -> BFTask {
     let mainTask = BFTaskCompletionSource()
     
@@ -83,7 +79,7 @@ public struct UserReview {
         feedRelation?.addObject(parsePost)
         return PFUser.currentUser()?.saveInBackground()
       } else {
-        mainTask.setError(task.error)
+        mainTask.setError(task.error!)
         return nil
       }
     }.continueWithBlock { (task: BFTask!) -> AnyObject! in
@@ -97,7 +93,7 @@ public struct UserReview {
         })
         return nil
       } else {
-        mainTask.setError(task.error)
+        mainTask.setError(task.error!)
         return nil
       }
   }
@@ -108,6 +104,28 @@ public struct UserReview {
   
   
   
+  func loadComments() -> BFTask {
+    let mainTask = BFTaskCompletionSource()
+    let commentsQuery = self.pfObject.relationForKey("comments").query()
+    commentsQuery.includeKey("createdBy")
+    commentsQuery.addAscendingOrder("createdAt")
+    commentsQuery.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
+      if let results = results where error == nil {
+        var comments = [Comment]()
+        for commentObj in results {
+          let commentAuthor = commentObj["createdBy"] as! PFUser
+          let user = User(thePfUser: commentAuthor)
+          let createdAt = commentObj.createdAt
+          let timeSincePosted = Post.sharedInstance.timeSincePostedfromDate(createdAt!)
+          let text = commentObj["text"] as! String
+          let comment = Comment(theCreatedBy: user, theTimeSincePosted: timeSincePosted, theText: text, thePfObject: commentObj)
+          comments.append(comment)
+        }
+        self.comments = comments
+      }
+    })
+    return mainTask.task
+  }
 
   
   

@@ -1,9 +1,9 @@
 //
 //  AddMovieReviewVC.swift
-//  Moviethete
+//  Quipo
 //
-//  Created by Mike on 9/3/15.
-//  Copyright © 2015 BIBORAM. All rights reserved.
+//  Created by Mikhail Yakushin on 9/3/15.
+//  Copyright © 2015 Mikhail Yakushin. All rights reserved.
 //
 
 import UIKit
