@@ -22,10 +22,6 @@ import Parse
 import ParseFacebookUtilsV4
 import SDWebImage
 
-
-
-
-
 class DetailedSettingsVC: UIViewController {
   
   var shouldUpdateLinkedAccounts = false
@@ -54,36 +50,31 @@ class DetailedSettingsVC: UIViewController {
   }
   
   override func viewWillDisappear(animated: Bool) {
-    // second if => "self" is being shown because of a "back" button.
     if shouldUpdateLinkedAccounts {
       UserSingleton.getSharedInstance().updateUserSubscriptions(
                                   UserSingleton.getSharedInstance().followedUsers,
         unfollowedUsersObjectIDs: UserSingleton.getSharedInstance().unfollowedUsers
         )
         .continueWithBlock({ (task: BFTask!) -> AnyObject! in
-          
           self.shouldUpdateLinkedAccounts = false
           return nil
         })
     }
-    
   }
-  
   
   func checkButtonTapped(sender: UIButton) -> NSIndexPath {
     let buttonPosition = sender.convertPoint(CGPointZero, toView: self.tableView)
     let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
-    if indexPath != nil {
-      return indexPath!
+    if let indexPath = indexPath {
+      return indexPath
     }
     return NSIndexPath()
   }
   
-  
   func didTapFollowButton(sender: UIButton) {
-      let indexPath = checkButtonTapped(sender)
-      let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row].pfUser!
-      let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
+    let indexPath = checkButtonTapped(sender)
+    let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row].pfUser!
+    let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
     if sender.titleLabel?.text == "+ follow" {
       UserSingleton.getSharedInstance().followedUsers.append(user.objectId!)
       cell.followButton.setTitle("following", forState: .Normal)
@@ -101,21 +92,12 @@ class DetailedSettingsVC: UIViewController {
   
   }
 
-  
-  
-
-
-
 // MARK: - UITableViewDataSource
 extension DetailedSettingsVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    
     let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
-   
     let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row]
-    
-    
     cell.userName.text = user.username
     cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
     if user.isFollowed {
@@ -133,38 +115,25 @@ extension DetailedSettingsVC: UITableViewDataSource {
           }
       }
     )
-      
-      return cell
-    
+    return cell
   }
-  
-  
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
       return UserSingleton.getSharedInstance().allFriends[cellIndexPath.row].count
   }
   
-  
-  
 }
-
-
-
 
 
 // MARK: - UITableViewDelegate
 extension DetailedSettingsVC: UITableViewDelegate {
   
-  
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    
     switch indexPath.row {
         default: break
     }
-    
     tableView.deselectRowAtIndexPath(indexPath, animated: false)
   }
-  
   
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if cell.isKindOfClass(ProfileFollowerCell) {

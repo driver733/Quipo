@@ -28,7 +28,7 @@ class User {
   var profileImageURL: String!
   var pfUser: PFUser!
   var isFollowed = false
-  var isFollowedBy = false
+//  var isFollowedBy = false
   
   var followers = [User]()
   var following = [User]()
@@ -50,7 +50,7 @@ class User {
   
   func loadFeedPosts() -> BFTask {
     let mainTask = BFTaskCompletionSource()
-    Post.sharedInstance.loadPosts(pfUser, reqType: postsType.feed).continueWithBlock { (task: BFTask!) -> AnyObject! in
+    Post.sharedInstance.loadPosts(pfUser, reqType: postsType.feed).continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
       self.feedPosts = task.result! as! [Post]
       mainTask.setResult(nil)
       return nil
@@ -119,20 +119,41 @@ class User {
     return mainTask.task
   }
   
-  
-  func checkIfFollowedUsersFollowBack() {
+  func checkIfFollowersAreFollowed() {
     var followersPfUserObjectIDs = [String]()
-    for follow in following {
-      followersPfUserObjectIDs.append(follow.pfUser.objectId!)
+    for follower in followers {
+      followersPfUserObjectIDs.append(follower.pfUser.objectId!)
     }
-    for follower in self.followers {
-      if followersPfUserObjectIDs.contains((follower.pfUser?.objectId)!) {
-        follower.isFollowedBy = true
-      } else {
-        follower.isFollowedBy = false
+    
+    var followingPfUserObjectIDs = [String]()
+    for follower in following {
+      followingPfUserObjectIDs.append(follower.pfUser.objectId!)
+    }
+    
+    for follower in followers {
+      for followingObjID in followingPfUserObjectIDs {
+        if followersPfUserObjectIDs.contains(followingObjID) {
+          follower.isFollowed = true
+        }
       }
     }
+    
   }
+  
+  
+//  func checkIfFollowedUsersFollowBack() {
+//    var followersPfUserObjectIDs = [String]()
+//    for follow in following {
+//      followersPfUserObjectIDs.append(follow.pfUser.objectId!)
+//    }
+//    for follower in self.followers {
+//      if followersPfUserObjectIDs.contains((follower.pfUser?.objectId)!) {
+//        follower.isFollowedBy = true
+//      } else {
+//        follower.isFollowedBy = false
+//      }
+//    }
+//  }
 
   // ======================================================= //
   // MARK: - Profile
@@ -149,7 +170,10 @@ class User {
         loadWatchedPosts()
       ]
       ).continueWithBlock { (task: BFTask!) -> AnyObject! in
-        self.checkIfFollowedUsersFollowBack()
+   //    self.checkIfFollowersAreFollowed()
+        
+        
+   //     self.checkIfFollowedUsersFollowBack()
         mainTask.setResult(nil)
         return nil
     }

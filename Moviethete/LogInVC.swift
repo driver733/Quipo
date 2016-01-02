@@ -183,20 +183,20 @@ class LogInVC: UIViewController {
         return task
         }).continueWithBlock({ (task: BFTask!) -> AnyObject! in
           if task.error == nil {
-            
             PFUser.logInWithUsernameInBackground(
               username,
               password: password,
               block: {
                 (user: PFUser?, error: NSError?) -> Void in
-                if user != nil {
+                if user != nil && error == nil {
+                  UserSingleton.resetSharedInstance()
                   UserSingleton.getSharedInstance().checkUserLinkedAccounts()
                   if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() == nil {
                     NSNotificationCenter.defaultCenter().addObserver(self, name: FBSDKProfileDidChangeNotification, object: nil, handler: { (observer, notification) -> Void in
                       BFTask(forCompletionOfAllTasks: [LinkedAccount.updateAll(), UserSingleton.getSharedInstance().loadLinkedAccountsFriends()])
                         .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
-                        self.pushMainVC()
-                        return nil
+                         self.pushMainVC()
+                          return nil
                       })
                     })
                   } else {
@@ -283,17 +283,23 @@ class LogInVC: UIViewController {
   }
   
   func pushMainVC() {
+    Async.main {
     let mainTabBarVC = self.storyboard!.instantiateViewControllerWithIdentifier("main") as! UITabBarController
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    mainTabBarVC.view.layoutIfNeeded()
+  //  mainTabBarVC.view.layoutIfNeeded()
     UIView.transitionFromView((appDelegate.window?.rootViewController?.view)!,
       toView: mainTabBarVC.view,
       duration: 0.5,
       options: UIViewAnimationOptions.TransitionCrossDissolve,
-      completion: { (_) -> Void in
-        appDelegate.window?.rootViewController? = mainTabBarVC
+      completion: { (complete: Bool) -> Void in
+        if complete {
+          NSNotificationCenter.defaultCenter().addObserver(self, name: "feedViewDidAppear", object: nil, handler: { (observer, notification) -> Void in
+            appDelegate.window?.rootViewController? = mainTabBarVC
+          })
+        }
       })
     }
+  }
   }
 
 // MARK: - UITextFieldDelegate

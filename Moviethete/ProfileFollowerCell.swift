@@ -10,7 +10,6 @@ import UIKit
 
 class ProfileFollowerCell: UITableViewCell {
 
-
   @IBOutlet weak var followButton: UIButton!
   @IBOutlet weak var userName: UILabel!
   @IBOutlet weak var profileImage: UIImageView!
@@ -27,4 +26,8 @@ class ProfileFollowerCell: UITableViewCell {
       // Configure the view for the selected state
   }
 
+  override func prepareForReuse() {
+    followButton.setTitle("+ follow", forState: .Normal)
+    followButton.setTitleColor(.blueColor(), forState: .Normal)
+  }
 }

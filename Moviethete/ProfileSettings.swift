@@ -99,14 +99,17 @@ class ProfileSettings: UIViewController {
   
   func logOut() {
     
-    PFUser.logOutInBackground()              // causes freeze sometimes ONLY IN SIMULATOR - WORKS FINE ON 8.4 DEVICE
+    PFUser.logOutInBackground().continueWithSuccessBlock { (task: BFTask) -> AnyObject? in         // causes freeze sometimes ONLY IN SIMULATOR - WORKS FINE ON 8.4 DEVICE
+      UserSingleton.getSharedInstance()
+      return nil
+    }
     InstagramEngine.sharedEngine().logout()  // might cause freeze
     VKSdk.forceLogout()
     FBSDKLoginManager().logOut()
     Twitter.sharedInstance().logOut()
     
 //    UserSingleton.getSharedInstance().linkedAccountsKeychain["instagram"] = nil
-    UserSingleton.getSharedInstance()
+    
     
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     let loginVC = (appDelegate.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("login"))!
@@ -126,8 +129,6 @@ class ProfileSettings: UIViewController {
 
 // MARK: - UITableViewDelegate
 extension ProfileSettings: UITableViewDelegate {
-  
-  
   
   func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     return 20

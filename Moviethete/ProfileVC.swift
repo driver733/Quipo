@@ -36,6 +36,8 @@ import Async
   
   var tableView = UITableView()
   
+  var shouldUpdateLinkedAccounts = false
+  
   var posterCollectionView : UICollectionView!
   var refreshControl = UIRefreshControl()
   
@@ -122,30 +124,58 @@ import Async
     tableView.addSubview(refreshControl)
     
   //  refreshControl.beginRefreshing()
-    if self.navigationController?.viewControllers.count > 1 {
-      refresh(nil)
-    } else {
+    
+    refresh(nil)
+    
+    if user.pfUser == UserSingleton.getSharedInstance().pfUser {
       self.title = self.user.username
     }
+    
   }
   
   func refresh(sender: AnyObject?) {
-    user.updateAllProfileData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
-      Async.main {
-        self.title = self.user.username
-        self.refreshControl.endRefreshing()
-        self.tableView.reloadData()
-        self.updatePosterCollectionViewFrame()
-        self.posterCollectionView.reloadData()
+    if shouldUpdateLinkedAccounts {
+      UserSingleton.getSharedInstance().updateUserSubscriptions(
+        UserSingleton.getSharedInstance().followedUsers,
+        unfollowedUsersObjectIDs: UserSingleton.getSharedInstance().unfollowedUsers
+        )
+        .continueWithBlock({ (task: BFTask!) -> AnyObject! in
+          self.shouldUpdateLinkedAccounts = false
+          self.refresh(nil)
+          return nil
+        })
+    } else {
+      user.updateAllProfileData().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+        Async.main {
+          self.title = self.user.username
+          self.refreshControl.endRefreshing()
+          self.tableView.reloadData()
+          self.updatePosterCollectionViewFrame()
+          self.posterCollectionView.reloadData()
+        }
+        return nil
       }
-      return nil
     }
   }
   
   override func viewWillAppear(animated: Bool) {
+    shouldUpdateLinkedAccounts = false
     self.navigationController?.navigationBar.barTintColor = UIColor.quipoColor()
     self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+  }
+  
+  override func viewWillDisappear(animated: Bool) {
+    if shouldUpdateLinkedAccounts {
+      UserSingleton.getSharedInstance().updateUserSubscriptions(
+                                  UserSingleton.getSharedInstance().followedUsers,
+        unfollowedUsersObjectIDs: UserSingleton.getSharedInstance().unfollowedUsers
+      )
+      .continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
+        self.shouldUpdateLinkedAccounts = false
+        return nil
+      })
+    }
   }
 
   func settings(sender: UIBarButtonItem) {
@@ -216,6 +246,48 @@ import Async
     // Dispose of any resources that can be recreated.
   }
   
+  
+  func indexPathForButton(sender: UIButton) -> NSIndexPath {
+    let buttonPosition = sender.convertPoint(CGPointZero, toView: self.tableView)
+    let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
+    if let indexPath = indexPath {
+      return indexPath
+    }
+    return NSIndexPath()
+  }
+  
+  func processSubscriptionForUser(user: PFUser, cell: ProfileFollowerCell) {
+    if cell.followButton.titleLabel?.text == "+ follow" {
+      UserSingleton.getSharedInstance().followedUsers.append(user.objectId!)
+      cell.followButton.setTitle("following", forState: .Normal)
+      cell.followButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
+    } else {
+      UserSingleton.getSharedInstance().unfollowedUsers.append(user.objectId!)
+      cell.followButton.setTitle("+ follow", forState: .Normal)
+      cell.followButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+    }
+    shouldUpdateLinkedAccounts = true
+  }
+  
+  func cellIndexPathRow(row: Int) -> Int {
+    return row - 1
+  }
+  
+  func didTapFollowersFollowButton(sender: UIButton) {
+    let indexPath = indexPathForButton(sender)
+    let user = UserSingleton.getSharedInstance().followers[cellIndexPathRow(indexPath.row)].pfUser!
+    let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
+    processSubscriptionForUser(user, cell: cell)
+  }
+  
+  func didTapFollowingUsersFollowButton (sender: UIButton) {
+    let indexPath = indexPathForButton(sender)
+    let user = UserSingleton.getSharedInstance().following[cellIndexPathRow(indexPath.row)].pfUser!
+    let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
+    processSubscriptionForUser(user, cell: cell)
+  }
+
+  
 }
 
 
@@ -259,8 +331,8 @@ extension ProfileVC: UITableViewDataSource {
         cell.followingCount.text = String(user.following.count)
         cell.watchedCount.text = String(user.watchedPosts.count)
         cell.favouriteCount.text = String(user.favoritePosts.count)
-        cell.awaitedCount.text = "0" // to be implemented
-      
+       // TODO:  implement awaitedCount
+        cell.awaitedCount.text = "0"
       
       //  cell.awaitedCount.text = String(user.)
 //      } else {
@@ -286,9 +358,8 @@ extension ProfileVC: UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
         
         let theUser = (user.following)[indexPath.row - 1]
-        
         cell.userName.text = theUser.username
-        cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
+     //   cell.followButton.addTarget(self, action: "didTapFollowingUsersFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
         if theUser.isFollowed {
           cell.followButton.setTitle("following", forState: .Normal)
           cell.followButton.setTitleColor(.greenColor(), forState: .Normal)
@@ -305,18 +376,16 @@ extension ProfileVC: UITableViewDataSource {
           }
         )
         
-        
         return cell
         
       case .followers:
         
         let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
        
-        
         let theUser = (user.followers)[indexPath.row - 1]
         
         cell.userName.text = theUser.username
-        cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
+    //    cell.followButton.addTarget(self, action: "didTapFollowersFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
         if theUser.isFollowed {
           cell.followButton.setTitle("following", forState: .Normal)
           cell.followButton.setTitleColor(.greenColor(), forState: .Normal)
@@ -365,8 +434,6 @@ extension ProfileVC: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 
 extension ProfileVC: UITableViewDelegate {
-  
-  
   
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if indexPath.row == 0 && posterCollectionView == nil {

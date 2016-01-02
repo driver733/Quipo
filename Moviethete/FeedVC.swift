@@ -51,9 +51,14 @@ class FeedVC: UIViewController {
     
     self.automaticallyAdjustsScrollViewInsets = false
     
-    refresh(nil)
+    self.refreshControl.beginRefreshing()
+    self.refresh(nil)
   }
   
+  
+  override func viewDidAppear(animated: Bool) {
+    NSNotificationCenter.defaultCenter().postNotificationName("feedViewDidAppear", object: nil)
+  }
   
   override func viewWillAppear(animated: Bool) {
     self.title = "Feed"

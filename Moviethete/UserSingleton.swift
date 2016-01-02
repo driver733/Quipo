@@ -58,7 +58,8 @@ class UserSingleton: User {
     return sharedInstance
   }
   
-  private class func resetSharedInstance() {
+  //private
+  class func resetSharedInstance() {
     sharedInstance = nil
   }
   
@@ -159,9 +160,11 @@ class UserSingleton: User {
         self.following.removeAll(keepCapacity: false)
         for follow in results {
           let followerObj = follow["to"] as! PFUser
-          self.following.append(User(thePfUser: followerObj))
+          let follower = User(thePfUser: followerObj)
+          follower.isFollowed = true
+          self.following.append(follower)
         }
-        self.checkIfFollowedUsersFollowBack()
+  //      self.checkIfFollowedUsersFollowBack()
         mainTask.setResult(nil)
       }
     }
@@ -179,29 +182,24 @@ class UserSingleton: User {
         for follow in results {
           let followerObj = follow["from"] as! PFUser
           let follower = User(thePfUser: followerObj)
+    //      follower.isFollowedBy = true
           self.followers.append(follower)
         }
-        var followersPfUserObjectIDs = [String]()
-        for follow in results {
-          followersPfUserObjectIDs.append((follow["from"] as! PFUser).objectId!)
-        }
-        for (socIndex, socialNetwork) in self.allFriends.enumerate() {
-          for (userIndex, _) in socialNetwork.enumerate() {
-            if followersPfUserObjectIDs.contains((self.allFriends[socIndex][userIndex].pfUser?.objectId)!) {
-              self.allFriends[socIndex][userIndex].isFollowedBy = true
-            } else {
-              self.allFriends[socIndex][userIndex].isFollowedBy = false
-            }
-          }
-      }
-//      self.followers.removeAll(keepCapacity: false)
-//      for socialNetwork in self.allFriends {
-//        for friend in socialNetwork {
-//          if friend.isFollowedBy {
-//            self.followers.append(friend)
+        
+//        var followersPfUserObjectIDs = [String]()
+//        for follow in results {
+//          followersPfUserObjectIDs.append((follow["from"] as! PFUser).objectId!)
+//        }
+//        for (socIndex, socialNetwork) in self.allFriends.enumerate() {
+//          for (userIndex, _) in socialNetwork.enumerate() {
+//            if followersPfUserObjectIDs.contains((self.allFriends[socIndex][userIndex].pfUser?.objectId)!) {
+//              self.allFriends[socIndex][userIndex].isFollowedBy = true
+//            } else {
+//              self.allFriends[socIndex][userIndex].isFollowedBy = false
+//            }
 //          }
 //        }
-//      }
+        
       mainTask.setResult(nil)
       }
     }
@@ -363,8 +361,8 @@ func loginWithInstagram() -> BFTask {
           
           let userName =   user.username
           let userID =     user.Id
-          let smallPhoto = user.profilePictureURL
-          let bigPhoto =   user.profilePictureURL
+          let smallPhoto = user.profilePictureURL!
+          let bigPhoto =   user.profilePictureURL!
           
           PFQuery.usernameIfRegistered("INSTM\(userID)").continueWithBlock({
             (task: BFTask!) -> AnyObject! in
@@ -472,7 +470,6 @@ func loginWithVkontakte() -> BFTask {
       }
       BFTask(forCompletionOfAllTasks: [LinkedAccount.updateVkontakte(), self.loadVkontakteFriends()])
       .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
-
         self.loginLoadingStateDelegate?.didEndNetworingActivity()
         mainTask.setResult(nil)
         return nil
@@ -780,6 +777,7 @@ func getVKUsername() -> BFTask {
               loadWatchedPosts()
             ])
     .continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+   //   self.checkIfFollowersAreFollowed()
       self.checkLinkedAccountsFollowingFriends()
       self.updateFollowFriendsCells()
       NSNotificationCenter.defaultCenter().postNotificationName("didFinishLoadingStartupData", object: nil)
