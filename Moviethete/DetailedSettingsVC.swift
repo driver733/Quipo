@@ -51,9 +51,9 @@ class DetailedSettingsVC: UIViewController {
   
   override func viewWillDisappear(animated: Bool) {
     if shouldUpdateLinkedAccounts {
-      UserSingleton.getSharedInstance().updateUserSubscriptions(
-                                  UserSingleton.getSharedInstance().followedUsers,
-        unfollowedUsersObjectIDs: UserSingleton.getSharedInstance().unfollowedUsers
+      CurrentUser.sharedCurrentUser().updateUserSubscriptions(
+                                  CurrentUser.sharedCurrentUser().followedUsers,
+        unfollowedUsersObjectIDs: CurrentUser.sharedCurrentUser().unfollowedUsers
         )
         .continueWithBlock({ (task: BFTask!) -> AnyObject! in
           self.shouldUpdateLinkedAccounts = false
@@ -73,15 +73,15 @@ class DetailedSettingsVC: UIViewController {
   
   func didTapFollowButton(sender: UIButton) {
     let indexPath = checkButtonTapped(sender)
-    let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row].pfUser!
+    let user = CurrentUser.sharedCurrentUser().allFriends[cellIndexPath.row][indexPath.row].pfUser!
     let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
     if sender.titleLabel?.text == "+ follow" {
-      UserSingleton.getSharedInstance().followedUsers.append(user.objectId!)
+      CurrentUser.sharedCurrentUser().followedUsers.append(user.objectId!)
       cell.followButton.setTitle("following", forState: .Normal)
       cell.followButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
     } else {
-      let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row].pfUser!
-      UserSingleton.getSharedInstance().unfollowedUsers.append(user.objectId!)
+      let user = CurrentUser.sharedCurrentUser().allFriends[cellIndexPath.row][indexPath.row].pfUser!
+      CurrentUser.sharedCurrentUser().unfollowedUsers.append(user.objectId!)
       cell.followButton.setTitle("+ follow", forState: .Normal)
       cell.followButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
     }
@@ -97,7 +97,7 @@ extension DetailedSettingsVC: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("ProfileFollowerCell", forIndexPath: indexPath) as! ProfileFollowerCell
-    let user = UserSingleton.getSharedInstance().allFriends[cellIndexPath.row][indexPath.row]
+    let user = CurrentUser.sharedCurrentUser().allFriends[cellIndexPath.row][indexPath.row]
     cell.userName.text = user.username
     cell.followButton.addTarget(self, action: "didTapFollowButton:", forControlEvents: UIControlEvents.TouchUpInside)
     if user.isFollowed {
@@ -119,7 +119,7 @@ extension DetailedSettingsVC: UITableViewDataSource {
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return UserSingleton.getSharedInstance().allFriends[cellIndexPath.row].count
+      return CurrentUser.sharedCurrentUser().allFriends[cellIndexPath.row].count
   }
   
 }

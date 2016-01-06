@@ -76,8 +76,8 @@ class LinkedAccount {
       theLocalIconName: "facebook",
       theServiceName:   "Facebook",
       theUsername:      "",
-      theLoginTask:     UserSingleton.getSharedInstance().loginWithFacebook,
-      thelogout:    UserSingleton.getSharedInstance().logoutFromFacebook,
+      theLoginTask:     CurrentUser.sharedCurrentUser().loginWithFacebook,
+      thelogout:    CurrentUser.sharedCurrentUser().logoutFromFacebook,
       theIsLoggedIn:    FBSDKAccessToken.currentAccessToken() != nil ? true : false
     )
   }
@@ -87,9 +87,9 @@ class LinkedAccount {
       theLocalIconName: "instagram",
       theServiceName:   "Instagram",
       theUsername:      "",
-      theLoginTask:     UserSingleton.getSharedInstance().loginWithInstagram,
-      thelogout:    UserSingleton.getSharedInstance().logoutFromInstagram,
-      theIsLoggedIn:    (UserSingleton.getSharedInstance().linkedAccountsKeychain["instagram"] != nil) ? true : false
+      theLoginTask:     CurrentUser.sharedCurrentUser().loginWithInstagram,
+      thelogout:    CurrentUser.sharedCurrentUser().logoutFromInstagram,
+      theIsLoggedIn:    (CurrentUser.sharedCurrentUser().linkedAccountsKeychain["instagram"] != nil) ? true : false
     )
   }
   
@@ -98,8 +98,8 @@ class LinkedAccount {
       theLocalIconName: "vk",
       theServiceName:   "VKontakte",
       theUsername:      "",
-      theLoginTask:     UserSingleton.getSharedInstance().loginWithVkontakte,
-      thelogout:    UserSingleton.getSharedInstance().logoutFromVkontakte,
+      theLoginTask:     CurrentUser.sharedCurrentUser().loginWithVkontakte,
+      thelogout:    CurrentUser.sharedCurrentUser().logoutFromVkontakte,
       theIsLoggedIn:    VKSdk.isLoggedIn()
     )
   }
@@ -115,9 +115,9 @@ class LinkedAccount {
  class func updateInstagram() -> BFTask {
     let mainTask = BFTaskCompletionSource()
     let instagram = linkedAccounts[LinkedAccountType.Instagram.rawValue]
-    let linkedAccountsKeychain = UserSingleton.getSharedInstance().linkedAccountsKeychain
+    let linkedAccountsKeychain = CurrentUser.sharedCurrentUser().linkedAccountsKeychain
     if linkedAccountsKeychain["instagram"] != nil {
-      UserSingleton.getSharedInstance().instagramGetSelfUserDetailsWithSuccess().continueWithSuccessBlock { (task: BFTask) -> AnyObject? in
+      CurrentUser.sharedCurrentUser().instagramGetSelfUserDetailsWithSuccess().continueWithSuccessBlock { (task: BFTask) -> AnyObject? in
         let currentUser = task.result as! InstagramUser     
         instagram.username = currentUser.username
         instagram.isLoggedIn = true
@@ -136,7 +136,7 @@ class LinkedAccount {
     let mainTask = BFTaskCompletionSource()
     let vk = linkedAccounts[LinkedAccountType.Vkontakte.rawValue]
     if VKSdk.isLoggedIn() {
-      UserSingleton.getSharedInstance().getVKUsername().continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
+      CurrentUser.sharedCurrentUser().getVKUsername().continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
         vk.username = (task.result as! String)
         vk.isLoggedIn = true
         mainTask.setResult(nil)

@@ -46,7 +46,7 @@ class LinkedAccountsVC: UIViewController, LoadingStateDelegate {
  //   NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveFacebookProfile:", name: FBSDKProfileDidChangeNotification, object: nil)
   //  NSNotificationCenter.defaultCenter().addObserver(self, selector: "instagramLoginWebViewWillDisappear:", name: "instagramLoginWebViewWillDisappear", object: nil)
     
-    UserSingleton.getSharedInstance().loginLoadingStateDelegate = self
+    CurrentUser.sharedCurrentUser().loginLoadingStateDelegate = self
   }
   
   override func didReceiveMemoryWarning() {

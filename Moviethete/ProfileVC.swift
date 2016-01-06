@@ -63,7 +63,7 @@ import Async
   }
   
   override func awakeFromNib() {
-    user = UserSingleton.getSharedInstance()
+    user = CurrentUser.sharedCurrentUser()
   }
   
   func setupPosterCollectionView() {
@@ -127,7 +127,7 @@ import Async
     
     refresh(nil)
     
-    if user.pfUser == UserSingleton.getSharedInstance().pfUser {
+    if user.pfUser == CurrentUser.sharedCurrentUser().pfUser {
       self.title = self.user.username
     }
     
@@ -135,9 +135,9 @@ import Async
   
   func refresh(sender: AnyObject?) {
     if shouldUpdateLinkedAccounts {
-      UserSingleton.getSharedInstance().updateUserSubscriptions(
-        UserSingleton.getSharedInstance().followedUsers,
-        unfollowedUsersObjectIDs: UserSingleton.getSharedInstance().unfollowedUsers
+      CurrentUser.sharedCurrentUser().updateUserSubscriptions(
+        CurrentUser.sharedCurrentUser().followedUsers,
+        unfollowedUsersObjectIDs: CurrentUser.sharedCurrentUser().unfollowedUsers
         )
         .continueWithBlock({ (task: BFTask!) -> AnyObject! in
           self.shouldUpdateLinkedAccounts = false
@@ -167,9 +167,9 @@ import Async
   
   override func viewWillDisappear(animated: Bool) {
     if shouldUpdateLinkedAccounts {
-      UserSingleton.getSharedInstance().updateUserSubscriptions(
-                                  UserSingleton.getSharedInstance().followedUsers,
-        unfollowedUsersObjectIDs: UserSingleton.getSharedInstance().unfollowedUsers
+      CurrentUser.sharedCurrentUser().updateUserSubscriptions(
+                                  CurrentUser.sharedCurrentUser().followedUsers,
+        unfollowedUsersObjectIDs: CurrentUser.sharedCurrentUser().unfollowedUsers
       )
       .continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
         self.shouldUpdateLinkedAccounts = false
@@ -258,11 +258,11 @@ import Async
   
   func processSubscriptionForUser(user: PFUser, cell: ProfileFollowerCell) {
     if cell.followButton.titleLabel?.text == "+ follow" {
-      UserSingleton.getSharedInstance().followedUsers.append(user.objectId!)
+      CurrentUser.sharedCurrentUser().followedUsers.append(user.objectId!)
       cell.followButton.setTitle("following", forState: .Normal)
       cell.followButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
     } else {
-      UserSingleton.getSharedInstance().unfollowedUsers.append(user.objectId!)
+      CurrentUser.sharedCurrentUser().unfollowedUsers.append(user.objectId!)
       cell.followButton.setTitle("+ follow", forState: .Normal)
       cell.followButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
     }
@@ -275,14 +275,14 @@ import Async
   
   func didTapFollowersFollowButton(sender: UIButton) {
     let indexPath = indexPathForButton(sender)
-    let user = UserSingleton.getSharedInstance().followers[cellIndexPathRow(indexPath.row)].pfUser!
+    let user = CurrentUser.sharedCurrentUser().followers[cellIndexPathRow(indexPath.row)].pfUser!
     let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
     processSubscriptionForUser(user, cell: cell)
   }
   
   func didTapFollowingUsersFollowButton (sender: UIButton) {
     let indexPath = indexPathForButton(sender)
-    let user = UserSingleton.getSharedInstance().following[cellIndexPathRow(indexPath.row)].pfUser!
+    let user = CurrentUser.sharedCurrentUser().following[cellIndexPathRow(indexPath.row)].pfUser!
     let cell = tableView.cellForRowAtIndexPath(indexPath) as! ProfileFollowerCell
     processSubscriptionForUser(user, cell: cell)
   }

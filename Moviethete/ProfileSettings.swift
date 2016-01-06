@@ -46,14 +46,14 @@ class ProfileSettings: UIViewController {
       
  //     NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishLoadingLinkedAccountsData:", name: "didFinishLoadingLinkedAccountsData", object: nil)
       
-//      if UserSingleton.getSharedInstance().allFriends.isEmpty {
-//        UserSingleton.getSharedInstance().loadLinkedAccountsFriends().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
+//      if CurrentUser.sharedCurrentUser().allFriends.isEmpty {
+//        CurrentUser.sharedCurrentUser().loadLinkedAccountsFriends().continueWithSuccessBlock { (task: BFTask!) -> AnyObject! in
 //          self.tableView.reloadData()
 //          return nil
 //        }
 //      }
       
-      UserSingleton.getSharedInstance().followFriendsDelegate = self
+      CurrentUser.sharedCurrentUser().followFriendsDelegate = self
     }
   
   
@@ -100,7 +100,7 @@ class ProfileSettings: UIViewController {
   func logOut() {
     
     PFUser.logOutInBackground().continueWithSuccessBlock { (task: BFTask) -> AnyObject? in         // causes freeze sometimes ONLY IN SIMULATOR - WORKS FINE ON 8.4 DEVICE
-      UserSingleton.getSharedInstance()
+      CurrentUser.sharedCurrentUser()
       return nil
     }
     InstagramEngine.sharedEngine().logout()  // might cause freeze
@@ -108,7 +108,7 @@ class ProfileSettings: UIViewController {
     FBSDKLoginManager().logOut()
     Twitter.sharedInstance().logOut()
     
-//    UserSingleton.getSharedInstance().linkedAccountsKeychain["instagram"] = nil
+//    CurrentUser.sharedCurrentUser().linkedAccountsKeychain["instagram"] = nil
     
     
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -243,8 +243,8 @@ extension ProfileSettings: UITableViewDataSource {
     case 0:   // follow friends
       
       let cell = tableView.dequeueReusableCellWithIdentifier("ProfileSettingsFollowFriendsCell", forIndexPath: indexPath) as! ProfileSettingsFollowFriendsCell
-      cell.icon.image = UIImage(named: UserSingleton.getSharedInstance().followFriendsData[indexPath.row].localIconName!)
-      cell.label.text = UserSingleton.getSharedInstance().followFriendsData[indexPath.row].description
+      cell.icon.image = UIImage(named: CurrentUser.sharedCurrentUser().followFriendsData[indexPath.row].localIconName!)
+      cell.label.text = CurrentUser.sharedCurrentUser().followFriendsData[indexPath.row].description
       return cell
        
       case 1:
@@ -364,7 +364,7 @@ extension ProfileSettings: UITableViewDataSource {
     switch section {
       
     case 0:
-      return UserSingleton.getSharedInstance().followFriendsData.count
+      return CurrentUser.sharedCurrentUser().followFriendsData.count
       
     case 1:
       //return 3

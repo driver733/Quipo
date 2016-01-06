@@ -178,8 +178,8 @@ class Post {
   func loadMovieReviewsForMovie(withTrackID: Int) -> BFTask {
     let mainTask = BFTaskCompletionSource()
     var friendsObjectIDs = [String]()
-    friendsObjectIDs.append(UserSingleton.getSharedInstance().pfUser.objectId!)
-    for followedUser in UserSingleton.getSharedInstance().following {
+    friendsObjectIDs.append(CurrentUser.sharedCurrentUser().pfUser.objectId!)
+    for followedUser in CurrentUser.sharedCurrentUser().following {
       friendsObjectIDs.append(followedUser.pfUser.objectId!)
     }
     let trackID = withTrackID

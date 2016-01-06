@@ -304,9 +304,10 @@ class SearchVC: UITableViewController, LoadingStateDelegate {
     let cell = self.tableView.dequeueReusableCellWithIdentifier("SearchResultCell") as! SearchResultCell
     
     let foundMovie = searchResults[indexPath.row]
-    cell.movieTitle.text = foundMovie.movieTitle
- //   cell.localizedMovieTitle.text = foundMovie.localizedMovieTitle
-    cell.localizedMovieTitle.text = ""
+    cell.movieTitle.text = ""
+  //  cell.localizedMovieTitle.text = foundMovie.localizedMovieTitle
+    // TODO: localize movie title
+    cell.localizedMovieTitle.text = foundMovie.movieTitle
     cell.genre.text = foundMovie.movieGenre
     cell.releaseDate.text = foundMovie.releaseDate
     

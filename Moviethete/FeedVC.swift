@@ -82,7 +82,7 @@ class FeedVC: UIViewController {
   
   
   func refresh(sender: AnyObject?) {
-    UserSingleton.getSharedInstance().loadFeedPosts().continueWithBlock {
+    CurrentUser.sharedCurrentUser().loadFeedPosts().continueWithBlock {
   (task: BFTask!) -> AnyObject! in
     if task.error == nil {
       Async.main {
@@ -126,14 +126,14 @@ class FeedVC: UIViewController {
   
   func loadImagesForOnscreenRows() {
     
-    if (UserSingleton.getSharedInstance().feedPosts.count > 0){
+    if (CurrentUser.sharedCurrentUser().feedPosts.count > 0){
       let visiblePaths = tableView.indexPathsForVisibleRows!
       for indexPath in visiblePaths {
         if (indexPath.row % 2 == 0) {
           let cell: TopCell = self.tableView.cellForRowAtIndexPath(indexPath) as! TopCell   // crash
-          if UserSingleton.getSharedInstance().feedPosts.count * 2 > indexPath.row {
+          if CurrentUser.sharedCurrentUser().feedPosts.count * 2 > indexPath.row {
             cell.profileImage.sd_setImageWithURL(
-              NSURL(string: UserSingleton.getSharedInstance().feedPosts[getCellPostIndex(indexPath.row)].author!.profileImageURL!),
+              NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex(indexPath.row)].author!.profileImageURL!),
               placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
               options: SDWebImageOptions.RefreshCached,
               completed:{
@@ -146,8 +146,8 @@ class FeedVC: UIViewController {
           }
         } else {
           let cell: ContentCell = self.tableView.cellForRowAtIndexPath(indexPath) as! ContentCell
-          if UserSingleton.getSharedInstance().feedPosts.count * 2 > indexPath.row {
-            if let bigPosterImage = UserSingleton.getSharedInstance().feedPosts[getCellPostIndex(indexPath.row)].standardPosterImageURL {
+          if CurrentUser.sharedCurrentUser().feedPosts.count * 2 > indexPath.row {
+            if let bigPosterImage = CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex(indexPath.row)].standardPosterImageURL {
               cell.posterImage.sd_setImageWithURL(
                 NSURL(string: bigPosterImage),
                 placeholderImage: getImageWithColor(.placeholderColor(), size: cell.posterImage.bounds.size)
@@ -171,11 +171,11 @@ extension FeedVC: UITableViewDelegate {
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     if indexPath.row % 2 == 0 {
-      let selectedUser = UserSingleton.getSharedInstance().feedPosts[getCellPostIndex(indexPath.row)].author!
+      let selectedUser = CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex(indexPath.row)].author!
       let vc = ProfileVC(theUser: selectedUser)
       self.navigationController?.pushViewController(vc, animated: true)
     } else {
-      let post = UserSingleton.getSharedInstance().feedPosts[getCellPostIndex((tableView.indexPathForSelectedRow?.row)!)]
+      let post = CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex((tableView.indexPathForSelectedRow?.row)!)]
       let posterImage = (tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!) as! ContentCell).posterImage.image!
       let colors = primaryPosterImageColorAndtextColor(posterImage)
       let vc = DetailedPostVC(thePost: post, theNavBarBackgroundColor: colors.primaryColor, theNavBarTextColor: colors.inferredTextColor)
@@ -223,8 +223,8 @@ extension FeedVC: UITableViewDataSource {
       let cell = tableView.dequeueReusableCellWithIdentifier("TopCell", forIndexPath: indexPath) as! TopCell
       cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
       
-      if UserSingleton.getSharedInstance().feedPosts.count * 2 > indexPath.row {
-        let post = UserSingleton.getSharedInstance().feedPosts[getCellPostIndex(indexPath.row)]
+      if CurrentUser.sharedCurrentUser().feedPosts.count * 2 > indexPath.row {
+        let post = CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex(indexPath.row)]
         cell.userName.text = post.userName
         cell.timeSincePosted.text = post.timeSincePosted
         
@@ -234,11 +234,11 @@ extension FeedVC: UITableViewDataSource {
         
         if (tableView.dragging || tableView.decelerating) {
           SDWebImageManager.sharedManager().diskImageExistsForURL(
-            NSURL(string: UserSingleton.getSharedInstance().feedPosts[getCellPostIndex(indexPath.row)].author!.profileImageURL!),
+            NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex(indexPath.row)].author!.profileImageURL!),
             completion: { (result: Bool) -> Void in
               if result {
                 cell.profileImage.sd_setImageWithURL(
-                  NSURL(string: UserSingleton.getSharedInstance().feedPosts[self.getCellPostIndex(indexPath.row)].author!.profileImageURL!),
+                  NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[self.getCellPostIndex(indexPath.row)].author!.profileImageURL!),
                   placeholderImage: self.getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
                   options: SDWebImageOptions.RefreshCached, completed:{(
                     image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
@@ -253,7 +253,7 @@ extension FeedVC: UITableViewDataSource {
           return cell
         } else {
           cell.profileImage.sd_setImageWithURL(
-            NSURL(string: UserSingleton.getSharedInstance().feedPosts[getCellPostIndex(indexPath.row)].author!.profileImageURL!),
+            NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex(indexPath.row)].author!.profileImageURL!),
             placeholderImage: getImageWithColor(UIColor.placeholderColor(), size: cell.profileImage.bounds.size),
             options: SDWebImageOptions.RefreshCached, completed:{(
               image: UIImage!, error: NSError!, cacheType: SDImageCacheType, url: NSURL!) -> Void in
@@ -272,23 +272,23 @@ extension FeedVC: UITableViewDataSource {
     
     let cell = tableView.dequeueReusableCellWithIdentifier("ContentCell", forIndexPath: indexPath) as! ContentCell
     
-    if UserSingleton.getSharedInstance().feedPosts.count * 2 > indexPath.row {
-      let post = UserSingleton.getSharedInstance().feedPosts[getCellPostIndex(indexPath.row)]
+    if CurrentUser.sharedCurrentUser().feedPosts.count * 2 > indexPath.row {
+      let post = CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex(indexPath.row)]
       cell.rating.value = CGFloat(post.rating!)
       cell.reviewTitle.text = post.reviewTitle!
       cell.reviewText.text = post.review!
 
       if (tableView.dragging || tableView.decelerating) {
         SDWebImageManager.sharedManager().cachedImageExistsForURL(
-          NSURL(string: UserSingleton.getSharedInstance().feedPosts[getCellPostIndex(indexPath.row)].standardPosterImageURL!),
+          NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[getCellPostIndex(indexPath.row)].standardPosterImageURL!),
           completion: { (result: Bool) -> Void in
             if result {
                 cell.posterImage.sd_setImageWithURL(
-                  NSURL(string: UserSingleton.getSharedInstance().feedPosts[self.getCellPostIndex(indexPath.row)].standardPosterImageURL!),
+                  NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[self.getCellPostIndex(indexPath.row)].standardPosterImageURL!),
                   placeholderImage: self.getImageWithColor(.placeholderColor(), size: cell.posterImage.bounds.size)
                 )
 //              cell.posterImage.sd_setImageWithURL(
-//                NSURL(string: UserSingleton.getSharedInstance().feedPosts[self.getCellPostIndex(indexPath.row)].bigPosterImageURL!),
+//                NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[self.getCellPostIndex(indexPath.row)].bigPosterImageURL!),
 //                placeholderImage: self.getImageWithColor(.placeholderColor(), size: cell.posterImage.bounds.size), options: SDWebImageOptions.AvoidAutoSetImage, completed: { (image: UIImage!, error: NSError!, _, _) -> Void in
 //                  cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: Toucan.Resize.FitMode.Scale).image
 //              })
@@ -301,11 +301,11 @@ extension FeedVC: UITableViewDataSource {
         
       } else {
         cell.posterImage.sd_setImageWithURL(
-          NSURL(string: UserSingleton.getSharedInstance().feedPosts[self.getCellPostIndex(indexPath.row)].standardPosterImageURL!),
+          NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[self.getCellPostIndex(indexPath.row)].standardPosterImageURL!),
           placeholderImage: self.getImageWithColor(.placeholderColor(), size: cell.posterImage.bounds.size)
         )
 //        cell.posterImage.sd_setImageWithURL(
-//          NSURL(string: UserSingleton.getSharedInstance().feedPosts[self.getCellPostIndex(indexPath.row)].bigPosterImageURL!),
+//          NSURL(string: CurrentUser.sharedCurrentUser().feedPosts[self.getCellPostIndex(indexPath.row)].bigPosterImageURL!),
 //          placeholderImage: self.getImageWithColor(.placeholderColor(), size: cell.posterImage.bounds.size), options: SDWebImageOptions.AvoidAutoSetImage, completed: { (image: UIImage!, error: NSError!, _, _) -> Void in
 //            cell.posterImage.image = Toucan(image: image).resize(cell.posterImage.bounds.size, fitMode: Toucan.Resize.FitMode.Scale).image
 //        })
@@ -320,7 +320,7 @@ extension FeedVC: UITableViewDataSource {
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    let count = UserSingleton.getSharedInstance().feedPosts.count * 2
+    let count = CurrentUser.sharedCurrentUser().feedPosts.count * 2
     if count == 0 {
       //  return 4
     }

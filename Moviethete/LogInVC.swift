@@ -99,14 +99,12 @@ class LogInVC: UIViewController {
       signUpTriangle.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
       signUpTriangle.hidden = true
     
-    
-      
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "instagramLoginWebViewWillDisappear:", name: "instagramLoginWebViewWillDisappear", object: nil)
       
 //    let path = NSBundle.mainBundle().pathForResource("loginBackground", ofType: "pdf")
 //    backgroundImage.image = UIImage(contentsOfFile: path!)
       
-      UserSingleton.getSharedInstance().loginLoadingStateDelegate = self
+      CurrentUser.sharedCurrentUser().loginLoadingStateDelegate = self
   }
   
   
@@ -189,18 +187,18 @@ class LogInVC: UIViewController {
               block: {
                 (user: PFUser?, error: NSError?) -> Void in
                 if user != nil && error == nil {
-                  UserSingleton.resetSharedInstance()
-                  UserSingleton.getSharedInstance().checkUserLinkedAccounts()
+                  CurrentUser.resetSharedInstance()
+                  CurrentUser.sharedCurrentUser().checkUserLinkedAccounts()
                   if FBSDKAccessToken.currentAccessToken() != nil && FBSDKProfile.currentProfile() == nil {
                     NSNotificationCenter.defaultCenter().addObserver(self, name: FBSDKProfileDidChangeNotification, object: nil, handler: { (observer, notification) -> Void in
-                      BFTask(forCompletionOfAllTasks: [LinkedAccount.updateAll(), UserSingleton.getSharedInstance().loadLinkedAccountsFriends()])
+                      BFTask(forCompletionOfAllTasks: [LinkedAccount.updateAll(), CurrentUser.sharedCurrentUser().loadLinkedAccountsFriends()])
                         .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
                          self.pushMainVC()
                           return nil
                       })
                     })
                   } else {
-                    BFTask(forCompletionOfAllTasks: [LinkedAccount.updateAll(), UserSingleton.getSharedInstance().loadLinkedAccountsFriends()])
+                    BFTask(forCompletionOfAllTasks: [LinkedAccount.updateAll(), CurrentUser.sharedCurrentUser().loadLinkedAccountsFriends()])
                     .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
                       self.pushMainVC()
                       return nil
@@ -241,7 +239,7 @@ class LogInVC: UIViewController {
         (task: BFTask!) -> AnyObject! in
         if task.error == nil {
           Async.main {
-            UserSingleton.getSharedInstance()
+            CurrentUser.resetSharedInstance()
             self.pushMainVC()
           }
         } else {
@@ -271,15 +269,15 @@ class LogInVC: UIViewController {
   }
   
   @IBAction func loginWithInstagram(sender: AnyObject) {
-    UserSingleton.getSharedInstance().loginWithInstagram()
+    CurrentUser.sharedCurrentUser().loginWithInstagram()
   }
 
   @IBAction func loginWithFacebook(sender: AnyObject) {
-    UserSingleton.getSharedInstance().loginWithFacebook()
+    CurrentUser.sharedCurrentUser().loginWithFacebook()
   }
   
   @IBAction func loginWithVkontakte(sender: AnyObject) {
-    UserSingleton.getSharedInstance().loginWithVkontakte()
+    CurrentUser.sharedCurrentUser().loginWithVkontakte()
   }
   
   func pushMainVC() {

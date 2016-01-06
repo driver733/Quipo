@@ -84,7 +84,7 @@ class UserMedia {
   class func userMediaInfoForMovieWithTrackID(trackID: Int) -> BFTask {
     let mainTask = BFTaskCompletionSource()
     let query = PFQuery(className: "UserMedia")
-    query.whereKey("by", equalTo: UserSingleton.getSharedInstance().pfUser)
+    query.whereKey("by", equalTo: CurrentUser.sharedCurrentUser().pfUser)
     query.whereKey("trackID", equalTo: trackID)
     query.limit = 1
     query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in

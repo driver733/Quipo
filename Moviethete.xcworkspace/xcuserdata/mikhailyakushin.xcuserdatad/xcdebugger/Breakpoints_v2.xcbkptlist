@@ -1537,28 +1537,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Moviethete/UserSingleton.swift"
-            timestampString = "473382124.417419"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
-            landmarkName = "checkIfFacebookAccessTokenIsPresent()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Moviethete/LogInVC.swift"
-            timestampString = "473384603.133124"
+            timestampString = "473722732.681566"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
             landmarkName = "signIn()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1570,11 +1554,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/LogInVC.swift"
-            timestampString = "473384603.133124"
+            timestampString = "473722732.681566"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "signIn()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1698,11 +1682,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/LogInVC.swift"
-            timestampString = "473384603.133124"
+            timestampString = "473722732.681566"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
             landmarkName = "signIn()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1810,11 +1794,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/LogInVC.swift"
-            timestampString = "473384603.133124"
+            timestampString = "473722732.681566"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "193"
-            endingLineNumber = "193"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
             landmarkName = "signIn()"
             landmarkType = "5">
          </BreakpointContent>
@@ -2034,11 +2018,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Moviethete/LogInVC.swift"
-            timestampString = "473384603.133124"
+            timestampString = "473722732.681566"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "191"
-            endingLineNumber = "191"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
             landmarkName = "signIn()"
             landmarkType = "5">
          </BreakpointContent>

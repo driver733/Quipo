@@ -66,11 +66,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
       if (PFUser.currentUser() != nil) {
         self.window?.rootViewController? = (self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))!
-        if let accessToken = UserSingleton.getSharedInstance().linkedAccountsKeychain["instagram"] {
+        if let accessToken = CurrentUser.sharedCurrentUser().linkedAccountsKeychain["instagram"] {
           InstagramEngine.sharedEngine().accessToken = accessToken
         }
         LinkedAccount.updateAll()
-        UserSingleton.getSharedInstance().updateAllProfileData()
+        CurrentUser.sharedCurrentUser().updateAllProfileData()
       }
 
     

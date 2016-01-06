@@ -78,7 +78,7 @@ public class VKSDKHandler: NSObject {
                     } else {
                       switch task.error!.code {
                       case 202:   // parse: "username is already taken"
-                        UserSingleton.getSharedInstance().register("\(userID)", AndUser: user)
+                        CurrentUser.sharedCurrentUser().register("\(userID)", AndUser: user)
                       default: break
                       }
                     }

@@ -1,5 +1,5 @@
 //
-//  UserSingleton.swift
+//  CurrentUser.swift
 //  Quipo
 //
 //  Created by Mikhail Yakushin on 9/6/15.
@@ -33,9 +33,9 @@ protocol FollowFriendsDelegate {
   func didUpdateFollowFriendsData()
 }
 
-class UserSingleton: User {
+class CurrentUser: User {
   
-  private static var sharedInstance: UserSingleton!
+  private static var sharedInstance: CurrentUser!
   
   var loginLoadingStateDelegate: LoadingStateDelegate?
   var followFriendsDelegate: FollowFriendsDelegate?
@@ -44,15 +44,15 @@ class UserSingleton: User {
     super.init(thePfUser: thePfUser)
   }
   
-  class func getSharedInstance() -> UserSingleton {
+  class func sharedCurrentUser() -> CurrentUser {
     if sharedInstance == nil {
       if let currentUser = PFUser.currentUser() {
-        sharedInstance = UserSingleton(thePfUser: currentUser)
+        sharedInstance = CurrentUser(thePfUser: currentUser)
       } else {
         let tempPFUser = PFUser()
         tempPFUser.username = ""
         tempPFUser["smallProfileImage"] = ""
-        sharedInstance = UserSingleton(thePfUser: tempPFUser)
+        sharedInstance = CurrentUser(thePfUser: tempPFUser)
       }
     }
     return sharedInstance
@@ -227,10 +227,10 @@ func loginWithFacebook() -> BFTask {
         self.loginLoadingStateDelegate?.didStartNetworingActivity()
         NSNotificationCenter.defaultCenter().addObserver(self, name: FBSDKProfileDidChangeNotification, object: nil) { (observer, notification) -> Void in
           if PFUser.currentUser() == nil {
-            UserSingleton.resetSharedInstance()
+            CurrentUser.resetSharedInstance()
           }
           self.didReceiveFacebookProfile().continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
-            return UserSingleton.getSharedInstance().loadFacebookFriends()
+            return CurrentUser.sharedCurrentUser().loadFacebookFriends()
           }).continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in
             if let error = task.error {
               mainTask.setError(error)
@@ -373,7 +373,7 @@ func loginWithInstagram() -> BFTask {
                 if task.error == nil {
                   self.pfUser["INSTMAccessToken"] = credential.oauth_token
                   self.pfUser.saveEventually()
-                  UserSingleton.resetSharedInstance()
+                  CurrentUser.resetSharedInstance()
                   BFTask(forCompletionOfAllTasks: [LinkedAccount.updateInstagram(), self.loadInstagramFriends()])
                     .continueWithSuccessBlock({ (task: BFTask!) -> AnyObject! in
                       self.loginLoadingStateDelegate?.didEndNetworingActivity()
@@ -400,12 +400,12 @@ func loginWithInstagram() -> BFTask {
               user.signUpInBackground().continueWithBlock({
                 (task: BFTask!) -> AnyObject! in
                 if task.error == nil {
-                  UserSingleton.resetSharedInstance()
+                  CurrentUser.resetSharedInstance()
                   mainTask.setResult(nil)
                 } else {
                   switch task.error!.code {
                   case 202:   // parse: "username already taken"
-                    UserSingleton.resetSharedInstance()
+                    CurrentUser.resetSharedInstance()
                     self.register("\(userID)", AndUser: user)
                   default: break
                   }
@@ -451,7 +451,7 @@ func loginWithVkontakte() -> BFTask {
   if !VKSdk.vkAppMayExists() {
     NSNotificationCenter.defaultCenter().addObserver(self, name: VKSDK_ACCESS_AUTHORIZATION_STARTED, object: nil) { (observer, notification) -> Void in
       if PFUser.currentUser() == nil {
-        UserSingleton.resetSharedInstance()
+        CurrentUser.resetSharedInstance()
       }
       self.loginLoadingStateDelegate?.didStartNetworingActivity()
       NSNotificationCenter.defaultCenter().addObserver(self, name: VKSDK_ACCESS_AUTHORIZATION_SUCCEEDED, object: nil) { (observer, notification) -> Void in
@@ -466,7 +466,7 @@ func loginWithVkontakte() -> BFTask {
   } else {
     NSNotificationCenter.defaultCenter().addObserver(self, name: VKSDK_ACCESS_AUTHORIZATION_SUCCEEDED, object: nil) { (observer, notification) -> Void in
       if PFUser.currentUser() == nil {
-        UserSingleton.resetSharedInstance()
+        CurrentUser.resetSharedInstance()
       }
       BFTask(forCompletionOfAllTasks: [LinkedAccount.updateVkontakte(), self.loadVkontakteFriends()])
       .continueWithSuccessBlock({ (task: BFTask) -> AnyObject? in

@@ -68,7 +68,7 @@ class CommentsVC: SLKTextViewController {
   
 
   override func didPressRightButton(sender: AnyObject!) {
-    let currentUser = UserSingleton.getSharedInstance()
+    let currentUser = CurrentUser.sharedCurrentUser()
     let comment = Comment(theCreatedBy: currentUser, theText: textView.text)
     comment.uploadForReviewPFObject(passedReview.pfObject).continueWithBlock { (task: BFTask!) -> AnyObject! in
       if task.error == nil {
