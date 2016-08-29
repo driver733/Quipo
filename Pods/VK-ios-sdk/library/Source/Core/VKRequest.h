@@ -43,7 +43,46 @@ Creates and debug timings for VKRequest
 @end
 
 /**
-Class for execution API-requests
+ Class for execution API-requests.
+ 
+ See example requests below:
+ 
+ 1) A plain request
+    
+    VKRequest *usersReq = [[VKApi users] get];
+ 
+ 2) A request with parameters
+ 
+    VKRequest *usersReq = [[VKApi users] get:@{VK_API_FIELDS : @"photo_100"}];
+ 
+ 3) A request with predetermined maximum number of attempts. For example, take 10 attempts until succeed or an API error occurs:
+ 
+    VKRequest *postReq = [[VKApi wall] post:@{VK_API_MESSAGE : @"Test"}];
+    postReq.attempts = 10;
+    //or infinite
+    //postReq.attempts = 0;
+ 
+ 4) You can build a request for any public method of VK API
+ 
+    VKRequest *getWall = [VKRequest requestWithMethod:@"wall.get" andParameters:@{VK_API_OWNER_ID : @"-1"}];
+ 
+ 5) Also there are some special requests for uploading a photos to a user's wall, user albums and other
+ 
+    VKRequest *request = [VKApi uploadWallPhotoRequest:[UIImage imageNamed:@"my_photo"] parameters:[VKImageParameters pngImage] userId:0 groupId:0 ];
+ 
+ 
+ After you have prepared a request, you execute it and you may receive some data or error
+ 
+    [usersReq executeWithResultBlock:^(VKResponse *response) {
+        NSLog(@"Json result: %@", response.json);
+    } errorBlock:^(NSError * error) {
+        if (error.code != VK_API_ERROR) {
+            [error.vkError.request repeat];
+        } else {
+            NSLog(@"VK error: %@", error);
+        }
+    }];
+ 
 */
 @interface VKRequest : VKObject
 /// Specify progress for uploading or downloading. Useless for text requests (because gzip encoding bytesTotal will always return -1)
@@ -87,13 +126,15 @@ Class for execution API-requests
 ///-------------------------------
 /// @name Preparing requests
 ///-------------------------------
+
+
 /**
  Creates new request with parameters. See documentation for methods here https://vk.com/dev/methods
  @param method API-method name, e.g. audio.get
  @param parameters method parameters
  @param httpMethod HTTP method for execution, e.g. GET, POST
  @return Complete request object for execute or configure method
- @deprecated Use requestWithMethod:andParameters: instead
+ @deprecated Use requestWithMethod:parameters: instead
 */
 + (instancetype)requestWithMethod:(NSString *)method
                     andParameters:(NSDictionary *)parameters
@@ -104,9 +145,21 @@ Class for execution API-requests
  @param method API-method name, e.g. audio.get
  @param parameters method parameters
  @return Complete request object for execute or configure method
+ @deprecated Use requestWithMethod:parameters: instead
 */
 + (instancetype)requestWithMethod:(NSString *)method
-                    andParameters:(NSDictionary *)parameters;
+                    andParameters:(NSDictionary *)parameters __deprecated;
+
+/**
+ Creates new request with parameters. See documentation for methods here https://vk.com/dev/methods
+ @param method API-method name, e.g. audio.get
+ @param parameters method parameters
+ @param modelClass class for automatic parse
+ @return Complete request object for execute or configure method
+ */
++ (instancetype)requestWithMethod:(NSString *)method
+                    andParameters:(NSDictionary *)parameters
+                       modelClass:(Class)modelClass __deprecated;
 
 /**
  Creates new request with parameters. See documentation for methods here https://vk.com/dev/methods
@@ -116,21 +169,30 @@ Class for execution API-requests
  @param modelClass class for automatic parse
  @return Complete request object for execute or configure method
  @deprecated Use requestWithMethod:andParameters:modelClass: instead
-*/
+ */
 + (instancetype)requestWithMethod:(NSString *)method
                     andParameters:(NSDictionary *)parameters
                     andHttpMethod:(NSString *)httpMethod
                      classOfModel:(Class)modelClass __deprecated;
 
 /**
-Creates new request with parameters. See documentation for methods here https://vk.com/dev/methods
-@param method API-method name, e.g. audio.get
-@param parameters method parameters
-@param modelClass class for automatic parse
-@return Complete request object for execute or configure method
-*/
+ Creates new request with parameters. See documentation for methods here https://vk.com/dev/methods
+ @param method API-method name, e.g. audio.get
+ @param parameters method parameters
+ @return Complete request object for execute or configure method
+ */
 + (instancetype)requestWithMethod:(NSString *)method
-                    andParameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary *)parameters;
+
+/**
+ Creates new request with parameters. See documentation for methods here https://vk.com/dev/methods
+ @param method API-method name, e.g. audio.get
+ @param parameters method parameters
+ @param modelClass class for automatic parse
+ @return Complete request object for execute or configure method
+ */
++ (instancetype)requestWithMethod:(NSString *)method
+                       parameters:(NSDictionary *)parameters
                        modelClass:(Class)modelClass;
 
 /**
@@ -194,12 +256,15 @@ Cancel current request. Result will be not passed. errorBlock will be called wit
 /// @name Operating with parameters
 ///-------------------------------
 /**
-Adds additional parameters to that request
-@param extraParameters parameters supposed to be added
+ Adds additional parameters to that request
+ 
+ @param extraParameters parameters supposed to be added
 */
 - (void)addExtraParameters:(NSDictionary *)extraParameters;
 
-/// Specify language for API request
+/** 
+ Specify language for API request
+ */
 - (void)setPreferredLang:(NSString *)lang;
 
 @end

@@ -29,11 +29,11 @@
 
 @implementation BFTask (Private)
 
-- (instancetype)continueAsyncWithBlock:(BFContinuationBlock)block {
+- (BFTask *)continueAsyncWithBlock:(BFContinuationBlock)block {
     return [self continueWithExecutor:[BFExecutor defaultPriorityBackgroundExecutor] withBlock:block];
 }
 
-- (instancetype)continueAsyncWithSuccessBlock:(BFContinuationBlock)block {
+- (BFTask *)continueAsyncWithSuccessBlock:(BFContinuationBlock)block {
     return [self continueWithExecutor:[BFExecutor defaultPriorityBackgroundExecutor] withSuccessBlock:block];
 }
 
@@ -45,47 +45,39 @@
     return [self continueWithExecutor:[BFExecutor immediateExecutor] withSuccessBlock:block];
 }
 
-- (instancetype)continueWithResult:(id)result {
+- (BFTask *)continueWithResult:(id)result {
     return [self continueWithBlock:^id(BFTask *task) {
         return result;
     }];
 }
 
-- (instancetype)continueWithSuccessResult:(id)result {
+- (BFTask *)continueWithSuccessResult:(id)result {
     return [self continueWithSuccessBlock:^id(BFTask *task) {
         return result;
     }];
 }
 
-- (instancetype)continueWithMainThreadResultBlock:(PFIdResultBlock)resultBlock
-                               executeIfCancelled:(BOOL)executeIfCancelled {
+- (BFTask *)continueWithMainThreadResultBlock:(PFIdResultBlock)resultBlock
+                           executeIfCancelled:(BOOL)executeIfCancelled {
     if (!resultBlock) {
         return self;
     }
     return [self continueWithExecutor:[BFExecutor mainThreadExecutor]
                             withBlock:^id(BFTask *task) {
                                 BFTaskCompletionSource *tcs = [BFTaskCompletionSource taskCompletionSource];
-
                                 @try {
-                                    if (self.exception) {
-                                        //TODO: (nlutsenko) Add more context, by passing a `_cmd` from the caller method
-                                        PFLogException(self.exception);
-                                        @throw self.exception;
-                                    }
-
                                     if (!self.cancelled || executeIfCancelled) {
                                         resultBlock(self.result, self.error);
                                     }
                                 } @finally {
                                     tcs.result = nil;
                                 }
-
                                 return tcs.task;
                             }];
 }
 
-- (instancetype)continueWithMainThreadBooleanResultBlock:(PFBooleanResultBlock)resultBlock
-                                      executeIfCancelled:(BOOL)executeIfCancelled {
+- (BFTask *)continueWithMainThreadBooleanResultBlock:(PFBooleanResultBlock)resultBlock
+                                  executeIfCancelled:(BOOL)executeIfCancelled {
     return [self continueWithMainThreadResultBlock:^(id object, NSError *error) {
         resultBlock([object boolValue], error);
     } executeIfCancelled:executeIfCancelled];
@@ -121,8 +113,6 @@
     }
     if (self.cancelled) {
         return nil;
-    } else if (self.exception) {
-        @throw self.exception;
     }
     if (self.error && error) {
         *error = self.error;

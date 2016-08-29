@@ -52,8 +52,8 @@ static NSSet *protectedKeys;
     [super removeObjectForKey:PFInstallationKeyDeviceToken];
 }
 
-- (BFTask PF_GENERIC(PFVoid) *)_validateDeleteAsync {
-    return [[super _validateDeleteAsync] continueWithSuccessBlock:^id(BFTask PF_GENERIC(PFVoid) *task) {
+- (BFTask<PFVoid> *)_validateDeleteAsync {
+    return [[super _validateDeleteAsync] continueWithSuccessBlock:^id(BFTask<PFVoid> *task) {
         NSError *error = [PFErrorUtilities errorWithCode:kPFErrorCommandUnavailable
                                                  message:@"Installation cannot be deleted"];
         return [BFTask taskWithError:error];
@@ -132,8 +132,11 @@ static NSSet *protectedKeys;
 ///--------------------------------------
 
 + (instancetype)currentInstallation {
-    BFTask *task = [[self _currentInstallationController] getCurrentObjectAsync];
-    return [task waitForResult:nil withMainThreadWarning:NO];
+    return [[self getCurrentInstallationInBackground] waitForResult:nil withMainThreadWarning:NO];
+}
+
++ (BFTask<__kindof PFInstallation *> *)getCurrentInstallationInBackground {
+    return [[self _currentInstallationController] getCurrentObjectAsync];
 }
 
 ///--------------------------------------
@@ -210,7 +213,7 @@ static NSSet *protectedKeys;
      onlyIfDifferent:YES];
 }
 
-- (void)setChannels:(NSArray PF_GENERIC(NSString *)*)channels {
+- (void)setChannels:(NSArray<NSString *> *)channels {
     [self _setObject:channels forKey:PFInstallationKeyChannels onlyIfDifferent:YES];
 }
 

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ITunesSwift
+//import ITunesSwift
 import SwiftyJSON
 import SDWebImage
 import Alamofire

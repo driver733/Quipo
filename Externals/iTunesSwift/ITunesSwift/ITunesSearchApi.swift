@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Alamofire
+//import Alamofire
 
 public class ITunesSearchApi {
     let url = "https://itunes.apple.com/search"
@@ -75,7 +75,8 @@ public class ITunesSearchApi {
     
     
     public func request(completionHandler: (String?, NSError?) -> Void) -> Void {
-      Alamofire.request(.GET, self.buildUrl()).responseString { (response: Response<String, NSError>) -> Void in
+		
+      requestA(.GET, self.buildUrl()).responseString { (response: Response<String, NSError>) -> Void in
         completionHandler(response.result.value, response.result.error)
       }
     }

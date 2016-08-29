@@ -9,6 +9,8 @@
 
 #import "PFQuery.h"
 #import "PFQueryPrivate.h"
+#import "PFQuery+Synchronous.h"
+#import "PFQuery+Deprecated.h"
 
 #import <Bolts/BFCancellationTokenSource.h>
 #import <Bolts/BFTask.h>
@@ -32,32 +34,7 @@
 #import "PFUserPrivate.h"
 #import "ParseInternal.h"
 #import "Parse_Private.h"
-
-NSString *const PFQueryKeyNotEqualTo = @"$ne";
-NSString *const PFQueryKeyLessThan = @"$lt";
-NSString *const PFQueryKeyLessThanEqualTo = @"$lte";
-NSString *const PFQueryKeyGreaterThan = @"$gt";
-NSString *const PFQueryKeyGreaterThanOrEqualTo = @"$gte";
-NSString *const PFQueryKeyContainedIn = @"$in";
-NSString *const PFQueryKeyNotContainedIn = @"$nin";
-NSString *const PFQueryKeyContainsAll = @"$all";
-NSString *const PFQueryKeyNearSphere = @"$nearSphere";
-NSString *const PFQueryKeyWithin = @"$within";
-NSString *const PFQueryKeyRegex = @"$regex";
-NSString *const PFQueryKeyExists = @"$exists";
-NSString *const PFQueryKeyInQuery = @"$inQuery";
-NSString *const PFQueryKeyNotInQuery = @"$notInQuery";
-NSString *const PFQueryKeySelect = @"$select";
-NSString *const PFQueryKeyDontSelect = @"$dontSelect";
-NSString *const PFQueryKeyRelatedTo = @"$relatedTo";
-NSString *const PFQueryKeyOr = @"$or";
-NSString *const PFQueryKeyQuery = @"query";
-NSString *const PFQueryKeyKey = @"key";
-NSString *const PFQueryKeyObject = @"object";
-
-NSString *const PFQueryOptionKeyMaxDistance = @"$maxDistance";
-NSString *const PFQueryOptionKeyBox = @"$box";
-NSString *const PFQueryOptionKeyRegexOptions = @"$options";
+#import "PFQueryConstants.h"
 
 /**
  Checks if an object can be used as value for query equality clauses.
@@ -76,7 +53,7 @@ static void PFQueryAssertValidEqualityClauseClass(id object) {
         }
     }
 
-    PFParameterAssert(NO, @"Cannot do a comparison query for type: %@", [object class]);
+    PFParameterAssertionFailure(@"Cannot do a comparison query for type: %@", [object class]);
 }
 
 /**
@@ -95,7 +72,7 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
         }
     }
 
-    PFParameterAssert(NO, @"Cannot do a query that requires ordering for type: %@", [object class]);
+    PFParameterAssertionFailure(@"Cannot do a query that requires ordering for type: %@", [object class]);
 }
 
 @interface PFQuery () {
@@ -403,6 +380,12 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
     return self;
 }
 
+- (instancetype)includeKeys:(NSArray<NSString *> *)keys {
+    [self checkIfCommandIsRunning];
+    [self.state includeKeys:keys];
+    return self;
+}
+
 ///--------------------------------------
 #pragma mark - Select
 ///--------------------------------------
@@ -484,15 +467,13 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
                 // Like "value IN SELF"
                 [self whereKeyExists:left.keyPath];
             } else {
-                [NSException raise:NSInternalInconsistencyException
-                            format:@"An IN predicate must have a key path and a constant."];
+                PFConsistencyAssertionFailure(@"An IN predicate must have a key path and a constant.");
             }
             return;
         }
         case NSCustomSelectorPredicateOperatorType: {
             if (predicate.customSelector != NSSelectorFromString(@"notContainedIn:")) {
-                [NSException raise:NSInternalInconsistencyException
-                            format:@"Predicates with custom selectors are not supported."];
+                PFConsistencyAssertionFailure(@"Predicates with custom selectors are not supported.");
             }
 
             if (right.expressionType == NSConstantValueExpressionType &&
@@ -519,8 +500,7 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
                 // Like "NOT (value IN SELF)"
                 [self whereKeyDoesNotExist:left.keyPath];
             } else {
-                [NSException raise:NSInternalInconsistencyException
-                            format:@"A NOT IN predicate must have a key path and a constant array."];
+                PFConsistencyAssertionFailure(@"A NOT IN predicate must have a key path and a constant array.");
             }
             return;
         }
@@ -529,32 +509,19 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
             [self whereKey:left.keyPath hasPrefix:right.constantValue];
             return;
         }
-        case NSContainsPredicateOperatorType: {
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"Regex queries are not supported with "
-             "[PFQuery queryWithClassName:predicate:]. Please try to structure your "
-             "data so that you can use an equalTo or containedIn query."];
-        }
-        case NSEndsWithPredicateOperatorType: {
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"Regex queries are not supported with "
-             "[PFQuery queryWithClassName:predicate:]. Please try to structure your "
-             "data so that you can use an equalTo or containedIn query."];
-        }
+        case NSContainsPredicateOperatorType:
+        case NSEndsWithPredicateOperatorType:
         case NSMatchesPredicateOperatorType: {
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"Regex queries are not supported with "
-             "[PFQuery queryWithClassName:predicate:]. Please try to structure your "
-             "data so that you can use an equalTo or containedIn query."];
+            PFConsistencyAssertionFailure(@"Regex queries are not supported with "
+                                          "[PFQuery queryWithClassName:predicate:]. Please try to structure your "
+                                          "data so that you can use an equalTo or containedIn query.");
         }
         case NSLikePredicateOperatorType: {
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"LIKE is not supported by PFQuery."];
+            PFConsistencyAssertionFailure(@"LIKE is not supported by PFQuery.");
         }
         case NSBetweenPredicateOperatorType:
         default: {
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"This comparison predicate is not supported. (%zd)", predicate.predicateOperatorType];
+            PFConsistencyAssertionFailure(@"This comparison predicate is not supported. (%zd)", predicate.predicateOperatorType);
         }
     }
 }
@@ -579,9 +546,7 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
                     if ([subpredicate isKindOfClass:[NSCompoundPredicate class]] &&
                         ((NSCompoundPredicate *)subpredicate).compoundPredicateType == NSOrPredicateType) {
                         if (query) {
-                            [NSException raise:NSInternalInconsistencyException
-                                        format:@"A query had 2 ORs in an AND after normalization. %@",
-                             predicate];
+                            PFConsistencyAssertionFailure(@"A query had 2 ORs in an AND after normalization. %@", predicate);
                         }
                         query = [self queryWithClassName:className normalizedPredicate:subpredicate];
                     } else {
@@ -595,9 +560,8 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
                 for (NSPredicate *subpredicate in subpredicates) {
                     if (![subpredicate isKindOfClass:[NSComparisonPredicate class]]) {
                         // This should never happen.
-                        [NSException raise:NSInternalInconsistencyException
-                                    format:@"A predicate had a non-comparison predicate inside an AND "
-                         "after normalization. %@", predicate];
+                        PFConsistencyAssertionFailure(@"A predicate had a non-comparison predicate inside an AND after normalization. %@",
+                                                      predicate);
                     }
                     NSComparisonPredicate *comparison = (NSComparisonPredicate *)subpredicate;
                     [query whereComparisonPredicate:comparison];
@@ -607,9 +571,7 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
             case NSOrPredicateType: {
                 NSMutableArray *subqueries = [NSMutableArray arrayWithCapacity:compound.subpredicates.count];
                 if (compound.subpredicates.count > 4) {
-                    [NSException raise:NSInternalInconsistencyException
-                                format:@"This query is too complex. It had an OR with >4 subpredicates "
-                     "after normalization."];
+                    PFConsistencyAssertionFailure(@"This query is too complex. It had an OR with >4 subpredicates after normalization.");
                 }
                 for (NSPredicate *subpredicate in compound.subpredicates) {
                     [subqueries addObject:[self queryWithClassName:className normalizedPredicate:subpredicate]];
@@ -619,13 +581,12 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
             case NSNotPredicateType:
             default: {
                 // This should never happen.
-                [NSException raise:NSInternalInconsistencyException
-                            format:@"A predicate had a NOT after normalization. %@", predicate];
+                PFConsistencyAssertionFailure(@"A predicate had a NOT after normalization. %@", predicate);
                 return nil;
             }
         }
     } else {
-        [NSException raise:NSInternalInconsistencyException format:@"Unknown predicate type."];
+        PFConsistencyAssertionFailure(@"Unknown predicate type.");
         return nil;
     }
 }
@@ -637,8 +598,7 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
 - (void)checkIfCommandIsRunning {
     @synchronized(self) {
         if (_cancellationTokenSource) {
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"This query has an outstanding network connection. You have to wait until it's done."];
+            PFConsistencyAssertionFailure(@"This query has an outstanding network connection. You have to wait until it's done.");
         }
     }
 }
@@ -667,20 +627,15 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
     return [self queryWithClassName:className normalizedPredicate:normalizedPredicate];
 }
 
-+ (instancetype)orQueryWithSubqueries:(NSArray *)queries {
-    NSMutableArray *array = [NSMutableArray array];
-    NSString *className = nil;
-    for (id object in queries) {
-        PFParameterAssert([object isKindOfClass:[PFQuery class]],
++ (instancetype)orQueryWithSubqueries:(NSArray<PFQuery *> *)queries {
+    PFParameterAssert(queries.count, @"Can't create an `or` query from no subqueries.");
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:queries.count];
+    NSString *className = queries.firstObject.parseClassName;
+    for (PFQuery *query in queries) {
+        PFParameterAssert([query isKindOfClass:[PFQuery class]],
                           @"All elements should be instances of `PFQuery` class.");
-
-        PFQuery *query = (PFQuery *)object;
-        if (!className) {
-            className = query.parseClassName;
-        } else {
-            PFParameterAssert([query.parseClassName isEqualToString:className],
-                              @"All sub queries of an `or` query should be on the same class.");
-        }
+        PFParameterAssert([query.parseClassName isEqualToString:className],
+                          @"All sub queries of an `or` query should be on the same class.");
 
         [array addObject:query];
     }
@@ -692,26 +647,6 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
 ///--------------------------------------
 #pragma mark - Get with objectId
 ///--------------------------------------
-
-+ (PFObject *)getObjectOfClass:(NSString *)objectClass objectId:(NSString *)objectId {
-    return [self getObjectOfClass:objectClass objectId:objectId error:nil];
-}
-
-+ (PFObject *)getObjectOfClass:(NSString *)objectClass
-                      objectId:(NSString *)objectId
-                         error:(NSError **)error {
-    PFQuery *query = [self queryWithClassName:objectClass];
-    return [query getObjectWithId:objectId error:error];
-}
-
-// TODO (hallucinogen): we may want to remove this in 2.0 since we can just use the static counterpart
-- (PFObject *)getObjectWithId:(NSString *)objectId {
-    return [self getObjectWithId:objectId error:nil];
-}
-
-- (PFObject *)getObjectWithId:(NSString *)objectId error:(NSError **)error {
-    return [[self getObjectInBackgroundWithId:objectId] waitForResult:error];
-}
 
 - (BFTask *)getObjectInBackgroundWithId:(NSString *)objectId {
     if (objectId.length == 0) {
@@ -738,12 +673,6 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
     }
 }
 
-- (void)getObjectInBackgroundWithId:(NSString *)objectId target:(id)target selector:(SEL)selector {
-    [self getObjectInBackgroundWithId:objectId block:^(PFObject *object, NSError *error) {
-        [PFInternalUtils safePerformSelector:selector withTarget:target object:object object:error];
-    }];
-}
-
 - (BFTask *)_getObjectWithIdAsync:(NSString *)objectId cachePolicy:(PFCachePolicy)cachePolicy after:(BFTask *)task {
     self.limit = 1;
     self.skip = 0;
@@ -766,17 +695,6 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
 #pragma mark - Get Users (Deprecated)
 ///--------------------------------------
 
-+ (PFUser *)getUserObjectWithId:(NSString *)objectId {
-    return [self getUserObjectWithId:objectId error:nil];
-}
-
-+ (PFUser *)getUserObjectWithId:(NSString *)objectId error:(NSError **)error {
-    PFQuery *query = [PFUser query];
-    PFUser *object = (PFUser *)[query getObjectWithId:objectId error:error];
-
-    return object;
-}
-
 + (instancetype)queryForUser {
     return [PFUser query];
 }
@@ -784,14 +702,6 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
 ///--------------------------------------
 #pragma mark - Find Objects
 ///--------------------------------------
-
-- (NSArray *)findObjects {
-    return [self findObjects:nil];
-}
-
-- (NSArray *)findObjects:(NSError **)error {
-    return [[self findObjectsInBackground] waitForResult:error];
-}
 
 - (BFTask *)findObjectsInBackground {
     PFQueryState *state = [self _queryStateCopy];
@@ -815,12 +725,6 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
             [[self findObjectsInBackground] thenCallBackOnMainThreadAsync:block];
         }
     }
-}
-
-- (void)findObjectsInBackgroundWithTarget:(id)target selector:(SEL)selector {
-    [self findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        [PFInternalUtils safePerformSelector:selector withTarget:target object:objects object:error];
-    }];
 }
 
 - (BFTask *)_findObjectsAsyncForQueryState:(PFQueryState *)queryState after:(BFTask *)previous {
@@ -861,14 +765,6 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
 #pragma mark - Get Object
 ///--------------------------------------
 
-- (PFObject *)getFirstObject {
-    return [self getFirstObject:nil];
-}
-
-- (PFObject *)getFirstObject:(NSError **)error {
-    return [[self getFirstObjectInBackground] waitForResult:error];
-}
-
 - (BFTask *)getFirstObjectInBackground {
     PFConsistencyAssert(self.state.cachePolicy != kPFCachePolicyCacheThenNetwork,
                         @"kPFCachePolicyCacheThenNetwork can only be used with methods that have a callback.");
@@ -886,12 +782,6 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
             [[self getFirstObjectInBackground] thenCallBackOnMainThreadAsync:block];
         }
     }
-}
-
-- (void)getFirstObjectInBackgroundWithTarget:(id)target selector:(SEL)selector {
-    [self getFirstObjectInBackgroundWithBlock:^(PFObject *result, NSError *error) {
-        [PFInternalUtils safePerformSelector:selector withTarget:target object:result object:error];
-    }];
 }
 
 - (BFTask *)_getFirstObjectAsyncWithCachePolicy:(PFCachePolicy)cachePolicy after:(BFTask *)task {
@@ -912,31 +802,10 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
 #pragma mark - Count Objects
 ///--------------------------------------
 
-- (NSInteger)countObjects {
-    return [self countObjects:nil];
-}
-
-- (NSInteger)countObjects:(NSError **)error {
-    NSNumber *count = [[self countObjectsInBackground] waitForResult:error];
-    if (!count) {
-        // TODO: (nlutsenko) It's really weird that we are inconsistent in sync vs async methods.
-        // Leaving for now since some devs might be relying on this.
-        return -1;
-    }
-
-    return count.integerValue;
-}
-
 - (BFTask *)countObjectsInBackground {
     PFConsistencyAssert(self.state.cachePolicy != kPFCachePolicyCacheThenNetwork,
                         @"kPFCachePolicyCacheThenNetwork can only be used with methods that have a callback.");
     return [self _countObjectsAsyncForQueryState:[self _queryStateCopy] after:nil];
-}
-
-- (void)countObjectsInBackgroundWithTarget:(id)target selector:(SEL)selector {
-    [self countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        [PFInternalUtils safePerformSelector:selector withTarget:target object:@(number) object:error];
-    }];
 }
 
 - (void)countObjectsInBackgroundWithBlock:(PFIntegerResultBlock)block {
@@ -1134,6 +1003,121 @@ static void PFQueryAssertValidOrderingClauseClass(id object) {
         return [BFTask taskWithResult:nil];
     }
     return [[Parse _currentManager].coreManager.currentUserController getCurrentObjectAsync];
+}
+
+@end
+
+///--------------------------------------
+#pragma mark - Synchronous
+///--------------------------------------
+
+@implementation PFQuery (Synchronous)
+
+#pragma mark Getting Objects by ID
+
++ (PFObject *)getObjectOfClass:(NSString *)objectClass objectId:(NSString *)objectId {
+    return [self getObjectOfClass:objectClass objectId:objectId error:nil];
+}
+
++ (PFObject *)getObjectOfClass:(NSString *)objectClass objectId:(NSString *)objectId error:(NSError **)error {
+    PFQuery *query = [self queryWithClassName:objectClass];
+    return [query getObjectWithId:objectId error:error];
+}
+
+- (PFObject *)getObjectWithId:(NSString *)objectId {
+    return [self getObjectWithId:objectId error:nil];
+}
+
+- (PFObject *)getObjectWithId:(NSString *)objectId error:(NSError **)error {
+    return [[self getObjectInBackgroundWithId:objectId] waitForResult:error];
+}
+
+#pragma mark Getting User Objects
+
++ (PFUser *)getUserObjectWithId:(NSString *)objectId {
+    return [self getUserObjectWithId:objectId error:nil];
+}
+
++ (PFUser *)getUserObjectWithId:(NSString *)objectId error:(NSError **)error {
+    PFQuery *query = [PFUser query];
+    return [query getObjectWithId:objectId error:error];
+}
+
+#pragma mark Getting all Matches for a Query
+
+- (NSArray *)findObjects {
+    return [self findObjects:nil];
+}
+
+- (NSArray *)findObjects:(NSError **)error {
+    return [[self findObjectsInBackground] waitForResult:error];
+}
+
+#pragma mark Getting First Match in a Query
+
+- (PFObject *)getFirstObject {
+    return [self getFirstObject:nil];
+}
+
+- (PFObject *)getFirstObject:(NSError **)error {
+    return [[self getFirstObjectInBackground] waitForResult:error];
+}
+
+#pragma mark Counting the Matches in a Query
+
+- (NSInteger)countObjects {
+    return [self countObjects:nil];
+}
+
+- (NSInteger)countObjects:(NSError **)error {
+    NSNumber *count = [[self countObjectsInBackground] waitForResult:error];
+    if (!count) {
+        // TODO: (nlutsenko) It's really weird that we are inconsistent in sync vs async methods.
+        // Leaving for now since some devs might be relying on this.
+        return -1;
+    }
+
+    return count.integerValue;
+}
+
+@end
+
+///--------------------------------------
+#pragma mark - Deprecated
+///--------------------------------------
+
+@implementation PFQuery (Deprecated)
+
+#pragma mark Getting Objects by ID
+
+- (void)getObjectInBackgroundWithId:(NSString *)objectId target:(nullable id)target selector:(nullable SEL)selector {
+    [self getObjectInBackgroundWithId:objectId block:^(PFObject *object, NSError *error) {
+        [PFInternalUtils safePerformSelector:selector withTarget:target object:object object:error];
+    }];
+}
+
+#pragma mark Getting all Matches for a Query
+
+- (void)findObjectsInBackgroundWithTarget:(nullable id)target selector:(nullable SEL)selector {
+    [self findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [PFInternalUtils safePerformSelector:selector withTarget:target object:objects object:error];
+    }];
+}
+
+#pragma mark Getting the First Match in a Query
+
+- (void)getFirstObjectInBackgroundWithTarget:(nullable id)target selector:(nullable SEL)selector {
+    [self getFirstObjectInBackgroundWithBlock:^(PFObject *result, NSError *error) {
+        [PFInternalUtils safePerformSelector:selector withTarget:target object:result object:error];
+    }];
+}
+
+#pragma mark Counting the Matches in a Query
+
+- (void)countObjectsInBackgroundWithTarget:(nullable id)target selector:(nullable SEL)selector {
+    [self countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        [PFInternalUtils safePerformSelector:selector withTarget:target object:@(number) object:error];
+    }];
 }
 
 @end

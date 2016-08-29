@@ -22,13 +22,15 @@
 
 #import "VKUser.h"
 
-@implementation VKBanInfo
-@end
-
 @implementation VKLastSeen
 @end
 
 @implementation VKUser
+
+-(NSString *)description {
+    return [NSString stringWithFormat:@"<VKUser:%p> (id:%@) %@ %@", self, self.id, self.first_name, self.last_name];
+}
+
 @end
 
 @implementation VKGeoObject
@@ -44,7 +46,8 @@
 @end
 
 @implementation VKUsersArray
-- (instancetype)initWithDictionary:(NSDictionary *)dict {
-    return [super initWithDictionary:dict objectClass:[VKUser class]];
+
+-(Class)objectClass {
+    return [VKUser class];
 }
 @end

@@ -26,34 +26,47 @@ extension String {
         get {
             let startIndex = self.startIndex.advancedBy(r.startIndex)
             let endIndex = startIndex.advancedBy(r.endIndex - r.startIndex)
-            
-            return self[Range(start: startIndex, end: endIndex)]
+            return self[startIndex..<endIndex]
         }
     }
 
     func urlEncodedStringWithEncoding(encoding: NSStringEncoding) -> String {
         let originalString: NSString = self
-        let customAllowedSet =  NSCharacterSet(charactersInString:":/?&=;+!@#$()',*=\"#%/<>?@\\^`{|}").invertedSet
+        let customAllowedSet =  NSCharacterSet(charactersInString:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
         let escapedString = originalString.stringByAddingPercentEncodingWithAllowedCharacters(customAllowedSet)
         return escapedString! as String
     }
 
     func parametersFromQueryString() -> Dictionary<String, String> {
+        return dictionaryBySplitting("&", keyValueSeparator: "=")
+    }
+    
+    var urlQueryEncoded: String? {
+        return self.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+    }
+
+    func dictionaryBySplitting(elementSeparator: String, keyValueSeparator: String) -> Dictionary<String, String> {
+		
+		var string = self
+		if(hasPrefix(elementSeparator)) {
+			string = String(characters.dropFirst(1))
+		}
+		
         var parameters = Dictionary<String, String>()
 
-        let scanner = NSScanner(string: self)
+        let scanner = NSScanner(string: string)
 
         var key: NSString?
         var value: NSString?
 
         while !scanner.atEnd {
             key = nil
-            scanner.scanUpToString("=", intoString: &key)
-            scanner.scanString("=", intoString: nil)
+            scanner.scanUpToString(keyValueSeparator, intoString: &key)
+            scanner.scanString(keyValueSeparator, intoString: nil)
 
             value = nil
-            scanner.scanUpToString("&", intoString: &value)
-            scanner.scanString("&", intoString: nil)
+            scanner.scanUpToString(elementSeparator, intoString: &value)
+            scanner.scanString(elementSeparator, intoString: nil)
 
             if (key != nil && value != nil) {
                 parameters.updateValue(value! as String, forKey: key! as String)
@@ -61,6 +74,10 @@ extension String {
         }
         
         return parameters
+    }
+        
+    public var headerDictionary: Dictionary<String, String> {
+        return dictionaryBySplitting(",", keyValueSeparator: "=")
     }
     
     var safeStringByRemovingPercentEncoding: String {

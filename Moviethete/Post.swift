@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Bolts
 import Parse
-import ITunesSwift
+//import ITunesSwift
 import SwiftyJSON
 import Async
 

@@ -9,11 +9,11 @@
 
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
-#import "PFFacebookAuthenticationProvider.h"
+#import "PFFacebookMobileAuthenticationProvider.h"
 
 @interface PFFacebookUtils (Private)
 
-+ (PFFacebookAuthenticationProvider *)_authenticationProvider;
-+ (void)_setAuthenticationProvider:(PFFacebookAuthenticationProvider *)provider;
++ (PFFacebookMobileAuthenticationProvider *)_authenticationProvider;
++ (void)_setAuthenticationProvider:(PFFacebookMobileAuthenticationProvider *)provider;
 
 @end

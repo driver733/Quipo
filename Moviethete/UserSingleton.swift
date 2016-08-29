@@ -125,7 +125,7 @@ class CurrentUser: User {
     if let token = PFUser.currentUser()?["VKAccessToken"] as? String, vkUserID = PFUser.currentUser()?["VKID"] as? String  {
       let vkAccessToken = VKAccessToken(token: token, secret: "PuLAVPrHRvxkl24PWKDm", userId: vkUserID)
       vkAccessToken.saveTokenToDefaults("VKAccessToken")
-      VKSdk.setAccessToken(vkAccessToken)
+//      VKSdk.setAccessToken(vkAccessToken)
     }
   }
   

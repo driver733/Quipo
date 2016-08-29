@@ -40,8 +40,11 @@ NSString *const PFConfigParametersRESTKey = @"params";
 #pragma mark Public
 
 + (PFConfig *)currentConfig {
-    return [[[self _configController].currentConfigController getCurrentConfigAsync] waitForResult:nil
-                                                                             withMainThreadWarning:NO];
+    return [[self getCurrentConfigInBackground] waitForResult:nil withMainThreadWarning:NO];
+}
+
++ (BFTask<PFConfig *> *)getCurrentConfigInBackground {
+    return [[self _configController].currentConfigController getCurrentConfigAsync];
 }
 
 ///--------------------------------------
@@ -60,14 +63,6 @@ NSString *const PFConfigParametersRESTKey = @"params";
 ///--------------------------------------
 #pragma mark - Fetch
 ///--------------------------------------
-
-+ (PFConfig *)getConfig {
-    return [self getConfig:nil];
-}
-
-+ (PFConfig *)getConfig:(NSError **)error {
-    return [[self getConfigInBackground] waitForResult:error];
-}
 
 + (BFTask *)getConfigInBackground {
     PFCurrentUserController *controller = [Parse _currentManager].coreManager.currentUserController;
@@ -109,6 +104,24 @@ NSString *const PFConfigParametersRESTKey = @"params";
     }
 
     return NO;
+}
+
+@end
+
+///--------------------------------------
+#pragma mark - Synchronous
+///--------------------------------------
+
+@implementation PFConfig (Synchronous)
+
+#pragma mark Retrieving Config
+
++ (PFConfig *)getConfig {
+    return [self getConfig:nil];
+}
+
++ (PFConfig *)getConfig:(NSError **)error {
+    return [[self getConfigInBackground] waitForResult:error];
 }
 
 @end

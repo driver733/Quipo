@@ -41,6 +41,9 @@
 @interface VKCountry : VKGeoObject
 @end
 
+/**
+ * User personal information (field 'personal')
+ */
 @interface VKPersonal : VKObject
 @property(nonatomic, strong) NSArray *langs;
 @property(nonatomic, strong) NSNumber *political;
@@ -53,26 +56,16 @@
 @end
 
 /**
-User type of VK API. See descriptions here https://vk.com/dev/fields
-*/
-@interface VKBanInfo : VKApiObject
-/// идентификатор администратора, который добавил пользователя в черный список;
-@property(nonatomic, strong) NSNumber *admin_id;
-/// дата добавления пользователя в черный список;
-@property(nonatomic, strong) NSNumber *date;
-/// причина добавления пользователя в черный список;
-@property(nonatomic, strong) NSNumber *reason;
-/// текст комментария
-@property(nonatomic, strong) NSString *comment;
-/// дата, когда пользователь будет разбанен.
-@property(nonatomic, strong) NSNumber *end_date;
-@end
-
+ * User last seen information (field 'last_seen')
+ */
 @interface VKLastSeen : VKApiObject
 @property(nonatomic, strong) NSNumber *time;
 @property(nonatomic, strong) NSNumber *platform;
 @end
 
+/**
+ * Information about connected services by user (field 'exports')
+ */
 @interface VKExports : VKApiObject
 @property(nonatomic, strong) NSNumber *twitter;
 @property(nonatomic, strong) NSNumber *facebook;
@@ -80,6 +73,9 @@ User type of VK API. See descriptions here https://vk.com/dev/fields
 @property(nonatomic, strong) NSNumber *instagram;
 @end
 
+/**
+ User type of VK API. See descriptions here https://vk.com/dev/fields
+ */
 @interface VKUser : VKApiObject
 @property(nonatomic, strong) NSNumber *id;
 @property(nonatomic, strong) NSString *first_name;
@@ -92,6 +88,7 @@ User type of VK API. See descriptions here https://vk.com/dev/fields
 @property(nonatomic, strong) NSString *last_name_dat;
 @property(nonatomic, strong) NSString *first_name_ins;
 @property(nonatomic, strong) NSString *last_name_ins;
+@property(nonatomic, strong) NSString *domain;
 @property(nonatomic, strong) VKPersonal *personal;
 @property(nonatomic, strong) NSNumber *sex;
 @property(nonatomic, strong) NSNumber *invited_by;
@@ -118,6 +115,7 @@ User type of VK API. See descriptions here https://vk.com/dev/fields
 @property(nonatomic, strong) VKExports *exports;
 @property(nonatomic, strong) NSNumber *wall_comments;
 @property(nonatomic, assign) BOOL can_write_private_message;
+@property(nonatomic, assign) BOOL can_see_audio;
 @property(nonatomic, strong) NSString *phone;
 @property(nonatomic, strong) NSNumber *online_mobile;
 @property(nonatomic, strong) NSNumber *faculty;
@@ -126,6 +124,7 @@ User type of VK API. See descriptions here https://vk.com/dev/fields
 @property(nonatomic, strong) VKSchools *schools;
 @property(nonatomic, strong) NSNumber *graduation;
 @property(nonatomic, strong) NSNumber *friendState;
+@property(nonatomic, strong) NSNumber *common_count;
 @property(nonatomic, strong) NSString *faculty_name;
 @property(nonatomic, strong) NSString *university_name;
 @property(nonatomic, strong) NSString *books;
@@ -157,27 +156,15 @@ User type of VK API. See descriptions here https://vk.com/dev/fields
 @property(nonatomic, strong) NSString *twitter;
 @property(nonatomic, strong) NSString *skype;
 @property(nonatomic, strong) NSString *facebook;
+@property(nonatomic, strong) NSString *instagram;
 @property(nonatomic, strong) NSString *livejournal;
 @property(nonatomic, strong) NSString *wall_default;
-/// Для метода account.lookupContacts
 
-@property(nonatomic, strong) NSString *contact;
-@property(nonatomic, strong) NSNumber *request_sent;
-@property(nonatomic, strong) NSNumber *common_count;
-
-/// Для метода groups.getBanned
-@property(nonatomic, strong) VKBanInfo *ban_info;
-
-/// audio.get
-@property(nonatomic, strong) NSString *name;
-@property(nonatomic, strong) NSString *name_gen;
-
-// getSubscriptions
 @property(nonatomic, strong) NSNumber *followers_count;
 @end
 
 /**
 Array of API users
 */
-@interface VKUsersArray : VKApiObjectArray
+@interface VKUsersArray : VKApiObjectArray<VKUser*>
 @end

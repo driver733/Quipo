@@ -8,7 +8,7 @@ Swift based OAuth library for iOS and OSX.
 
 ## Support OAuth1.0, OAuth2.0
 
-Twitter, Flickr, Github, Instagram, Foursquare. Fitbit, Withings, Linkedin, Dropbox, Dribbble, Salesforce, BitBucket, GoogleDrive, Smugmug, Intuit, Zaim, Tumblr, Slack, Uber, Gitter, Facebook etc
+Twitter, Flickr, Github, Instagram, Foursquare. Fitbit, Withings, Linkedin, Dropbox, Dribbble, Salesforce, BitBucket, GoogleDrive, Smugmug, Intuit, Zaim, Tumblr, Slack, Uber, Gitter, Facebook, Spotify, Typetalk, SoundCloud etc
 
 ## Installation
 
@@ -24,7 +24,7 @@ OAuthSwift is packaged as a Swift framework. Currently this is the simplest way 
 * Install Carthage (https://github.com/Carthage/Carthage)
 * Create Cartfile file
 ```
-github "dongri/OAuthSwift" ~> 0.4.6
+github "OAuthSwift/OAuthSwift" ~> 0.5.0
 ```
 * Run `carthage update`.
 * On your application targets’ “General” settings tab, in the “Embedded Binaries” section, drag and drop OAuthSwift.framework from the Carthage/Build/iOS folder on disk.
@@ -37,7 +37,7 @@ github "dongri/OAuthSwift" ~> 0.4.6
 platform :ios, '8.0'
 use_frameworks!
 
-pod "OAuthSwift", "~> 0.4.6"
+pod 'OAuthSwift', '~> 0.5.0'
 ```
 ## How to
 ### Setting URL Schemes
@@ -46,19 +46,26 @@ Replace oauth-swift by your application name
 ### Examples
 
 #### Handle URL in AppDelegate
+- On iOS9 implement `UIApplicationDelegate` method
 ```swift
-func application(application: UIApplication!, openURL url: NSURL!, sourceApplication: String!, annotation: AnyObject!) -> Bool {
+func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
   if (url.host == "oauth-callback") {
-    if (url.path!.hasPrefix("/twitter")){
-      OAuth1Swift.handleOpenURL(url)
-    }
-    if ( url.path!.hasPrefix("/github" )){
-      OAuth2Swift.handleOpenURL(url)
-    }
+    OAuthSwift.handleOpenURL(url)
   }
   return true
 }
 ```
+:warning: Any other application may try to open a URL with your url scheme. So you can check the source application, for instance for safari controller :
+```
+if (options["UIApplicationOpenURLOptionsSourceApplicationKey"] as? String == "com.apple.SafariViewService") {
+```
+
+- On previous iOS version
+```swift
+func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+```
+- On OSX you must register an handler on `NSAppleEventManager` for event type `kAEGetURL` (see demo code)
+
 #### OAuth1.0
 ```swift
 let oauthswift = OAuth1Swift(
@@ -69,10 +76,11 @@ let oauthswift = OAuth1Swift(
     accessTokenUrl:  "https://api.twitter.com/oauth/access_token"
 )
 oauthswift.authorizeWithCallbackURL(
-    NSURL(string: "oauth-swift://oauth-callback/twitter"),
-    success: { credential, response in
-      println(credential.oauth_token)
-      println(credential.oauth_token_secret)
+    NSURL(string: "oauth-swift://oauth-callback/twitter")!,
+    success: { credential, response, parameters in
+      print(credential.oauth_token)
+      print(credential.oauth_token_secret)
+      print(parameters["user_id"])
     },
     failure: { error in
       print(error.localizedDescription)
@@ -88,10 +96,10 @@ let oauthswift = OAuth2Swift(
     responseType:   "token"
 )
 oauthswift.authorizeWithCallbackURL(
-    NSURL(string: "oauth-swift://oauth-callback/instagram"),
+    NSURL(string: "oauth-swift://oauth-callback/instagram")!,
     scope: "likes+comments", state:"INSTAGRAM",
     success: { credential, response, parameters in
-      println(credential.oauth_token)
+      print(credential.oauth_token)
     },
     failure: { error in
       print(error.localizedDescription)
@@ -129,19 +137,40 @@ oauthswift.authorize_url_handler = SafariURLHandler(viewController: self)
 ```
 Of course you can create your own class or customize the controller by setting the variable `SafariURLHandler#factory`.
 
+## Make signed request
+
+```swift
+oauthswift.client.get("https://api.linkedin.com/v1/people/~",
+      success: {
+        data, response in
+        let dataString = NSString(data: data, encoding: NSUTF8StringEncoding)
+        print(dataString)
+      }
+      , failure: { error in
+        print(error)
+      }
+)
+// same with request method
+oauthswift.client.request("https://api.linkedin.com/v1/people/~", .GET,
+      parameters: [:], headers: [:],
+      success: { ...
+```
+
+More examples into demo application: [ViewController.swift](/OAuthSwiftDemo/ViewController.swift)
+
 ## OAuth provider pages
 
-* [Twitter](https://dev.twitter.com/docs/auth/oauth)  
+* [Twitter](https://dev.twitter.com/oauth)  
 * [Flickr](https://www.flickr.com/services/api/auth.oauth.html)  
-* [Github](https://developer.github.com/v3/oauth)  
+* [Github](https://developer.github.com/v3/oauth/)  
 * [Instagram](http://instagram.com/developer/authentication)  
 * [Foursquare](https://developer.foursquare.com/overview/auth)  
 * [Fitbit](https://wiki.fitbit.com/display/API/OAuth+Authentication+in+the+Fitbit+API)  
 * [Withings](http://oauth.withings.com/api)  
-* [Linkedin](https://developer.linkedin.com/documents/authentication)  
+* [Linkedin](https://developer.linkedin.com/docs/oauth2)  
 * [Dropbox](https://www.dropbox.com/developers/core/docs)  
 * [Dribbble](http://developer.dribbble.com/v1/oauth/)
-* [Salesforce](https://www.salesforce.com/us/developer/docs/api_rest/)
+* [Salesforce](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/)
 * [BitBucket](https://confluence.atlassian.com/display/BITBUCKET/OAuth+on+Bitbucket)
 * [GoogleDrive](https://developers.google.com/drive/v2/reference/)
 * [Smugmug](https://smugmug.atlassian.net/wiki/display/API/OAuth)
@@ -152,6 +181,12 @@ Of course you can create your own class or customize the controller by setting t
 * [Uber](https://developer.uber.com/v1/auth/)
 * [Gitter](https://developer.gitter.im/docs/authentication)
 * [Facebook](https://developers.facebook.com/docs/facebook-login)
+* [Spotify](https://developer.spotify.com/web-api/authorization-guide/)
+* [Trello](https://developers.trello.com/authorize)
+* [Buffer](https://buffer.com/developers/api/oauth)
+* [Goodreads](https://www.goodreads.com/api/documentation#oauth)
+* [Typetalk](http://developer.nulab-inc.com/docs/typetalk/auth)
+* [SoundCloud](https://developers.soundcloud.com/docs/api/guide#authentication)
 
 ## Images
 
@@ -160,14 +195,17 @@ Of course you can create your own class or customize the controller by setting t
 ![Image](Assets/TwitterOAuthTokens.png "Image")
 
 ## Contributing
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+ See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+[Add a new service in demo app](https://github.com/OAuthSwift/OAuthSwift/wiki/Demo-application#add-a-new-service-in-demo-app)
 
 ## License
 
 OAuthSwift is available under the MIT license. See the LICENSE file for more info.
 
-[![Join the chat at https://gitter.im/dongri/OAuthSwift](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dongri/OAuthSwift?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/OAuthSwift/OAuthSwift](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OAuthSwift/OAuthSwift?utm_campaign=pr-badge&utm_content=badge&utm_medium=badge&utm_source=badge)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat
-            )](http://mit-license.org) [![Platform](http://img.shields.io/badge/platform-iOS_OSX_TVOS-lightgrey.svg?style=flat
-             )](https://developer.apple.com/resources/) [![Language](http://img.shields.io/badge/language-swift-orange.svg?style=flat
-             )](https://developer.apple.com/swift) [![Cocoapod](http://img.shields.io/cocoapods/v/OAuthSwift.svg?style=flat)](http://cocoadocs.org/docsets/OAuthSwift/)
+            )](http://mit-license.org) [![Platform](https://img.shields.io/badge/platform-iOS_OSX_TVOS-lightgrey.svg?style=flat
+             )](https://developer.apple.com/resources/) [![Language](https://img.shields.io/badge/language-swift-orange.svg?style=flat
+             )](https://developer.apple.com/swift) [![Cocoapod](https://img.shields.io/cocoapods/v/OAuthSwift.svg?style=flat)](http://cocoadocs.org/docsets/OAuthSwift/)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)

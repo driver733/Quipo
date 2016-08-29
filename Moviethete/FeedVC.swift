@@ -15,7 +15,7 @@ import FBSDKLoginKit
 import FBSDKShareKit
 import Parse
 import SDWebImage
-import ITunesSwift
+//import ITunesSwift
 import VK_ios_sdk
 import Alamofire
 import SwiftLocation

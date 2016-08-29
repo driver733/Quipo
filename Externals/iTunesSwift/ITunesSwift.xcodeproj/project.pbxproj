@@ -15,12 +15,26 @@
 		79C401A219CDD75300D6F4E2 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C401A119CDD75300D6F4E2 /* Entity.swift */; };
 		79C401A419CDD83100D6F4E2 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C401A319CDD83100D6F4E2 /* Attribute.swift */; };
 		79C401AA19CDD92800D6F4E2 /* ITunesSearchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C401A919CDD92800D6F4E2 /* ITunesSearchApi.swift */; };
-		C7C061022BF5E95C58A3E125 /* Pods_ITunesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462166457F5F621DCC43A927 /* Pods_ITunesSwift.framework */; };
+		E8CB80B91D58B09700D7F80B /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80A81D58B09700D7F80B /* Alamofire.swift */; };
+		E8CB80BA1D58B09700D7F80B /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80A91D58B09700D7F80B /* Download.swift */; };
+		E8CB80BB1D58B09700D7F80B /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80AA1D58B09700D7F80B /* Error.swift */; };
+		E8CB80BC1D58B09700D7F80B /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80AB1D58B09700D7F80B /* Manager.swift */; };
+		E8CB80BD1D58B09700D7F80B /* MultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80AC1D58B09700D7F80B /* MultipartFormData.swift */; };
+		E8CB80BE1D58B09700D7F80B /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80AD1D58B09700D7F80B /* NetworkReachabilityManager.swift */; };
+		E8CB80BF1D58B09700D7F80B /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80AE1D58B09700D7F80B /* Notifications.swift */; };
+		E8CB80C01D58B09700D7F80B /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80AF1D58B09700D7F80B /* ParameterEncoding.swift */; };
+		E8CB80C11D58B09700D7F80B /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B01D58B09700D7F80B /* Request.swift */; };
+		E8CB80C21D58B09700D7F80B /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B11D58B09700D7F80B /* Response.swift */; };
+		E8CB80C31D58B09700D7F80B /* ResponseSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B21D58B09700D7F80B /* ResponseSerialization.swift */; };
+		E8CB80C41D58B09700D7F80B /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B31D58B09700D7F80B /* Result.swift */; };
+		E8CB80C51D58B09700D7F80B /* ServerTrustPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B41D58B09700D7F80B /* ServerTrustPolicy.swift */; };
+		E8CB80C61D58B09700D7F80B /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B51D58B09700D7F80B /* Stream.swift */; };
+		E8CB80C71D58B09700D7F80B /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B61D58B09700D7F80B /* Timeline.swift */; };
+		E8CB80C81D58B09700D7F80B /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B71D58B09700D7F80B /* Upload.swift */; };
+		E8CB80C91D58B09700D7F80B /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB80B81D58B09700D7F80B /* Validation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		462166457F5F621DCC43A927 /* Pods_ITunesSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ITunesSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7561235CC872B0B3BDB5D1AD /* Pods-ITunesSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ITunesSwift.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-ITunesSwift/Pods-ITunesSwift.debug.xcconfig"; sourceTree = "<group>"; };
 		7981F7E819CEC9A200B2414C /* ITunesLookupApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunesLookupApi.swift; sourceTree = "<group>"; };
 		7981F85B19D14F3F00B2414C /* ITunesApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunesApi.swift; sourceTree = "<group>"; };
 		79C4017B19CDCA2000D6F4E2 /* ITunesSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ITunesSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,7 +47,23 @@
 		79C401A119CDD75300D6F4E2 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		79C401A319CDD83100D6F4E2 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		79C401A919CDD92800D6F4E2 /* ITunesSearchApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunesSearchApi.swift; sourceTree = "<group>"; };
-		FD8065EB06D2A22F23152F5E /* Pods-ITunesSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ITunesSwift.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-ITunesSwift/Pods-ITunesSwift.release.xcconfig"; sourceTree = "<group>"; };
+		E8CB80A81D58B09700D7F80B /* Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
+		E8CB80A91D58B09700D7F80B /* Download.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
+		E8CB80AA1D58B09700D7F80B /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		E8CB80AB1D58B09700D7F80B /* Manager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Manager.swift; sourceTree = "<group>"; };
+		E8CB80AC1D58B09700D7F80B /* MultipartFormData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipartFormData.swift; sourceTree = "<group>"; };
+		E8CB80AD1D58B09700D7F80B /* NetworkReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkReachabilityManager.swift; sourceTree = "<group>"; };
+		E8CB80AE1D58B09700D7F80B /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		E8CB80AF1D58B09700D7F80B /* ParameterEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterEncoding.swift; sourceTree = "<group>"; };
+		E8CB80B01D58B09700D7F80B /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		E8CB80B11D58B09700D7F80B /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		E8CB80B21D58B09700D7F80B /* ResponseSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseSerialization.swift; sourceTree = "<group>"; };
+		E8CB80B31D58B09700D7F80B /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		E8CB80B41D58B09700D7F80B /* ServerTrustPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerTrustPolicy.swift; sourceTree = "<group>"; };
+		E8CB80B51D58B09700D7F80B /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		E8CB80B61D58B09700D7F80B /* Timeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timeline.swift; sourceTree = "<group>"; };
+		E8CB80B71D58B09700D7F80B /* Upload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
+		E8CB80B81D58B09700D7F80B /* Validation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,7 +71,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7C061022BF5E95C58A3E125 /* Pods_ITunesSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,22 +84,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		05985667224D8157E41D444A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				7561235CC872B0B3BDB5D1AD /* Pods-ITunesSwift.debug.xcconfig */,
-				FD8065EB06D2A22F23152F5E /* Pods-ITunesSwift.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		79C4017119CDCA2000D6F4E2 = {
 			isa = PBXGroup;
 			children = (
+				E8CB80A71D58B09700D7F80B /* Alamofire */,
 				79C4017D19CDCA2000D6F4E2 /* ITunesSwift */,
 				79C4018719CDCA2000D6F4E2 /* ITunesSwiftTests */,
 				79C4017C19CDCA2000D6F4E2 /* Products */,
-				05985667224D8157E41D444A /* Pods */,
 				7E55390EA5CBAC9DF93DDC8B /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -127,9 +147,33 @@
 		7E55390EA5CBAC9DF93DDC8B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				462166457F5F621DCC43A927 /* Pods_ITunesSwift.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E8CB80A71D58B09700D7F80B /* Alamofire */ = {
+			isa = PBXGroup;
+			children = (
+				E8CB80A81D58B09700D7F80B /* Alamofire.swift */,
+				E8CB80A91D58B09700D7F80B /* Download.swift */,
+				E8CB80AA1D58B09700D7F80B /* Error.swift */,
+				E8CB80AB1D58B09700D7F80B /* Manager.swift */,
+				E8CB80AC1D58B09700D7F80B /* MultipartFormData.swift */,
+				E8CB80AD1D58B09700D7F80B /* NetworkReachabilityManager.swift */,
+				E8CB80AE1D58B09700D7F80B /* Notifications.swift */,
+				E8CB80AF1D58B09700D7F80B /* ParameterEncoding.swift */,
+				E8CB80B01D58B09700D7F80B /* Request.swift */,
+				E8CB80B11D58B09700D7F80B /* Response.swift */,
+				E8CB80B21D58B09700D7F80B /* ResponseSerialization.swift */,
+				E8CB80B31D58B09700D7F80B /* Result.swift */,
+				E8CB80B41D58B09700D7F80B /* ServerTrustPolicy.swift */,
+				E8CB80B51D58B09700D7F80B /* Stream.swift */,
+				E8CB80B61D58B09700D7F80B /* Timeline.swift */,
+				E8CB80B71D58B09700D7F80B /* Upload.swift */,
+				E8CB80B81D58B09700D7F80B /* Validation.swift */,
+			);
+			name = Alamofire;
+			path = ITunesSwift/Alamofire;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,12 +194,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 79C4018E19CDCA2000D6F4E2 /* Build configuration list for PBXNativeTarget "ITunesSwift" */;
 			buildPhases = (
-				510C08197D34ECB716D2A2E6 /* Check Pods Manifest.lock */,
 				79C4017619CDCA2000D6F4E2 /* Sources */,
 				79C4017719CDCA2000D6F4E2 /* Frameworks */,
 				79C4017819CDCA2000D6F4E2 /* Headers */,
 				79C4017919CDCA2000D6F4E2 /* Resources */,
-				3376DF54DDDB5AA37B30B9D4 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -191,7 +233,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = tsuchikazu;
 				TargetAttributes = {
 					79C4017A19CDCA2000D6F4E2 = {
@@ -237,50 +279,34 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		3376DF54DDDB5AA37B30B9D4 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../../Pods/Target Support Files/Pods-ITunesSwift/Pods-ITunesSwift-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		510C08197D34ECB716D2A2E6 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		79C4017619CDCA2000D6F4E2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8CB80C41D58B09700D7F80B /* Result.swift in Sources */,
+				E8CB80C01D58B09700D7F80B /* ParameterEncoding.swift in Sources */,
 				7981F85C19D14F3F00B2414C /* ITunesApi.swift in Sources */,
+				E8CB80C51D58B09700D7F80B /* ServerTrustPolicy.swift in Sources */,
+				E8CB80BA1D58B09700D7F80B /* Download.swift in Sources */,
 				79C401AA19CDD92800D6F4E2 /* ITunesSearchApi.swift in Sources */,
 				79C401A419CDD83100D6F4E2 /* Attribute.swift in Sources */,
 				79C401A219CDD75300D6F4E2 /* Entity.swift in Sources */,
+				E8CB80BF1D58B09700D7F80B /* Notifications.swift in Sources */,
+				E8CB80C11D58B09700D7F80B /* Request.swift in Sources */,
+				E8CB80C21D58B09700D7F80B /* Response.swift in Sources */,
+				E8CB80C31D58B09700D7F80B /* ResponseSerialization.swift in Sources */,
+				E8CB80C91D58B09700D7F80B /* Validation.swift in Sources */,
+				E8CB80BD1D58B09700D7F80B /* MultipartFormData.swift in Sources */,
 				7981F7E919CEC9A200B2414C /* ITunesLookupApi.swift in Sources */,
 				79C401A019CDD54C00D6F4E2 /* Media.swift in Sources */,
+				E8CB80C71D58B09700D7F80B /* Timeline.swift in Sources */,
+				E8CB80C81D58B09700D7F80B /* Upload.swift in Sources */,
+				E8CB80BB1D58B09700D7F80B /* Error.swift in Sources */,
+				E8CB80B91D58B09700D7F80B /* Alamofire.swift in Sources */,
+				E8CB80BE1D58B09700D7F80B /* NetworkReachabilityManager.swift in Sources */,
+				E8CB80BC1D58B09700D7F80B /* Manager.swift in Sources */,
+				E8CB80C61D58B09700D7F80B /* Stream.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +344,7 @@
 				DEFINES_MODULE = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -386,7 +413,6 @@
 		};
 		79C4018F19CDCA2000D6F4E2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7561235CC872B0B3BDB5D1AD /* Pods-ITunesSwift.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
@@ -403,6 +429,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.tsuchikazu.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -411,7 +438,6 @@
 		};
 		79C4019019CDCA2000D6F4E2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD8065EB06D2A22F23152F5E /* Pods-ITunesSwift.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
@@ -428,6 +454,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.tsuchikazu.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -446,6 +473,7 @@
 				);
 				INFOPLIST_FILE = ITunesSwiftTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.tsuchikazu.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -459,6 +487,7 @@
 				);
 				INFOPLIST_FILE = ITunesSwiftTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.tsuchikazu.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

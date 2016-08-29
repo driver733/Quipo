@@ -8,7 +8,7 @@ InstagramKit
 [![License](https://img.shields.io/cocoapods/l/InstagramKit.svg?style=flat)](http://cocoadocs.org/docsets/InstagramKit)
 [![Platform](https://img.shields.io/cocoapods/p/InstagramKit.svg?style=flat)](http://cocoadocs.org/docsets/InstagramKit)
 
-An extensive Objective C wrapper for the Instagram API.
+An extensive Objective C wrapper for the Instagram API, completely compatible with Swift.
 
 Here's a quick example to retrieve trending media on Instagram:
 
@@ -29,7 +29,7 @@ It’s neat, fast and works like a charm.
 
 Getting started is easy. Just include the files from the directory 'InstagramKit' into your project and you'll be up and running. You may need to add AFNetworking to your project as well if you haven't already.
 
-####Cocoapods Podfile
+####CocoaPods Podfile
 ```ruby
 pod 'InstagramKit', '~> 3.0'
 ```
@@ -49,25 +49,17 @@ Head over to http://instagram.com/developer/clients/manage/ to register your app
 ```InstagramAppClientId``` is your App's Client Id and ```InstagramAppRedirectURL```, the redirect URI which is obtained on registering your App on Instagram's Developer Dashboard.
 The redirect URI specifies where Instagram should redirect users after they have chosen whether or not to authenticate your application. 
 
+## Instagram Platform Updates
+http://developers.instagram.com/post/133424514006/instagram-platform-update
+
+Due to Instagram's recent update to it's API, new Apps will no longer be able to access unauthenticated requests and a few other endpoints supported by InstagramKit. An update to InstagramKit to support these changes is on it's way. 
+You may refer to Instagram's API changelog here - https://www.instagram.com/developer/changelog/
+
 ##Usage
-
-#### Unauthenticated Requests
-
-Some API calls only require the use of a Client Id, which simply associates the call with your specific App.
-
-```Objective-C
-InstagramEngine *engine = [InstagramEngine sharedEngine];
-[engine getPopularMediaWithSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
-    // media is an array of InstagramMedia objects
-    ...
-} failure:^(NSError *error, NSInteger statusCode) {
-    ...
-}];
-```
 
 #### Authentication
 
-For most API calls, you will need an Access Token and often times a User Id. To get your Access Token, the user needs to authenticate your app to access his Instagram account. 
+For each API call, you will need an Access Token and specific scope permissions. To get the Access Token, the user needs to authenticate your app to access his Instagram account with the specified permissions.
 
 To do so, redirect the user to ```https://instagram.com/oauth/authorize/?client_id=[Client ID]&redirect_uri=[Redirect URI]&response_type=token``` 
 or allow InstagramEngine's helper method do the hard work for you - 
@@ -159,25 +151,6 @@ Read in detail about more ways of implementing Pagination for your requests effo
 ####Demo
 
 Download and run the Example Project to understand how the engine is intended to be used.
-
-<img src='https://raw.githubusercontent.com/shyambhat/InstagramKit/master/InstagramKit-Example/Instagramkit_example.png' alt='InstagramKit-Example' width=310.5 height=625.5 />
-
-##Changelog
-**Version 3.6.9**
-
-##### Added
-- Xcode 7 changes to Project file.
-- Added CHANGELOG.md
-
-##### Changed
-- `-getMediaAtLocation: count: maxId: withSuccess: failure:` changed to `-getMediaAtLocation: count: maxId: distance: withSuccess: failure:`
-- #167 Typo fixed `-authorizarionURL` to `authorizationURL`. By @natan.
-
-##### Fixed
-- #146 Checks for media URLs in initializing InstagramMedia objects.
-- #148 Fix Token Get in Authorisation scopes. By @DanTakagaki.
-- #165 Parameter Count must be larger than zero. Fixes #150. By @shyambhat
-- #164 InstagramModel copyWithZone updated to allocate correct type of object. By @urklc.
 
 ##Contributions?
 

@@ -10,7 +10,7 @@ import UIKit
 import Async
 
 let LoadingIndicatorViewTag = 777
-let kTickTimeInterval = 0.5.second
+//let kTickTimeInterval = 0.5 // 0.5.second
 
 class LoadingIndicatorView: UIView {
   
@@ -51,10 +51,10 @@ class LoadingIndicatorView: UIView {
         tickImageView.frame.size = CGSizeMake(40, 35)
         tickImageView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds))
         self.addSubview(tickImageView)
-        NSTimer.after(kTickTimeInterval, { () -> Void in
-          self.removeFromSuperview()
-          timeIntervalExpirationBlock()
-        })
+//        NSTimer.after(kTickTimeInterval, { () -> Void in
+//          self.removeFromSuperview()
+//          timeIntervalExpirationBlock()
+//        })
       }
     }
   }

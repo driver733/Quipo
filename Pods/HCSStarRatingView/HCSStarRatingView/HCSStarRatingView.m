@@ -39,14 +39,6 @@
 
 #pragma mark - Initialization
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        [self _customInit];
-    }
-    return self;
-}
-
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -70,6 +62,7 @@
     _value = 0;
     _spacing = 5.f;
     _continuous = YES;
+    [self _updateAppearanceForState:self.enabled];
 }
 
 - (void)setNeedsLayout {
@@ -119,11 +112,13 @@
 }
 
 - (void)setValue:(CGFloat)value sendValueChangedAction:(BOOL)sendAction {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(value))];
     if (_value != value && value >= _minimumValue && value <= _maximumValue) {
         _value = value;
         if (sendAction) [self sendActionsForControlEvents:UIControlEventValueChanged];
         [self setNeedsDisplay];
     }
+    [self didChangeValueForKey:NSStringFromSelector(@selector(value))];
 }
 
 - (void)setSpacing:(CGFloat)spacing {
@@ -168,6 +163,19 @@
 
 - (BOOL)shouldUseImages {
     return (self.emptyStarImage!=nil && self.filledStarImage!=nil);
+}
+
+#pragma mark - State
+
+- (void)setEnabled:(BOOL)enabled
+{
+    [self _updateAppearanceForState:enabled];
+    [super setEnabled:enabled];
+}
+
+- (void)_updateAppearanceForState:(BOOL)enabled
+{
+    self.alpha = enabled ? 1.f : .5f;
 }
 
 #pragma mark - Image Drawing
@@ -405,11 +413,13 @@
 }
 
 - (void)accessibilityIncrement {
-    self.value += self.allowsHalfStars ? .5f : 1.f;
+    CGFloat value = self.value + (self.allowsHalfStars ? .5f : 1.f);
+    [self setValue:value sendValueChangedAction:YES];
 }
 
 - (void)accessibilityDecrement {
-    self.value -= self.allowsHalfStars ? .5f : 1.f;
+    CGFloat value = self.value - (self.allowsHalfStars ? .5f : 1.f);
+    [self setValue:value sendValueChangedAction:YES];
 }
 
 @end

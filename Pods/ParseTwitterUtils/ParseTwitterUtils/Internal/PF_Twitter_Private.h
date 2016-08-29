@@ -27,11 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
                           urlSession:(NSURLSession *)urlSession
                          dialogClass:(Class<PFOAuth1FlowDialogInterface>)dialogClass;
 
-/*!
+/**
  Obtain access to the local twitter account.
  Returns the twitter account if access is obtained. Otherwise, returns null.
  */
-- (BFTask PF_GENERIC(ACAccount *)*)_getLocalTwitterAccountAsync;
+- (BFTask<ACAccount *> *)_getLocalTwitterAccountAsync;
 
 @end
 

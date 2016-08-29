@@ -209,19 +209,19 @@ class DetailedPostVC: UIViewController {
   
   func didTapCommentsButton(sender: UIButton) {
 
-    var parentView = sender.superview!
-    while (!(parentView.isKindOfClass(ReviewCell)) ) {
-      parentView = parentView.superview!
-    }
-    
-    
-    let cell = parentView as! ReviewCell
-    
-    let vc = CommentsVC(tableViewStyle: .Plain)
-    vc.passedReview = reviews[getCellPostIndex((tableView.indexPathForCell(cell)?.row)!)]
-    
-    
-    self.navigationController?.pushViewController(vc, animated: true)
+//    var parentView = sender.superview!
+//    while (!(parentView.isKindOfClass(ReviewCell)) ) {
+//      parentView = parentView.superview!
+//    }
+//
+//
+//    let cell = parentView as! ReviewCell
+//
+//    let vc = CommentsVC(tableViewStyle: .Plain)
+//    vc.passedReview = reviews[getCellPostIndex((tableView.indexPathForCell(cell)?.row)!)]
+//
+//
+//    self.navigationController?.pushViewController(vc, animated: true)
   }
   
   

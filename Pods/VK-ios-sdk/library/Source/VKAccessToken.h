@@ -22,15 +22,14 @@
 //
 //  --------------------------------------------------------------------------------
 //
-//  Modified by Ruslan Kavetsky
 
 #import <Foundation/Foundation.h>
 #import "VKObject.h"
 #import "VKUser.h"
 
 /**
-Presents VK API access token that used for loading API methods and other stuff.
-*/
+ * Represents VK API access token that used for loading API methods and other stuff.
+ */
 @interface VKAccessToken : VKObject <NSCoding>
 
 /// String token for use in request parameters
@@ -57,7 +56,7 @@ Presents VK API access token that used for loading API methods and other stuff.
 /// Indicates time of token creation
 @property(nonatomic, readonly, assign) NSTimeInterval created;
 
-/// Indicates time of token creation
+/// Contains basic current user information. Available after delegate method -[VKSdkDelegate vkSdkAuthorizationStateUpdatedWithResult:] called
 @property(nonatomic, readonly, strong) VKUser *localUser;
 
 /**
@@ -94,11 +93,16 @@ Save token into user defaults by specified key
 
 /**
  Remove token from storage
+ 
+ @param service Access token storage key name
  */
 + (void)delete:(NSString *)service;
 
 @end
 
+/**
+ * This is mutable version of VKAccessToken. You should never use this class directly
+ */
 @interface VKAccessTokenMutable : VKAccessToken
 @property(nonatomic, readwrite, copy) NSString *accessToken;
 @property(nonatomic, readwrite, copy) NSString *userId;

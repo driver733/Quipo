@@ -1,6 +1,6 @@
-# Uncomment this line to define a global platform for your project
 platform :ios, '8.4'
 use_frameworks!
+
 workspace 'Moviethete'
 
 target 'Moviethete' do
@@ -35,6 +35,7 @@ target 'Moviethete' do
   pod 'AsyncSwift'
   pod 'TLYShyNavBar', '0.10.1'
   pod 'OAuthSwift'
+  pod 'ReactiveCocoa'
 end
 
 target 'MovietheteTests' do
@@ -45,8 +46,8 @@ target 'MovietheteUITests' do
 
 end
 
-target 'ITunesSwift' do
-   xcodeproj 'Externals/iTunesSwift/ITunesSwift.xcodeproj'
-    pod 'Alamofire'
-
-end
+# abstract_target 'ITunesSwift' do
+#    project 'Externals/iTunesSwift/ITunesSwift.xcodeproj'
+#     pod 'Alamofire'
+#
+# end

@@ -1,6 +1,0 @@
-framework module Pods_ITunesSwift {
-  umbrella header "Pods-ITunesSwift-umbrella.h"
-
-  export *
-  module * { export * }
-}

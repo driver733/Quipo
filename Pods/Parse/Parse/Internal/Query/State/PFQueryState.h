@@ -17,20 +17,20 @@
 
 @property (nonatomic, copy, readonly) NSString *parseClassName;
 
-@property (nonatomic, copy, readonly) NSDictionary *conditions;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *conditions;
 
-@property (nonatomic, copy, readonly) NSArray *sortKeys;
+@property (nonatomic, copy, readonly) NSArray<NSString *> *sortKeys;
 @property (nonatomic, copy, readonly) NSString *sortOrderString;
 
-@property (nonatomic, copy, readonly) NSSet *includedKeys;
-@property (nonatomic, copy, readonly) NSSet *selectedKeys;
-@property (nonatomic, copy, readonly) NSDictionary *extraOptions;
+@property (nonatomic, copy, readonly) NSSet<NSString *> *includedKeys;
+@property (nonatomic, copy, readonly) NSSet<NSString *> *selectedKeys;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *extraOptions;
 
 @property (nonatomic, assign, readonly) NSInteger limit;
 @property (nonatomic, assign, readonly) NSInteger skip;
 
 ///--------------------------------------
-/// @name Remote + Caching Options
+#pragma mark - Remote + Caching Options
 ///--------------------------------------
 
 @property (nonatomic, assign, readonly) PFCachePolicy cachePolicy;
@@ -39,7 +39,7 @@
 @property (nonatomic, assign, readonly) BOOL trace;
 
 ///--------------------------------------
-/// @name Local Datastore Options
+#pragma mark - Local Datastore Options
 ///--------------------------------------
 
 /**
@@ -56,7 +56,7 @@
 @property (nonatomic, copy, readonly) NSString *localDatastorePinName;
 
 ///--------------------------------------
-/// @name Init
+#pragma mark - Init
 ///--------------------------------------
 
 - (instancetype)initWithState:(PFQueryState *)state;

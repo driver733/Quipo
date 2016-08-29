@@ -106,7 +106,7 @@ class ProfileSettings: UIViewController {
     InstagramEngine.sharedEngine().logout()  // might cause freeze
     VKSdk.forceLogout()
     FBSDKLoginManager().logOut()
-    Twitter.sharedInstance().logOut()
+//    Twitter.sharedInstance().logOut()
     
 //    CurrentUser.sharedCurrentUser().linkedAccountsKeychain["instagram"] = nil
     

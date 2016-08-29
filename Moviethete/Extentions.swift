@@ -14,8 +14,17 @@ import FBSDKLoginKit
 import Bolts
 import SwiftyJSON
 import Parse
+import ObjectiveC
+
+// Localization for IB support
+//#define MLLocalizedString(key, comment)
+//[[NSBundle bundleForClass:[AppDelegate class]] localizedStringForKey:(key) value:@"" table:nil]
+//#define MLLocalizedStringFromTable(key, tbl, comment)
+//[[NSBundle bundleForClass:[AppDelegate class]] localizedStringForKey:(key) value:@"" table:(tbl)]
 
 
+
+private var xoAssociationKey: UInt8 = 0
 
 extension LoadingStateDelegate {
   
@@ -37,17 +46,64 @@ extension String {
   func sizeForWidth(width: CGFloat, font: UIFont) -> CGSize {
     let attr = [NSFontAttributeName: font]
     let height = NSString(string: self).boundingRectWithSize(CGSize(width: width, height: CGFloat.max), options:.UsesLineFragmentOrigin, attributes: attr, context: nil).height
+	
     return CGSize(width: width, height: ceil(height))
   }
 }
 
+
+@IBDesignable class BorderedButton : UIButton {}
+
 extension UIView {
+
+	@IBInspectable var locKey: String {
+		get {
+			return objc_getAssociatedObject(self, &xoAssociationKey) as! String
+		}
+		set(newValue) {
+//			objc_setAssociatedObject(self, &xoAssociationKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+			didSetLocKey(newValue)
+		}
+	}
+
+	func localizedString(locKey: String, comment: String) -> String {
+		return NSBundle(forClass: self.dynamicType).localizedStringForKey(locKey, value: "", table: nil)
+	}
+	
+	func localizedStringFromTable(locKey: String, tableName: String, comment: String) -> String {
+		return NSBundle(forClass: self.dynamicType).localizedStringForKey(locKey, value: "", table: tableName)
+	}
+	
+	
+	private func didSetLocKey(lokKey: String) {
+		if lokKey.characters.count > 0 {
+			let locString = localizedStringFromTable(lokKey, tableName: "LogIn", comment: "")
+			if self.isKindOfClass(UIButton) {
+				(self as! UIButton).setTitle(locString, forState: .Normal)
+			} else if self.isKindOfClass(UILabel) {
+				(self as! UILabel).text = locString
+			} else if self.isKindOfClass(UITextView) {
+				(self as! UITextView).text = locString
+			} else if self.isKindOfClass(UITextField) {
+				(self as! UITextField).text = locString
+			} else if self.isKindOfClass(UITextField) {
+				(self as! UITextField).text = locString
+			} else if self.isKindOfClass(UIImageView) {
+				(self as! UIImageView).image = UIImage(named: locString, inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)
+			}
+		}
+	}
+	
+	
   class func loadFromNibNamed(nibNamed: String, bundle : NSBundle? = nil) -> UIView? {
     return UINib(
-      nibName: nibNamed,
-      bundle: bundle
+		nibName: nibNamed,
+		bundle: bundle
       ).instantiateWithOwner(nil, options: nil)[0] as? UIView
   }
+	
+	
+	
 }
 
 extension UITableViewCell {

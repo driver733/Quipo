@@ -24,6 +24,7 @@
 #import "PFQueryPrivate.h"
 #import "PFRelation.h"
 #import "PFRelationPrivate.h"
+#import "PFQueryConstants.h"
 
 typedef BOOL (^PFComparatorDeciderBlock)(id value, id constraint);
 typedef BOOL (^PFSubQueryMatcherBlock)(id object, NSArray *results);
@@ -109,10 +110,10 @@ typedef BOOL (^PFSubQueryMatcherBlock)(id object, NSArray *results);
     if ([key rangeOfString:@"."].location != NSNotFound) {
         NSArray *parts = [key componentsSeparatedByString:@"."];
 
-        NSString *firstKey = [parts firstObject];
+        NSString *firstKey = parts.firstObject;
         NSString *rest = nil;
-        if ([parts count] > 1) {
-            NSRange range = NSMakeRange(1, [parts count] - 1);
+        if (parts.count > 1) {
+            NSRange range = NSMakeRange(1, parts.count - 1);
             rest = [[parts subarrayWithRange:range] componentsJoinedByString:@"."];
         }
         id value = [self valueForContainer:container key:firstKey depth:depth + 1];
@@ -125,7 +126,7 @@ typedef BOOL (^PFSubQueryMatcherBlock)(id object, NSArray *results);
                     return [self valueForContainer:restFormat key:rest depth:depth + 1];
                 }
             }
-            [NSException raise:NSInvalidArgumentException format:@"Key %@ is invalid", key];
+            PFParameterAssertionFailure(@"Key %@ is invalid.", key);
         }
         return [self valueForContainer:value key:rest depth:depth + 1];
     }
@@ -151,7 +152,7 @@ typedef BOOL (^PFSubQueryMatcherBlock)(id object, NSArray *results);
     } else if (container == nil) {
         return nil;
     } else {
-        [NSException raise:NSInvalidArgumentException format:@"Bad key %@", key];
+        PFParameterAssertionFailure(@"Bad key %@", key);
         // Shouldn't reach here.
         return nil;
     }
@@ -387,7 +388,7 @@ greaterThanOrEqualTo:(id)constraint {
     }
     PFGeoPoint *point1 = constraint;
     PFGeoPoint *point2 = value;
-    return [point1 distanceInRadiansTo:point2] <= [maxDistance doubleValue];
+    return [point1 distanceInRadiansTo:point2] <= maxDistance.doubleValue;
 }
 
 /**
@@ -456,9 +457,7 @@ greaterThanOrEqualTo:(id)constraint {
     } else if ([operator isEqualToString:PFQueryKeyWithin]) {
         return [self matchesValue:value within:constraint];
     }
-
-    [NSException raise:NSInvalidArgumentException
-                format:@"The offline store does not yet support %@ operator.", operator];
+    PFParameterAssertionFailure(@"Local Datastore does not yet support %@ operator.", operator);
     // Shouldn't reach here
     return YES;
 }
@@ -689,10 +688,10 @@ greaterThanOrEqualTo:(id)constraint {
     // Descend into the container and try again
     NSArray *parts = [include componentsSeparatedByString:@"."];
 
-    NSString *key = [parts firstObject];
+    NSString *key = parts.firstObject;
     NSString *rest = nil;
-    if ([parts count] > 1) {
-        NSRange range = NSMakeRange(1, [parts count] - 1);
+    if (parts.count > 1) {
+        NSRange range = NSMakeRange(1, parts.count - 1);
         rest = [[parts subarrayWithRange:range] componentsJoinedByString:@"."];
     }
 
@@ -709,10 +708,9 @@ greaterThanOrEqualTo:(id)constraint {
             // throwing an exception.
             return nil;
         }
-        NSException *exception = [NSException exceptionWithName:NSInternalInconsistencyException
-                                                         reason:@"include is invalid"
-                                                       userInfo:nil];
-        return [BFTask taskWithException:exception];
+        NSError *error = [PFErrorUtilities errorWithCode:kPFErrorInvalidNestedKey
+                                                 message:@"include is invalid"];
+        return [BFTask taskWithError:error];
     }] continueWithSuccessBlock:^id(BFTask *task) {
         return [self fetchIncludeAsync:rest container:task.result database:database];
     }];
@@ -727,11 +725,11 @@ greaterThanOrEqualTo:(id)constraint {
         return YES;
     }
 
-    PFACL *acl = [object ACL];
+    PFACL *acl = object.ACL;
     if (acl == nil) {
         return YES;
     }
-    if ([acl getPublicReadAccess]) {
+    if (acl.publicReadAccess) {
         return YES;
     }
     if (user != nil && [acl getReadAccessForUser:user]) {
@@ -747,11 +745,11 @@ greaterThanOrEqualTo:(id)constraint {
         return YES;
     }
 
-    PFACL *acl = [object ACL];
+    PFACL *acl = object.ACL;
     if (acl == nil) {
         return YES;
     }
-    if ([acl getPublicWriteAccess]) {
+    if (acl.publicWriteAccess) {
         return YES;
     }
     if (user != nil && [acl getWriteAccessForUser:user]) {

@@ -1,6 +1,8 @@
 SwiftValidator
 ===============
 
+[![Build Status](https://travis-ci.org/jpotts18/SwiftValidator.svg?branch=travis-ci)](https://travis-ci.org/jpotts18/SwiftValidator) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
 Swift Validator is a rule-based validation library for Swift.
 
 ![Swift Validator](/swift-validator-v2.gif)
@@ -11,7 +13,7 @@ Swift Validator is a rule-based validation library for Swift.
 * ``UITextField`` + ``ValidationError`` come out of ``Validator``
 * ``Validator`` evaluates ``[Rule]`` sequentially and stops evaluating when a ``Rule`` fails. 
 
-## Quick Start
+## Installation
 
 ```ruby
 # Podfile
@@ -19,20 +21,28 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, "8.1"
 
 use_frameworks!
-pod 'SwiftValidator', '3.0.0' 
+pod 'SwiftValidator', '3.0.3' 
 ```
 
 Install into your project:
 
-```
+```bash
 $ pod install
 ```
 
 Open your project in Xcode from the .xcworkspace file (not the usual project file):
 
-```
+```bash
 $ open MyProject.xcworkspace
 ```
+
+If you are using Carthage you will need to add this to your `Cartfile`
+
+```bash
+github "jpotts18/SwiftValidator"
+```
+
+## Usage 
 
 You can now import SwiftValidator framework into your files.
 
@@ -97,6 +107,26 @@ func validationFailed(errors:[UITextField:ValidationError]) {
 }
 
 ```
+
+### Single Field Validation
+
+You may use single field validation in some cases. This could be useful in situations such as controlling responders:
+
+```swift
+// Don't forget to use UITextFieldDelegate
+// and delegate yourTextField to self in viewDidLoad()
+func textFieldShouldReturn(textField: UITextField) -> Bool {
+    validator.validateField(textField){ error in
+        if error == nil {
+            // Field validation was successful
+        } else {
+            // Validation error occurred
+        }
+    }
+    return true
+}
+```
+
 
 ## Custom Validation 
 

@@ -23,9 +23,17 @@ import InstagramKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
-  var window: UIWindow?
+	var window: UIWindow?
+	let appDependencies = AppDependencies()
 
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+	
+	
+	
+	
+	
+	
+	
     // Override point for customization after application launch.
     
     // [Optional] Power your app with Local Datastore. For more info, go to
@@ -78,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
       UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -100, vertical: -100), forBarMetrics: UIBarMetrics.Default)
       
     
-    
+    appDependencies.installRootViewControllerIntoWindow(window!)
   
     //   self.window?.rootViewController?.tabBarController!.delegate = self
     //  ((self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("main"))! as! UITabBarController).delegate = self

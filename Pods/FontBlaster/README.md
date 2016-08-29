@@ -16,13 +16,22 @@ Say goodbye to importing custom fonts via property lists as **FontBlaster** auto
 
 ## Installation Instructions
 
-### CocoaPods Installation (iOS 8+)
+### CocoaPods
 ```ruby
 pod 'FontBlaster'
 ```
-- Add `import FontBlaster` to any `.Swift` file that references FontBlaster via a CocoaPods installation.
 
-### Manual Installation
+### Carthage
+``` swift
+github "ArtSabintsev/FontBlaster"
+```
+
+### Swift Package Manager
+``` swift
+.Package(url: "https://github.com/ArtSabintsev/FontBlaster.git", majorVersion: 2)
+```
+
+### Manual
 
 1. [Download FontBlaster](//github.com/ArtSabintsev/FontBlaster/archive/master.zip).
 2. Copy `FontBlaster.swift` into your project.
@@ -39,6 +48,21 @@ If you are loading from a bundle that isn't found inside your app's `mainBundle`
 
 ```Swift
 FontBlaster.blast(_:) // Takes one argument of type NSBundle, or as mentioned above, defaults to NSBundle.mainBundle() if no arguments are passed
+```
+
+If you need a list of all of the loaded fonts, an overloaded version of the `blast(_:)` method has a completion handler that returns just that. Just like the original method, this method takes either a custom `NSBundle` or defaults to `NSBundle.mainBundle()`` if no argument is passed.
+
+```Swift
+
+// Defaults to NSBundle.mainBundle() as no argument is passed
+FontBlaster.blast() { (fonts) in
+  print(fonts) // fonts is an array of Strings containing font names
+}
+
+// Custom bundle is passed as argument
+FontBlaster.blast(_:) { (fonts) in
+  print(fonts) // fonts is an array of Strings containing font names
+}
 ```
 
 To turn on console debug statements, simply set `debugEnabled() = true` **before** calling either `blast()` method:
